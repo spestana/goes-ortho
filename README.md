@@ -1,5 +1,5 @@
 # "The Mountains Are Calling, and I Must GOES" 
-> - [John Muir](https://en.wikipedia.org/wiki/John_Muir) with satellite remote sensing
+> - [John Muir](https://en.wikipedia.org/wiki/John_Muir) if he had access to satellite remote sensing probably
 
 ##### Geospatial Data Analysis Project - Steven Pestana, 2019
 
