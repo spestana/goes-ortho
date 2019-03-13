@@ -1,4 +1,4 @@
-# "The Mountains Are Calling, and I must GOES" 
+# "The Mountains Are Calling, and I Must GOES" 
 > - [John Muir](https://en.wikipedia.org/wiki/John_Muir) with satellite remote sensing
 
 ##### Geospatial Data Analysis Project - Steven Pestana, 2019
@@ -12,19 +12,28 @@ Before using observations from these instruments for observing the land surface 
 
 ## Objective(s):
 * Use python to access and work with GOES-16/17 ABI data from AWS
-* Overlay the coarse resolution satellite data on top of a higher resolution DEM of the Sierra Nevada
+* Overlay the coarse resolution satellite data on top of a higher resolution DEM of the Tuolumne River Watershed in the Sierra Nevada
 * Mask out areas not visible to the GOES satellites as determined by their orbital position and local terrain
-
 
 ## Data:
 * GOES-16/17 ABI (visible through longwaveIR)
 * SRTM CONUS DEM at 30 m resolution
   
 ## Packages:
-* ([goes-py](https://github.com/palexandremello/goes-py)) to access GOES data on AWS 
-* rasterio
-
+* [goes-py](https://github.com/palexandremello/goes-py) to access GOES data on AWS 
+* [elevation](https://pypi.org/project/elevation/) to access SRTM DEMs
+* [rasterio](https://pypi.org/project/rasterio/) for analysis and plotting
+* perhaps also [gdal](https://www.gdal.org/) utilities
 
 ## Approach:
+* use goes-py to access recent wintertime GOES-16 and -17 observations of CONUS
+* use elevation to access SRTM3 DEMs of the Tuolumne River Watershed in the Sierra Nevada
+* clip GOES imagery to the DEM areas
+* determine slope angles/aspects hidden from view
+* mask out the terrain hidden from view from the GOES imagery
+* export a GeoTiff of this new "product"
 
 ## Expected Outcomes:
+* Produce a masked GOES product that shows which areas were NOT visible to the satellite
+
+
