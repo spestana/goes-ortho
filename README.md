@@ -11,9 +11,9 @@ Additionally, when viewing complex terrain such as the mountains of western CONU
 Before using observations from these instruments for observing the land surface for applications where fine-scale variability is important, corrections could be applied to the geostationary satellite imagery to try and account for the off-nadir view angle and topographic effects.
 
 ## Objective(s):
-* Use python to access and work with GOES-16/17 ABI data from AWS
-* Overlay the coarse resolution satellite data on top of a higher resolution DEM of the Tuolumne River Watershed in the Sierra Nevada
-* Mask out areas not visible to the GOES satellites as determined by their orbital position and local terrain
+* :white_check_mark: Use python to access and work with GOES-16/17 ABI data from AWS
+* :black_square_button: Overlay the coarse resolution satellite data on top of a higher resolution DEM of the Tuolumne River Watershed in the Sierra Nevada
+* :black_square_button: Mask out areas not visible to the GOES satellites as determined by their orbital position and local terrain
 
 ## Data:
 * GOES-16/17 ABI (visible through longwaveIR)
