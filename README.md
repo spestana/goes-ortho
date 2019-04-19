@@ -36,5 +36,3 @@ Before using observations from these instruments for observing the land surface 
 
 ## Expected Outcomes:
 * Produce a masked GOES product that shows which areas were NOT visible to the satellite
-
-
