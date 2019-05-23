@@ -36,3 +36,10 @@ Before using observations from these instruments for observing the land surface 
 
 ## Expected Outcomes:
 * Produce a masked GOES product that shows which areas were NOT visible to the satellite
+
+***
+## RPC Resources:
+* [DigitalGlobe documentation](https://dg-cms-uploads-production.s3.amazonaws.com/uploads/document/file/106/ISD_External.pdf) has good explanations of RPCs
+* [RPC curve fitting in python](https://stackoverflow.com/questions/29815094/rational-function-curve-fitting-in-python)
+* [Calculating RPCs](https://gis.stackexchange.com/questions/180414/how-rational-polynomial-coefficientsrpcs-are-calculated-need-references)
+* [RCPs in GeoTiff metadata](http://geotiff.maptools.org/rpc_prop.html)
