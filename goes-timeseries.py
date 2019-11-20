@@ -89,6 +89,7 @@ filepath = []; # store filepaths of the files we download
 ##############################################################
 
 # For each S3 bucket, download the corresponding observations
+print('For each S3 bucket, download the corresponding observations')
 i = 0
 for d in range(len(days)):
     for h in range(len(hours)):
@@ -101,6 +102,7 @@ for d in range(len(days)):
 
 ##############################################################
 # for each path (load all the observations)
+print('Load all observations from each path')
 file_list = []
 for path in filepath:
     file_list.append(getListOfFiles(path))
@@ -108,20 +110,24 @@ for path in filepath:
 
 
 # flatten into a single list
+print('Flatten into single list')
 file_list = [item for sublist in file_list for item in sublist]
 
 
 ##############################################################
 # open this entire dataset as a "multi-file dataset"
+print('Open as multi-file dataset')
 g = xr.open_mfdataset(file_list,concat_dim='t')
 
 ##############################################################
 # Approx location of Gaylor Pit
+print('Approx location of Gaylor Pit')
 lat = 37.88 
 lon= -119.31
 z = 0
 print(lon, lat, z)
 ##############################################################
+print('Get values needed for geometry calculations')
 with xr.open_dataset(file_list[0]) as f:
     # Values needed for geometry calculations
     req = f.goes_imager_projection.semi_major_axis
@@ -136,6 +142,7 @@ with xr.open_dataset(file_list[0]) as f:
 
 ##############################################################
 # Take a look at how radiance changes at this single point
+print('Take a look at how radiance changes at this single point')
 values = []
 time = []
 for filename in file_list:
@@ -149,7 +156,7 @@ for filename in file_list:
 
 ##############################################################
 
-
+print('Convert values, make dataframe')
 # values are in mW for the emissive bands
 radiance = np.array(values)
 # calculate brightness temperature for this band, convert from K to C
@@ -162,4 +169,5 @@ df = pd.DataFrame(d)
 
 ##############################################################
 # save this informaiton out to a pickle file
-df1.to_pickle('GOES_B14_BrightnessTemperature_19-22_Feb_2017_GaylorPit_z.pkl')
+print('save this informaiton out to a pickle file')
+df.to_pickle('output.pkl')
