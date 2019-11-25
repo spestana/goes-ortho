@@ -4,7 +4,7 @@ import xarray as xr
 import os
 from goespy.Downloader import ABI_Downloader # https://github.com/palexandremello/goes-py
 
-###############################
+##############################################################
 def getListOfFiles(dirName):
     # create a list of file and sub directories 
     # names in the given directory 
@@ -25,7 +25,6 @@ def getListOfFiles(dirName):
 
 
 ##############################################################
-
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     '''Find the ABI elevation (y) and scanning (x) angles (radians) of point P , given a latitude and longitude (degrees)'''
     
@@ -87,7 +86,6 @@ filepath = []; # store filepaths of the files we download
 
 
 ##############################################################
-
 # For each S3 bucket, download the corresponding observations
 print('For each S3 bucket, download the corresponding observations')
 i = 0
@@ -165,9 +163,9 @@ Tb = goesBrightnessTemp(radiance) - 273.15
 # make a pandas dataframe out of this
 d = {'time': time, 'tb': Tb}
 df = pd.DataFrame(d)
-
+print(df)
 
 ##############################################################
 # save this informaiton out to a pickle file
 print('save this informaiton out to a pickle file')
-df.to_pickle('output.pkl')
+df.to_pickle('output.pkl', protocol=3)
