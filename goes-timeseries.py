@@ -71,6 +71,7 @@ def goesBrightnessTemp(rad):
 ##############################################################
 # AWS S3 Bucket for GOES-17
 bucket = 'noaa-goes16'
+satellite = bucket[5:] # get the last part of the bucket name
 # Specify date, time, product, band (channel)
 year='2017'
 month='04'
@@ -81,7 +82,7 @@ hours=['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14
 product='ABI-L1b-RadC'
 channel='C14' # 11.2 micron channel
 # Local paths where data will be stored
-path = r'C:\Users\steve\goes16'
+homepath = str(os.path.expanduser("~")) # home directory
 filepath = []; # store filepaths of the files we download
 
 
@@ -92,7 +93,7 @@ print('For each S3 bucket, download the corresponding observations')
 i = 0
 for d in range(len(days)):
     for h in range(len(hours)):
-        filepath.append('{}/{}/{}/{}/{}/{}/{}/'.format(path,year,month,days[d],product,hours[h],channel))
+        filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(homepath,satellite,year,month,days[d],product,hours[h],channel))
         if not os.path.exists(filepath[i]):
             ABI = ABI_Downloader(bucket,year,month,days[d],hours[h],product,channel)
         i+=1
