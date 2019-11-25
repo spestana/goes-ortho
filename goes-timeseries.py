@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import xarray as xr
 import os
 from goespy.Downloader import ABI_Downloader # https://github.com/palexandremello/goes-py
