@@ -115,7 +115,7 @@ file_list = [item for sublist in file_list for item in sublist]
 ##############################################################
 # open this entire dataset as a "multi-file dataset"
 print('Open as multi-file dataset')
-g = xr.open_mfdataset(file_list,concat_dim='t')
+g = xr.open_mfdataset(file_list, concat_dim='t', combine='nested')
 
 ##############################################################
 # Approx location of Gaylor Pit
@@ -164,6 +164,7 @@ Tb = goesBrightnessTemp(radiance) - 273.15
 d = {'time': time, 'tb': Tb}
 df = pd.DataFrame(d)
 print(df)
+print(type(df))
 
 ##############################################################
 # save this informaiton out to a pickle file
