@@ -56,6 +56,7 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
         return (np.nan, np.nan)
     else:
         return (x,y)
+
 ##############################################################	
 def goesBrightnessTemp(rad): 
     # for GOES emissive bands (only for band 14 right now)
@@ -66,7 +67,11 @@ def goesBrightnessTemp(rad):
     bc2 = 0.99920
     T = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
     return T
-	
+
+##############################################################
+###############  download-goes-timeseries.py ################# <-- the below should sit on its own
+##############################################################
+
 ##############################################################
 # AWS S3 Bucket for GOES-17
 bucket = 'noaa-goes16'
@@ -74,8 +79,8 @@ satellite = bucket[5:] # get the last part of the bucket name
 # Specify date, time, product, band (channel)
 year='2017'
 month='04'
-start_day = 19
-stop_day = 22
+start_day = 01
+stop_day = 30
 days=np.linspace(start_day,stop_day,stop_day-start_day+1,dtype=np.int16)
 hours=['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23']
 product='ABI-L1b-RadC'
@@ -86,7 +91,7 @@ filepath = []; # store filepaths of the files we download
 
 
 ##############################################################
-# For each S3 bucket, download the corresponding observations
+# For each S3 bucket, download the corresponding observations if we don't have them already
 print('For each S3 bucket, download the corresponding observations')
 i = 0
 for d in range(len(days)):
@@ -106,10 +111,14 @@ for path in filepath:
     file_list.append(getListOfFiles(path))
 
 
-
+##############################################################
 # flatten into a single list
 print('Flatten into single list')
 file_list = [item for sublist in file_list for item in sublist]
+
+##############################################################
+###############  download-goes-timeseries.py ################# <-- the above should sit on its own
+##############################################################
 
 
 ##############################################################
