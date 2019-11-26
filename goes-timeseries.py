@@ -78,7 +78,7 @@ bucket = 'noaa-goes16'
 satellite = bucket[5:] # get the last part of the bucket name
 # Specify date, time, product, band (channel)
 year='2017'
-month='04'
+month='03'
 start_day = 1
 stop_day = 30
 days=np.linspace(start_day,stop_day,stop_day-start_day+1,dtype=np.int16)
