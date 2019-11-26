@@ -108,7 +108,10 @@ for d in range(len(days)):
 print('Load all observations from each path')
 file_list = []
 for path in filepath:
-    file_list.append(getListOfFiles(path))
+	try:
+		file_list.append(getListOfFiles(path))
+	except FileNotFoundError:
+		print('Could not find file at {}'.format(path))
 
 
 ##############################################################
