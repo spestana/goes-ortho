@@ -3,6 +3,8 @@ import pandas as pd
 import xarray as xr
 import os
 from goespy.Downloader import ABI_Downloader # https://github.com/palexandremello/goes-py
+import sys, argparse
+
 
 ##############################################################
 def getListOfFiles(dirName):
@@ -68,38 +70,21 @@ def goesBrightnessTemp(rad):
     T = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
     return T
 
-##############################################################
-###############  download-goes-timeseries.py ################# <-- the below should sit on its own
-##############################################################
 
-##############################################################
-# AWS S3 Bucket for GOES-17
-bucket = 'noaa-goes16'
-satellite = bucket[5:] # get the last part of the bucket name
-# Specify date, time, product, band (channel)
-year='2017'
-month='03'
-start_day = 1
-stop_day = 15
-days=np.linspace(start_day,stop_day,stop_day-start_day+1,dtype=np.int16)
-hours=['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23']
-product='ABI-L1b-RadC'
-channel='C14' # 11.2 micron channel
-# Local paths where data will be stored
-homepath = str(os.path.expanduser("~")) # home directory
-filepath = []; # store filepaths of the files we download
+#---------------------------- COMMAND LINE ARGUMENTS ----------------------------#
+# Set up argument and error handling
+parser = argparse.ArgumentParser(description='Produces a timeseries of GOES ABI Radiance observations for a single location given a directory of GOES ABI files')
+parser.add_argument('-d','--dir', required=True, help='directory to search for GOES ABI files (.nc)')
+parser.add_argument('-l','--loc', required=False, nargs=3, type=float, help='Latitude, Longitude, and elevation of location to extract timeseries for')
+args = parser.parse_args()
 
+#-----------------------SET ARGUMENTS TO VARIABLES----------------------------#
+indir = args.dir
 
-##############################################################
-# For each S3 bucket, download the corresponding observations if we don't have them already
-print('For each S3 bucket, download the corresponding observations')
-i = 0
-for d in range(len(days)):
-    for h in range(len(hours)):
-        filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(homepath,satellite,year,month,days[d],product,hours[h],channel))
-        if not os.path.exists(filepath[i]):
-            ABI = ABI_Downloader(bucket,year,month,days[d],hours[h],product,channel)
-        i+=1
+# Lat, Lon, Elev.
+lat_obs = args.loc[0]
+lon_obs = args.loc[1]
+z_obs = args.loc[2]
 
 
 
@@ -119,10 +104,6 @@ for path in filepath:
 print('Flatten into single list')
 file_list = [item for sublist in file_list for item in sublist]
 
-##############################################################
-###############  download-goes-timeseries.py ################# <-- the above should sit on its own
-##############################################################
-
 
 ##############################################################
 # open this entire dataset as a "multi-file dataset"
@@ -130,12 +111,11 @@ print('Open as multi-file dataset')
 g = xr.open_mfdataset(file_list, concat_dim='t', combine='nested')
 
 ##############################################################
-# Approx location of Gaylor Pit
-print('Approx location of Gaylor Pit')
-lat = 37.88 
-lon= -119.31
-z = 0
-print(lon, lat, z)
+# Get location from user input
+lat = lat_obs
+lon= lon_obs
+z = z_obs
+print('Extracting radiance values for: {}, {}, {}'.format(lon, lat, z))
 ##############################################################
 print('Get values needed for geometry calculations')
 with xr.open_dataset(file_list[0]) as f:
@@ -148,7 +128,7 @@ with xr.open_dataset(file_list[0]) as f:
     
     # find corresponding look angles
     x_rad, y_rad = LonLat2ABIangle(lon,lat,z,H,req,rpol,e,lon_0)
-    print(x_rad, y_rad)
+    print('Extracting radiance values for: {}, {}'.format(x_rad, y_rad))
 
 ##############################################################
 # Take a look at how radiance changes at this single point
@@ -181,4 +161,4 @@ print(type(df))
 ##############################################################
 # save this informaiton out to a pickle file
 print('save this informaiton out to a pickle file')
-df.to_pickle('output.pkl', protocol=3)
+df.to_pickle('goes-output.pkl', protocol=3)
