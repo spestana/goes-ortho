@@ -75,7 +75,7 @@ def goesBrightnessTemp(rad):
 # Set up argument and error handling
 parser = argparse.ArgumentParser(description='Produces a timeseries of GOES ABI Radiance observations for a single location given a directory of GOES ABI files')
 parser.add_argument('-d','--dir', required=True, help='directory to search for GOES ABI files (.nc)')
-parser.add_argument('-l','--loc', required=False, nargs=3, type=float, help='Latitude, Longitude, and elevation of location to extract timeseries for')
+parser.add_argument('-l','--loc', required=True, nargs=3, type=float, help='Latitude, Longitude, and elevation of location to extract timeseries for')
 args = parser.parse_args()
 
 #-----------------------SET ARGUMENTS TO VARIABLES----------------------------#
@@ -90,13 +90,13 @@ z_obs = args.loc[2]
 
 ##############################################################
 # for each path (load all the observations)
-print('Load all observations from each path')
+print('Load all observations from the directory provided')
+path = indir
 file_list = []
-for path in filepath:
-	try:
-		file_list.append(getListOfFiles(path))
-	except FileNotFoundError:
-		print('Could not find file at {}'.format(path))
+try:
+	file_list.append(getListOfFiles(path))
+except FileNotFoundError:
+	print('Could not find files at {}'.format(path))
 
 
 ##############################################################
