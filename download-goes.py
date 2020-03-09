@@ -15,9 +15,9 @@ bucket = 'noaa-goes16'
 satellite = bucket[5:] # get the last part of the bucket name
 # Specify date, time, product, band (channel)
 year='2017'
-month='01'
-start_day = 15
-stop_day = 31
+month='02'
+start_day = 1
+stop_day = 28
 days=np.linspace(start_day,stop_day,stop_day-start_day+1,dtype=np.int16)
 hours=['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23']
 product='ABI-L1b-RadC'
