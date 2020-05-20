@@ -202,15 +202,16 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     # Create pixel map dataset
     print('\nCreate pixel map dataset')
     ds = xr.Dataset({    
-                    'elevation':          (['y', 'x'], dem.values)
+                    'elevation':          (['latitude', 'longitude'], dem.values)
                     },
         
-                    coords={'longitude':  (['x'], dem.x),
-                            'latitude':   (['y'], dem.y),
-                            'dem_px_angle_x':     (['y', 'x'],  abi_grid_x),
-                            'dem_px_angle_y':     (['y', 'x'],  abi_grid_y)},
+                    coords={'longitude':  (['longitude'], dem.x),
+                            'latitude':   (['latitude'], dem.y),
+                            'dem_px_angle_x':     (['latitude', 'longitude'],  abi_grid_x),
+                            'dem_px_angle_y':     (['latitude', 'longitude'],  abi_grid_y)},
                     
                     attrs=metadata)
+    print(ds)
     print('...done')
                      
     if out_filepath != None:
@@ -232,7 +233,7 @@ def orthorectify_abi_rad(goes_filepath, pixel_map, out_filename=None):
     # First check, Does the projection info in the image match our mapping?
     print('\nDoes the projection info in the image match our mapping?')
     # Open the GOES ABI image
-    print('\nOpening GOES ABI image...')
+    print('\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value')
     abi_image = xr.open_dataset(goes_filepath)
     print('perspective_point_height + semi_major_axis:\t{}\t{}'.format(abi_image.goes_imager_projection.perspective_point_height 
                                                                        + abi_image.goes_imager_projection.semi_major_axis,
@@ -249,45 +250,49 @@ def orthorectify_abi_rad(goes_filepath, pixel_map, out_filename=None):
     print('\nMap (orthorectify) and clip the image to the pixel map')
     abi_rad_values = abi_image.sel(x=pixel_map.dem_px_angle_x, y=pixel_map.dem_px_angle_y, method='nearest').Rad.values
     print('...done')
+	
     # Output this result to a new NetCDF file
+	#Create a new xarray dataset with the orthorectified ABI radiance values, 
+    #Lat, Lon, Elevation, and metadata from the pixel map. 
     print('\nOutput this result to a new NetCDF file')
     if out_filename == None:
         out_filename=abi_image.dataset_name+'_ortho.nc'
     print('Saving file as: {}'.format(out_filename))
-    output_ortho_netcdf(abi_rad_values, pixel_map, out_filename)
+    pixel_map['rad'] = (['latitude', 'longitude'], abi_rad_values)
+    pixel_map['tb'] = goesBrightnessTemp(pixel_map.rad)
+    pixel_map.to_netcdf(out_filename)
     print('...done')
     
-    return None
+    return pixel_map
 
 
 
 def output_ortho_netcdf(abi_rad_values, pixel_map, out_filename):
-    '''Create a new xarray dataset with the orthorectified ABI radiance values, 
-    Lat, Lon, Elevation, and metadata from the pixel map. 
-    Then export this as a new NetCDF file.'''
+
     print('\nRUNNING: output_ortho_netcdf()')
     
     # some metadata for this
     metadata = {'rad' : 'units'}
     
     # make the data array
-    rad_da = xr.DataArray(abi_rad_values, 
-                          dims=('y','x'),
-                          coords={'longitude': (['x'], pixel_map.longitude),
-                                  'latitude': (['y'], pixel_map.latitude)},
-                         attrs=metadata)
-    pixel_map['rad'] = rad_da
-    pixel_map.to_netcdf(out_filename)
+    #rad_da = xr.DataArray(abi_rad_values, 
+    #                      dims=('y','x'),
+    #                      coords={'latitude': (['y'], pixel_map.latitude),
+    #                            'longitude': (['x'], pixel_map.longitude)},
+    #                     attrs=metadata)
+
     
     return None
 
 
+def goesBrightnessTemp(rad): 
+    # for GOES emissive bands (only for the GOES-R ABI band 14 right now)
+    # TODO: Update this to work with the other emissive bands, there's a table of coefficients in the ATBD I can add here
+    fk1 = 8.51022e+03
+    fk2 = 1.28627e+03
+    bc1 = 0.22516
+    bc2 = 0.99920
+    T = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
+    return T
 
 
-
-def orthorectify(goes_filepath, orth_map_filepath):
-    '''Orthorectify an input GOES-R ABI image (netCDF input file) using a previously created ortho map (netCDF) (relating pixel locaitons to location on a DEM)''' 
-    
-    
-    
-    return None
