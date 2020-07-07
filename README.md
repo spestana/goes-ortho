@@ -22,7 +22,7 @@ This will download the GOES-16 ABI Level-1b Radiance (CONUS) product for channel
 
 ```python ./download-goes.py --bucket noaa-goes16 --year 2020 --month 2 --days 1 2 --product ABI-L1b-RadC --channel C14 --bounds 30 50 -125 -105 --dir /storage/spestana/scratchspace```
 
-or we can do the same command with short flag names:
+We can do the same command with short flag names:
 
 ```python ./download-goes.py -B noaa-goes16 -Y 2020 -M 1 -D 1 2 -p ABI-L1b-RadC -c C14 -b 30 50 -125 -105 -d /storage/spestana/scratchspace```
 
