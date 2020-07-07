@@ -43,4 +43,31 @@ CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
 ```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.643103 -119.029146 2940```
 
 ---
+
+### goes_ortho.py
+
+Functions for orthorectifying GOES-R ABI imagery using a DEM.
+
+#### Usage:
+
+```python
+# import to use these functions
+import goes_ortho
+
+# specify filepaths for inputs
+abi_filepath = '.\OR_ABI-L1b-RadC-M4C14_G16_s20171111750224_e20171111755027_c20171111755074.nc'
+dem_filepath = '.\dem.tif'
+
+# generate the pixel mapping
+pixel_map = goes_ortho.make_ortho_map(abi_filepath, dem_filepath)
+
+# orthorectify the image
+goes_ortho.orthorectify_abi_rad(abi_filepath, pixel_map, out_filename='test_ortho.nc')
+```
+
+#### Example:
+
+see the [goes-orthorectify](https://github.com/spestana/goes-view/blob/master/goes-orthorectify.ipynb) notebook for an example
+
+---
 ---
