@@ -59,9 +59,9 @@ def LonLat2ABIangle_ellipsoid(lon_deg, lat_deg, H, req, rpol, e, lon_0_deg):
 
 def subsetNetCDF(filepath,bounds):
     '''Function to crop a GOES ABI netcdf file to lat/lon bounds.
-		Inputs:
-			- filepath: path to a netcdf file
-			- bounds: list or array containing lat/lon bounds like [min_lat, max_lat, min_lon, max_lon]'''
+        Inputs:
+            - filepath: path to a netcdf file
+            - bounds: list or array containing lat/lon bounds like [min_lat, max_lat, min_lon, max_lon]'''
     # get all the files we just downloaded to "filepath"
     file_list = getListOfFiles(filepath)
     
@@ -148,8 +148,9 @@ for d in range(len(days)):
             ABI = ABI_Downloader(storage_path,bucket,year,month,days[d],hours[h],product,channel)
         
             # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
-            print('\nSubsetting files in...{}'.format(filepath[i]))
-            subsetNetCDF(filepath[i],bounds)
+            if os.path.exists(filepath[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
+                print('\nSubsetting files in...{}'.format(filepath[i]))
+                subsetNetCDF(filepath[i],bounds)
         i+=1
 
 
