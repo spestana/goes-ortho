@@ -79,5 +79,12 @@ goes_ortho.orthorectify_abi_rad(abi_filepath, pixel_map, out_filename='test_orth
 
 see the [goes-orthorectify](https://github.com/spestana/goes-view/blob/master/goes-orthorectify.ipynb) notebook for an example
 
+#### Flowchart:
+
+(work in progress)
+
+![goes-ortho-flowchart](/images/goes-ortho-flowchart.png)
+
+
 ---
 ---
