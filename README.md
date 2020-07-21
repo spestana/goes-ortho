@@ -1,16 +1,21 @@
 # goes-view
 
+Python scripts for downloading GOES ABI data (wrapper around goespy), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain/parallax correction) GOES ABI imagery using a DEM.
+
 ---
 
-### activate the environment:
+### Setting up the conda environment:
 
-```conda activate goes-linux```
+```bash
+conda env create -f environment.yml
+conda activate goes-linux; ipython kernel install --user --name goes-linux
+```
 
 ---
 
 ### download-goes.py
 
-Downloads GOES-16 or GOES-17 products/bands, requires command line arguments:
+Downloads GOES-16 or GOES-17 products/bands, requires command line arguments (wrapper around goespy.Downloader.ABI_Downloader()):
 
 #### Usage:
 
@@ -56,7 +61,9 @@ CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
 
 ### goes_ortho.py
 
-Functions for orthorectifying GOES-R ABI imagery using a DEM.
+Functions for orthorectifying GOES-R ABI imagery using a DEM. Produces an orthorectified NetCDF at the spatial resolution of the input DEM.
+
+This method uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface.
 
 #### Usage:
 
@@ -81,7 +88,7 @@ see the [goes-orthorectify](https://github.com/spestana/goes-view/blob/master/go
 
 #### Flowchart:
 
-(work in progress)
+(flowchart diagram is a work in progress)
 
 ![goes-ortho-flowchart](/images/goes-ortho-flowchart.png)
 
