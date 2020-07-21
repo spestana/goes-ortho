@@ -5,7 +5,6 @@ Script to orthorectify GOES-R ABI images that correspond with specific ASTER obs
 #-------------------------------------------------------#
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import xarray as xr
 import os
 import goes_ortho
@@ -50,10 +49,15 @@ goes_directory = "/storage/GOES/goes16"
 output_directory = "/storage/GOES/orthorectified"
 
 # pick a DEM to orthorectify with
-dem_filename = 'dem\dem2.tif'
+dem_filename = 'dem/dem2.tif'
 # The DEM I'm using here is merged/cropped around the upper Tuolumne River basin 
 # and includes Mammoth Mountain, from four tiles of SRTM (1 Arc-Second Global) 
 # retrieved from USGS EarthExplorer.
+
+print('\n\nThis script will search for ASTER geotiff files within:\n\t{}\nand for each one, will find a corresponding GOES ABI image within:\n\t{}'.format(aster_directory, goes_directory))
+print('Each corresponding GOES observation will be orthorectified and cropped to the bounds of this DEM:\n\t{}'.format(dem_filename))
+print('And the resulting orthorectified and cropped GOES ABI image will be output to:\n\t{}'.format(output_directory))
+input("\n\t\tIf this is correct, press Enter to continue...\n\t\tIf this is NOT correct, press Ctrl+C to stop the script and exit.")
 
 #-------------------------------------------------------#
 
@@ -66,7 +70,7 @@ aster_files = getListOfFiles(aster_directory)
 aster_datetimes = []
 aster_datetimes_UTC = []
 for fpath in aster_files:
-    fn = fpath.split('\\')[-1] # non-re method
+    fn = fpath.split('/')[-1]
     MM = fn.split('_')[2][3:5]
     DD = fn.split('_')[2][5:7]
     YYYY = fn.split('_')[2][7:11]
@@ -100,7 +104,7 @@ for aster_datetime_UTC in aster.datetimeUTC:
                             product='ABI-L1b-RadC', 
                             hour=aster_datetime_UTC.strftime('%H'), 
                             channel='C14')
-    # now within this subdirectory, the same hour of this ASTER observation
+	# now within this subdirectory, the same hour of this ASTER observation
     print('\nSearching for GOES ABI imagery within:\n{}{}'.format(goes_directory,goes_subdir))
     # get the filenames of each GOES ABI image in this subdirectory
     goes_files = getListOfFiles(os.path.normpath(goes_directory+goes_subdir))
@@ -111,7 +115,7 @@ for aster_datetime_UTC in aster.datetimeUTC:
     goes_dict = {}
     
     for this_goes_file in goes_files:
-        this_goes_filename = this_goes_file.split('\\')[-1]
+        this_goes_filename = this_goes_file.split('/')[-1]
         #print('\t{}'.format(this_goes_filename))
         
         # parse the timstamp in the filename 
@@ -131,20 +135,16 @@ for aster_datetime_UTC in aster.datetimeUTC:
     #print(goes_dict[nearest_goes_datetime_UTC]['filepath'])
     print('\n\tFound nearest GOES ABI image:\n\t\tASTER datetime:\t{}\n\t\tGOES datetime:\t{}\n\t\tGOES filepath:\t{}'.format(
             aster_datetime_UTC, nearest_goes_datetime_UTC, nearest_goes_filepath))
-    
     # create the output directory if it does not already exist
     output_subdir = r"{}{}".format(output_directory,goes_subdir)
     print('\n\tPreparing to output files to:\n\t{}'.format(output_subdir))
     if not os.path.exists(output_subdir):
-        os.makedirs(output_subdir)
-        
+        os.makedirs(output_subdir)   
     # create a new filename for the orthorectified image
-    new_file_name = nearest_goes_filepath.split('\\')[-1].split('.')[0] + '_orthorectified'
+    new_file_name = nearest_goes_filepath.split('/')[-1].split('.')[0] + '_orthorectified'
     print('\n\tNew files will be called:\n\t{}.*'.format(new_file_name))
-    
     # Generate the pixel mapping that relates GOES ABI pixels to points on the DEM surface
     pixel_map = goes_ortho.make_ortho_map(nearest_goes_filepath, dem_filename)
-    
     # Apply the pixel mapping to orthorectify the GOES ABI image
     ds = goes_ortho.orthorectify_abi_rad(nearest_goes_filepath, 
                                      pixel_map, 
