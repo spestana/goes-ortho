@@ -151,10 +151,10 @@ for aster_datetime_UTC in aster.datetimeUTC:
                                      out_filename='{}{}.nc'.format(output_subdir,new_file_name))
     
     # Save a copy of the new orthorectified GOES ABI image (brightness temperature) as a GeoTIFF
-    print('\nSave a copy as a brightness temperature GeoTIFF')
-    new_nc_file_path =  '{}{}.nc'.format(output_subdir,new_file_name)
-    new_gtiff_file_path = '{}{}.tif'.format(output_subdir,new_file_name)
-    !gdal_translate -a_srs EPSG:4326 -of GTiff NETCDF:$new_nc_file_path:tb $new_gtiff_file_path
+    #print('\nSave a copy as a brightness temperature GeoTIFF')
+    #new_nc_file_path =  '{}{}.nc'.format(output_subdir,new_file_name)
+    #new_gtiff_file_path = '{}{}.tif'.format(output_subdir,new_file_name)
+    #!gdal_translate -a_srs EPSG:4326 -of GTiff NETCDF:$new_nc_file_path:tb $new_gtiff_file_path
 
 
 
