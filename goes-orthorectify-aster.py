@@ -89,7 +89,7 @@ aster_counter = 0
 for aster_datetime_UTC in aster.datetimeUTC:
     # count
     aster_counter += 1
-    print('\n\n File {} of {}'.format(aster_counter, aster.shape[0])
+    print('\n\n File {} of {}'.format(aster_counter, aster.shape[0]))
     print('\nFor ASTER observation at {}'.format(aster_datetime_UTC))
     # find the GOES subdirectory for the corresponding year-month-day and hour
     goes_subdir = r"/{year}/{month}/{day}/{product}/{hour}/{channel}/".format(
