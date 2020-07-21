@@ -28,7 +28,7 @@ def getListOfFiles(dirName):
             allFiles.append(fullPath)
                 
     return allFiles
-	
+    
 def nearest(items, pivot):
     # https://stackoverflow.com/questions/32237862/find-the-closest-date-to-a-given-date
     return min(items, key=lambda x: abs(x - pivot))
@@ -87,9 +87,9 @@ aster.reset_index(inplace=True, drop=True)
 aster_counter = 0
 # for every ASTER datetime (in UTC)
 for aster_datetime_UTC in aster.datetimeUTC:
-	# count
-	aster_counter += 1
-	print('\n\n File {} of {}'.format(aster_counter, aster.shape[0])
+    # count
+    aster_counter += 1
+    print('\n\n File {} of {}'.format(aster_counter, aster.shape[0])
     print('\nFor ASTER observation at {}'.format(aster_datetime_UTC))
     # find the GOES subdirectory for the corresponding year-month-day and hour
     goes_subdir = r"/{year}/{month}/{day}/{product}/{hour}/{channel}/".format(
