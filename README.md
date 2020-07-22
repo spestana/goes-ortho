@@ -84,7 +84,9 @@ goes_ortho.orthorectify_abi_rad(abi_filepath, pixel_map, out_filename='test_orth
 
 #### Example:
 
-see the [goes-orthorectify](https://github.com/spestana/goes-view/blob/master/goes-orthorectify.ipynb) notebook for an example
+See the [goes-orthorectify](https://github.com/spestana/goes-view/blob/master/goes-orthorectify.ipynb) notebook for an example of orthorectifying a single GOES ABI image.
+
+See the [goes-orthorectify-aster.py](https://github.com/spestana/goes-view/blob/master/goes-orthorectify-aster.py) script for an example of orthorectifying a batch of GOES ABI images.
 
 #### Flowchart:
 
