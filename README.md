@@ -1,8 +1,3 @@
-# "The Mountains Are Calling, and I Must GOES" 
- 
-- [John Muir](https://en.wikipedia.org/wiki/John_Muir) if he had access to satellite remote sensing probably
-
----
 # goes-ortho
 
 The latest generation of geostationary-orbiting weather satellites make frequent observations (5-60 min) in the visible and IR wavelengths at moderate resolutions (500-~2000m) (GOES-16/17 ABI, Himawari 8/9 AHI). This lends themselves to be used to fill temporal gaps between ~12-hour repeat observations by polar-orbiting spacecraft (Aqua/Terra MODIS, SNPP VIIRS, etc). 
