@@ -1,7 +1,13 @@
-# Sub-pixel Resolution GOES ABI Terrain Correction (Orthorectification)
+# GOES ABI Terrain Correction 
+### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
+
+<img src="https://github.com/spestana/goes-view/blob/master/images/GOES-terrain-correction.gif" width="600" align="center>
+
+---
 
 The latest generation of geostationary-orbiting weather satellites make frequent observations (5-60 min) in the visible and IR wavelengths at moderate resolutions (500-~2000m) (GOES-16/17 ABI, Himawari 8/9 AHI). This lends themselves to be used to fill temporal gaps between ~12-hour repeat observations by polar-orbiting spacecraft (Aqua/Terra MODIS, SNPP VIIRS, etc). 
 However, their geostationary orbits mean that outside of their sub-satellite-point on the equator, all other view angles are off-nadir, and due to the Earth's curvature in view, actual pixel sizes increase to >6 km towards the planet's limb.
+
 
 Additionally, when viewing complex terrain such as the mountains of western CONUS, parallax affects the apparent position of the variable topography. Some portions of the ground suface may even become obscured from view completely by surrounding steep terrain with poleward-facing aspects (north-facing aspects in the Northern Hemisphere, south-facing aspects in the Southern Hemisphere).
 
@@ -9,7 +15,7 @@ Before using observations from these instruments for observing the land surface 
 
 The terrain parallax is especially visually apparent when flipping between GOES-East and GOES-West views of a mountain range like the Sierra Nevada here:
 
-<img src="https://github.com/spestana/goes-view/blob/master/images/GOES_east-west_vis.gif" width="600" >
+<img src="https://github.com/spestana/goes-view/blob/master/images/GOES_east-west_vis.gif" width="600" align="center>
 
 The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is **"sub-pixel"** because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.
 
