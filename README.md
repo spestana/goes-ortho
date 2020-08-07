@@ -1,7 +1,7 @@
 # GOES ABI Terrain Correction 
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
 
-<img src="https://github.com/spestana/goes-view/blob/master/images/GOES-terrain-correction.gif" width="600" align="center>
+<img src="https://github.com/spestana/goes-view/blob/master/images/GOES-terrain-correction.gif" width="600">
 
 ---
 
@@ -15,7 +15,7 @@ Before using observations from these instruments for observing the land surface 
 
 The terrain parallax is especially visually apparent when flipping between GOES-East and GOES-West views of a mountain range like the Sierra Nevada here:
 
-<img src="https://github.com/spestana/goes-view/blob/master/images/GOES_east-west_vis.gif" width="600" align="center>
+<img src="https://github.com/spestana/goes-view/blob/master/images/GOES_east-west_vis.gif" width="600">
 
 The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is **"sub-pixel"** because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.
 
