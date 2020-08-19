@@ -21,7 +21,8 @@ def getListOfFiles(dirName):
         if os.path.isdir(fullPath):
             allFiles = allFiles + getListOfFiles(fullPath)
         else:
-            allFiles.append(fullPath)
+            if 'C14' in fullPath:
+                allFiles.append(fullPath)
                 
     return allFiles 
 
@@ -59,7 +60,7 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     else:
         return (x,y)
 
-##############################################################	
+##############################################################    
 def goesBrightnessTemp(rad): 
     # for GOES emissive bands (only for band 14 right now)
     # TODO: Update this to work with the other emissive bands
@@ -94,9 +95,9 @@ print('Load all observations from the directory provided')
 path = indir
 file_list = []
 try:
-	file_list.append(getListOfFiles(path))
+    file_list.append(getListOfFiles(path))
 except FileNotFoundError:
-	print('Could not find files at {}'.format(path))
+    print('Could not find files at {}'.format(path))
 
 
 ##############################################################
