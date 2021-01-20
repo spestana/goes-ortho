@@ -357,12 +357,12 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                 if var == 'Rad':
                     # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
                     if f.band_id.values <= 6:
-                        ref = goesReflectance(value, f.kappa0.values)
+                        ref = goesReflectance(values[i], f.kappa0.values)
                         # add reflectance to this row's update dict
                         this_row_dict['ref_or_tb'] = ref
                     # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
                     else:
-                        tb = goesBrightnessTemp(value, f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
+                        tb = goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
                         # add brightness temperature to this row's update dict
                         this_row_dict['ref_or_tb'] = tb
             
