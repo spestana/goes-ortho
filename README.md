@@ -58,7 +58,7 @@ We can do the same command with short flag names:
 
 ### goes_ortho.make_abi_timeseries()
 
-Creates a time series of a given GOES ABI product variable for a specified poitn location. This function can take into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
+Creates a time series of a given GOES ABI product variable for a specified point location. This function can take into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
 
 <img src="examples/make_abi_timeseries_example_plot.png" width="600">
 
