@@ -56,33 +56,35 @@ We can do the same command with short flag names:
 
 ---
 
-### goes-timeseries.py
+### goes_ortho.make_abi_timeseries()
 
-Creates a time series of GOES ABI radiance values for a specified point location. This takes into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
+Creates a time series of a given GOES ABI product variable for a specified poitn location. This function can take into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
+
+<img src="examples/make_abi_timeseries_example_plot.png" width="600">
 
 #### Usage:
 
-```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l <LATITUDE> <LONGITUDE> <ELEVATION>```
+```df = make_abi_timeseries(directory, product, data_vars, lon, lat, elev, outfilepath)```
 
+**Inputs:**
+ * directory: Directory containing GOES ABI product NetCDF files (using glob, this function searches recursively and allows the use of [Unix shell-style wildcards](https://docs.python.org/3/library/glob.html))
+ * product: GOES ABI product to search directory for (using glob, this allows the use of [Unix shell-style wildcards](https://docs.python.org/3/library/glob.html))
+ * data_vars: String or list of strings, each the name of a data variable contained within the ABI product NetCDF file
+ * lon: Longitude in degrees (-180 to 180)
+ * lat: Latitude in degrees (-90 to 90)
+ * elev: Elevation in meters (above GRS80 ellipsoid) of the point of interest
+ * outfilepath: Optional filepath and filename to output a csv file of the resulting pandas dataframe
+**Returns:**
+ * df: Pandas dataframe where df.index is a pandas Timestamp of the GOES ABI observation time in UTC, and a column for each of the data_vars 
+ 
 #### Examples:
 
-Gaylor Pit @ lat=37.88175, lon=-119.31212, elev=2811:
-
-```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.88175 -119.31212 2811```
-
-
-Grand Mesa West @ lat=39.0339, lon=-108.2140, elev=3033:
-
-```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 39.0339 -108.2140 3033```
-
-
-CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
-
-```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.643103 -119.029146 2940```
-
+See [make_abi_timeseries_example.ipynb]('examples/make_abi_timeseries_example.ipynb') jupyter notebook.
+ 
 ---
 
-### goes_ortho.py
+
+### goes_ortho.make_ortho_map() and goes_ortho.orthorectify_abi_rad()
 
 Functions for orthorectifying GOES-R ABI imagery using a DEM. Produces an orthorectified NetCDF at the spatial resolution of the input DEM.
 
@@ -117,6 +119,34 @@ See the [goes-orthorectify-aster.py](https://github.com/spestana/goes-ortho/blob
 
 ![goes-ortho-flowchart](/images/goes-ortho-flowchart.png)
 
+
+---
+
+### goes-timeseries.py
+
+**NOTE: Use `goes_ortho.make_abi_timeseries()` rather than this script.**
+
+Creates a time series of GOES ABI radiance values for a specified point location. This takes into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
+
+#### Usage:
+
+```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l <LATITUDE> <LONGITUDE> <ELEVATION>```
+
+#### Examples:
+
+Gaylor Pit @ lat=37.88175, lon=-119.31212, elev=2811:
+
+```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.88175 -119.31212 2811```
+
+
+Grand Mesa West @ lat=39.0339, lon=-108.2140, elev=3033:
+
+```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 39.0339 -108.2140 3033```
+
+
+CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
+
+```python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.643103 -119.029146 2940```
 
 ---
 ---
