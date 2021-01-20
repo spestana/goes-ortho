@@ -108,7 +108,7 @@ parser.add_argument('-M','--month', required=True, type=int, help='Specify time 
 parser.add_argument('-D','--days', required=True, type=int, nargs=2, help='Specify time range to search for GOES ABI imagery (start day, stop day)')
 parser.add_argument('-p','--product', required=True, type=str, help='GOES ABI Product (e.g. ABI-L1b-RadC)')
 parser.add_argument('-c','--channel', required=True, type=str, help='GOES ABI channel/band (e.g. C14)')
-parser.add_argument('-b','--bounds', required=True, type=int, nargs=4, help='Bounds to crop GOES ABI image to (min_lat max_lat min_lon max_lon')
+parser.add_argument('-b','--bounds', required=True, type=float, nargs=4, help='Bounds to crop GOES ABI image to (min_lat max_lat min_lon max_lon')
 parser.add_argument('-d','--dir', required=True, help='Directory to save GOES ABI files (.nc)')
 args = parser.parse_args()
 
