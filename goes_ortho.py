@@ -260,7 +260,7 @@ def orthorectify_abi_rad(goes_filepath, pixel_map, out_filename=None):
         out_filename=abi_image.dataset_name+'_ortho.nc'
     print('Saving file as: {}'.format(out_filename))
     pixel_map['rad'] = (['latitude', 'longitude'], abi_rad_values)
-    pixel_map['tb'] = goesBrightnessTemp(pixel_map.rad)
+    pixel_map['tb'] = goesBrightnessTemp(pixel_map.rad, abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
     pixel_map.to_netcdf(out_filename)
     print('...done')
     
