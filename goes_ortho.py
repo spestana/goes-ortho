@@ -353,24 +353,27 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                 # find corresponding pixel data_var value nearest to these scan angles y_rad and x_rad
                 values[i] = f[var].sel(y=y_rad, x=x_rad, method='nearest').values.mean()
                 
+                # For all other products set ref_or_tb to None
+                ref_or_tb = None
                 # For ABI-L1b-Rad products only:
                 if var == 'Rad':
                     # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
                     if f.band_id.values <= 6:
-                        ref = goesReflectance(values[i], f.kappa0.values)
-                        # add reflectance to this row's update dict
-                        this_row_dict['ref_or_tb'] = ref
+                        ref_or_tb = goesReflectance(values[i], f.kappa0.values)
                     # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
                     else:
-                        tb = goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
-                        # add brightness temperature to this row's update dict
-                        this_row_dict['ref_or_tb'] = tb
+                        ref_or_tb = goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
             
             
             # create a dictionary for this row of values (where each row is a GOES-R observation time)
             this_row_dict = dict( zip(data_vars, values ))
             # add our time stamp to this dict before we update the dataframe
             this_row_dict['time'] = timestamp
+            
+            # If we have reflectance or brightness temperature to add to our dataframe
+            if ref_or_tb is not None:
+                # add reflectance or brightness temperature to this row's update dict
+                this_row_dict['ref_or_tb'] = ref_or_tb
             
             # Finally, append this_row_dict to our dataframe for this one GOES-R observation time
             df = df.append(this_row_dict, ignore_index=True)
@@ -381,6 +384,7 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
          
     # if an output filepath was provided, save the dataframe as a csv
     if outfilepath is not None:
+        print('Saving csv file to: {}'.format(outfilepath))
         df.to_csv(outfilepath)
     
     return df
