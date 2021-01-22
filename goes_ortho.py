@@ -267,6 +267,57 @@ def orthorectify_abi_rad(goes_filepath, pixel_map, out_filename=None):
     return pixel_map
 
 
+def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
+    '''Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+    orthorectify the ABI radiance values and return an xarray dataarray with those values.'''
+    print('\nRUNNING: orthorectify_abi_rad()')
+    
+    # First check, Does the projection info in the image match our mapping?
+    print('\nDoes the projection info in the image match our mapping?')
+    # Open the GOES ABI image
+    print('\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value')
+    abi_image = xr.open_dataset(goes_filepath)
+    print('perspective_point_height + semi_major_axis:\t{}\t{}'.format(abi_image.goes_imager_projection.perspective_point_height 
+                                                                       + abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.satellite_height))
+    print('semi_major_axis:\t\t\t\t{}\t{}'.format(abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.semi_major_axis))
+    print('semi_minor_axis:\t\t\t\t{}\t{}'.format(abi_image.goes_imager_projection.semi_minor_axis,
+                                                          pixel_map.semi_minor_axis))
+    print('longitude_of_projection_origin:\t\t\t{}\t\t{}'.format(abi_image.goes_imager_projection.longitude_of_projection_origin,
+                                                          pixel_map.longitude_of_projection_origin))
+    print('...done')
+    
+    # Map (orthorectify) and clip the image to the pixel map for each data variable we want
+    for var in data_vars:
+        print('\nMap (orthorectify) and clip the image to the pixel map for {}'.format(var))
+        abi_var_values = abi_image.sel(x=pixel_map.dem_px_angle_x, y=pixel_map.dem_px_angle_y, method='nearest')[var].values
+        print('...done')
+        
+        #Create a new xarray dataset with the orthorectified ABI radiance values, 
+        #Lat, Lon, Elevation, and metadata from the pixel map. 
+        pixel_map[var] = (['latitude', 'longitude'], abi_var_values)
+        # If we are looking at an ABI-L1b-Rad product, create either a reflectance (bands 1-6) or brightness temperautre (bands 7-16) dataset
+        if var == 'Rad':
+            # if we are looking at bands 1-6, compute reflectance
+            if abi_image.band_id.values[0] <= 6:
+                pixel_map['ref'] = ref_or_tb = goesReflectance(pixel_map[var], abi_image.kappa0.values)
+            # else, compute brightness temperature for bands 7-16
+            else:
+                pixel_map['tb'] = goesBrightnessTemp(pixel_map[var], abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
+        
+    # Output this result to a new NetCDF file
+    print('\nOutput this result to a new NetCDF file')
+    if out_filename == None:
+        out_filename=abi_image.dataset_name+'_ortho.nc'
+    print('Saving file as: {}'.format(out_filename))
+    
+    pixel_map.to_netcdf(out_filename)
+    print('...done')
+    
+    return pixel_map
+
+
 
 def output_ortho_netcdf(abi_rad_values, pixel_map, out_filename):
 
