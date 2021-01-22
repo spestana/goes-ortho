@@ -84,7 +84,7 @@ See [make_abi_timeseries_example.ipynb]('examples/make_abi_timeseries_example.ip
 ---
 
 
-### goes_ortho.make_ortho_map() and goes_ortho.orthorectify_abi_rad()
+### goes_ortho.orthorectify_abi() and goes_ortho.make_ortho_map()
 
 Functions for orthorectifying GOES-R ABI imagery using a DEM. Produces an orthorectified NetCDF at the spatial resolution of the input DEM.
 
@@ -100,14 +100,19 @@ import goes_ortho
 abi_filepath = '.\OR_ABI-L1b-RadC-M4C14_G16_s20171111750224_e20171111755027_c20171111755074.nc'
 dem_filepath = '.\dem.tif'
 
+# specify which data variables we want to include in the final product
+data_vars = ['Rad']
+
 # generate the pixel mapping
 pixel_map = goes_ortho.make_ortho_map(abi_filepath, dem_filepath)
 
 # orthorectify the image
-goes_ortho.orthorectify_abi_rad(abi_filepath, pixel_map, out_filename='test_ortho.nc')
+goes_ortho.orthorectify_abi(abi_filepath, pixel_map, data_vars, out_filename='test_ortho.nc')
 ```
 
 #### Example:
+
+See the [orthorectify_abi_example.ipynb](https://github.com/spestana/goes-ortho/blob/master/examples/orthorectify_abi_example.ipynb) notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
 
 See the [goes-orthorectify](https://github.com/spestana/goes-ortho/blob/master/goes-orthorectify.ipynb) notebook for an example of orthorectifying a single GOES ABI image.
 
