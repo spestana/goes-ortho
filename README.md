@@ -110,7 +110,9 @@ pixel_map = goes_ortho.make_ortho_map(abi_filepath, dem_filepath)
 goes_ortho.orthorectify_abi(abi_filepath, pixel_map, data_vars, out_filename='test_ortho.nc')
 ```
 
-#### Example:
+#### Examples:
+
+**Note:** I've also included a copy of [asp_binder_utils.py](https://github.com/uw-cryo/asp-binder-demo/blob/6f03afadc7f4c6e13422da6d5f480c7f6762b47b/asp_binder_utils.py) here which has the extremely useful `get_dem()` function for downloading geotiffs of DEMs.
 
 See the [orthorectify_abi_example.ipynb](https://github.com/spestana/goes-ortho/blob/master/examples/orthorectify_abi_example.ipynb) notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
 
