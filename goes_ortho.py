@@ -44,6 +44,52 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     return (lon,lat)
 
 
+def subset_abi_netcdf(filepath,bounds):
+    '''Function to crop a GOES ABI netcdf file to lat/lon bounds.
+        Inputs:
+            - filepath: path to a netcdf file
+            - bounds: list or array containing lat/lon bounds like [min_lat, max_lat, min_lon, max_lon]
+                      where latitude is between -90 and 90, longitude between -180 and 180'''
+
+    # Show us the bounds we'll crop images to
+    print('Subsetting \n{filepath}\n to these bounds:'.format(filepath=filepath))
+    print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[1],w=bounds[2],e=bounds[3],s=bounds[0]))
+
+    
+    # get bounds: Lat_min Lat_max Lon_min Lon_max
+    lat_south = bounds[0]
+    lat_north = bounds[1]
+    lon_west = bounds[2]
+    lon_east = bounds[3]
+    
+
+    with xr.open_dataset(filepath) as file:
+        f = file.load()
+        # Values needed for geometry calculations
+        req = f.goes_imager_projection.semi_major_axis
+        rpol = f.goes_imager_projection.semi_minor_axis
+        H = f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis
+        lon_0 = f.goes_imager_projection.longitude_of_projection_origin
+        e = 0.0818191910435 # GRS-80 eccentricity
+        # find corresponding look angles
+        x_rad_w, y_rad_s = LonLat2ABIangle(lon_west,lat_south,0,H,req,rpol,e,lon_0)
+        #print('SW Corner: {}, {}'.format(x_rad_w, y_rad_s))
+        x_rad_e, y_rad_n = LonLat2ABIangle(lon_east,lat_north,0,H,req,rpol,e,lon_0)
+        #print('NE Corner: {}, {}'.format(x_rad_e, y_rad_n))
+        # Use these coordinates to subset the whole dataset
+        y_rad_bnds, x_rad_bnds = [y_rad_n, y_rad_s], [x_rad_w, x_rad_e]
+        ds = f.sel(x=slice(*x_rad_bnds), y=slice(*y_rad_bnds))
+        
+        # Close the original file
+        f.close()
+        
+        # Overwrite the original file
+        ds.to_netcdf(filepath,'w',encoding={'x': {'dtype': 'float'},'y': {'dtype': 'float'}}) #
+    
+    return None
+
+
+
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     '''This function finds the ABI elevation (y) and scanning (x) angles (radians) of point P, 
     given a latitude and longitude (degrees)'''
