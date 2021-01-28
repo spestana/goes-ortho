@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import glob
+from asp_binder_utils import get_dem, run_bash_command
 
 
 #-------------------------------------------------------#
@@ -44,12 +45,14 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     return (lon,lat)
 
 
-def subset_abi_netcdf(filepath,bounds):
+def subset_abi_netcdf(filepath,bounds,new_filepath=None):
     '''Function to crop a GOES ABI netcdf file to lat/lon bounds.
         Inputs:
             - filepath: path to a netcdf file
             - bounds: list or array containing lat/lon bounds like [min_lat, max_lat, min_lon, max_lon]
-                      where latitude is between -90 and 90, longitude between -180 and 180'''
+                      where latitude is between -90 and 90, longitude between -180 and 180
+            - new_filepath: path and filename of new file to save the cropped image to. If not provided or set to None, this will overwrite the original file at "filepath"
+            '''
 
     # Show us the bounds we'll crop images to
     print('Subsetting \n{filepath}\n to these bounds:'.format(filepath=filepath))
@@ -63,7 +66,8 @@ def subset_abi_netcdf(filepath,bounds):
     lon_east = bounds[3]
     
 
-    with xr.open_dataset(filepath) as file:
+    with xr.open_dataset(filepath, decode_times=False) as file:
+        # NOTE: for some reason (?) I sometimes get an error "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False." so I've added decode_times=False here.
         f = file.load()
         # Values needed for geometry calculations
         req = f.goes_imager_projection.semi_major_axis
@@ -83,8 +87,12 @@ def subset_abi_netcdf(filepath,bounds):
         # Close the original file
         f.close()
         
-        # Overwrite the original file
-        ds.to_netcdf(filepath,'w',encoding={'x': {'dtype': 'float'},'y': {'dtype': 'float'}}) #
+        # If no new_filepath is provided, overwrite the existing file
+        if new_filepath == None:
+            new_filepath = filepath
+        
+        # Write the new file
+        ds.to_netcdf(new_filepath,'w',encoding={'x': {'dtype': 'float'},'y': {'dtype': 'float'}}) #
     
     return None
 
@@ -364,6 +372,27 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     return pixel_map
 
 
+def ortho(goes_image_path, data_vars, bounds, new_goes_filename):
+    '''Wraps around get_dem(), make_ortho_map(), orthorectify_abi()'''
+    
+    demtype='SRTMGL3'
+    dem_filepath = 'temp_{demtype}_DEM.tif'.format(demtype=demtype)
+    get_dem(demtype=demtype, 
+            bounds=bounds, 
+            out_fn=dem_filepath, 
+            proj='+proj=lonlat +datum=GRS80')
+    
+    # create the mapping between scan angle coordinates and lat/lon given the GOES satellite position and our DEM
+    goes_ortho_map = goes_ortho.make_ortho_map(goes_image_path, 
+                                               dem_filepath)
+    
+    # Apply the "ortho map" and save a new NetCDF file with data variables from the original file
+    goes_ds = goes_ortho.orthorectify_abi(goes_image_path, 
+                                          goes_ortho_map,
+                                          data_vars,
+                                          out_filename=new_goes_filename)
+    
+    return None
 
 def output_ortho_netcdf(abi_rad_values, pixel_map, out_filename):
 
