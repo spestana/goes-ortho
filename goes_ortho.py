@@ -11,6 +11,7 @@ Functions to orthorectify GOES-R ABI images using a DEM
 import numpy as np
 import pandas as pd
 import xarray as xr
+import os
 import glob
 from asp_binder_utils import get_dem, run_bash_command
 
@@ -372,11 +373,11 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     return pixel_map
 
 
-def ortho(goes_image_path, data_vars, bounds, new_goes_filename):
+def ortho(goes_image_path, data_vars, bounds, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True):
     '''Wraps around get_dem(), make_ortho_map(), orthorectify_abi()'''
     
-    demtype='SRTMGL3'
-    dem_filepath = 'temp_{demtype}_DEM.tif'.format(demtype=demtype)
+    if dem_filepath == None:
+        dem_filepath = 'temp_{demtype}_DEM.tif'.format(demtype=demtype)
     get_dem(demtype=demtype, 
             bounds=bounds, 
             out_fn=dem_filepath, 
@@ -391,6 +392,10 @@ def ortho(goes_image_path, data_vars, bounds, new_goes_filename):
                                goes_ortho_map,
                                data_vars,
                                out_filename=new_goes_filename)
+    
+    # If keep_dem is False, delete the temporary DEM file we downloaded
+    if keep_dem == False:
+        os.remove(dem_filepath)
     
     return None
 
