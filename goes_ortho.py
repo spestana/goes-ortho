@@ -380,17 +380,17 @@ def ortho(goes_image_path, data_vars, bounds, new_goes_filename):
     get_dem(demtype=demtype, 
             bounds=bounds, 
             out_fn=dem_filepath, 
-            proj='+proj=lonlat +datum=GRS80')
+            proj='+proj=lonlat +datum=GRS80') # make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses
     
     # create the mapping between scan angle coordinates and lat/lon given the GOES satellite position and our DEM
-    goes_ortho_map = goes_ortho.make_ortho_map(goes_image_path, 
-                                               dem_filepath)
+    goes_ortho_map = make_ortho_map(goes_image_path, 
+                                    dem_filepath)
     
     # Apply the "ortho map" and save a new NetCDF file with data variables from the original file
-    goes_ds = goes_ortho.orthorectify_abi(goes_image_path, 
-                                          goes_ortho_map,
-                                          data_vars,
-                                          out_filename=new_goes_filename)
+    goes_ds = orthorectify_abi(goes_image_path, 
+                               goes_ortho_map,
+                               data_vars,
+                               out_filename=new_goes_filename)
     
     return None
 
