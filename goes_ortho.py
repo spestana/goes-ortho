@@ -204,8 +204,7 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     print('\nOpening DEM file...')
     dem = xr.open_rasterio(dem_filepath)
     dem = dem.where(dem!=dem.nodatavals[0])[0,:,:] # replace nodata with nans
-    dem = dem.where(dem!=0) # replace zeros with nans
-    # TO DO: use elevation library or something similar to grab an SRTM3 DEM from online for this step
+    #dem = dem.where(dem!=0) # replace zeros with nans
     # Create 2D arrays of longitude and latitude from the DEM
     print('\nCreate 2D arrays of longitude and latitude from the DEM')
     X, Y = np.meshgrid(dem.x,dem.y) # Lon and Lat of each DEM grid cell
