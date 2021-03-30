@@ -508,6 +508,8 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
             # Finally, append this_row_dict to our dataframe for this one GOES-R observation time
             df = df.append(this_row_dict, ignore_index=True)
             
+    # drop duplicates if there are any, keep the first one
+    df.drop_duplicates(['time'], keep='first', inplace=True)
     
     # set the dataframe intext to the timestamp column
     df.set_index('time', inplace = True, verify_integrity = True)
