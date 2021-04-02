@@ -100,6 +100,9 @@ import goes_ortho
 abi_filepath = '.\OR_ABI-L1b-RadC-M4C14_G16_s20171111750224_e20171111755027_c20171111755074.nc'
 dem_filepath = '.\dem.tif'
 
+# download DEM (make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses)
+get_dem(demtype='SRTMGL3', bounds=(-121, 36, -118, 41), out_fn=dem_filepath, proj='+proj=lonlat +datum=GRS80') 
+
 # specify which data variables we want to include in the final product
 data_vars = ['Rad']
 
