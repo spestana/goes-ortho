@@ -79,7 +79,7 @@ Creates a time series of a given GOES ABI product variable for a specified point
  
 #### Examples:
 
-See [make_abi_timeseries_example.ipynb]('examples/make_abi_timeseries_example.ipynb') jupyter notebook.
+See [make_abi_timeseries_example.ipynb](examples/make_abi_timeseries_example.ipynb) jupyter notebook.
  
 ---
 
