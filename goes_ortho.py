@@ -341,7 +341,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     print('longitude_of_projection_origin:\t\t\t{}\t\t{}'.format(abi_image.goes_imager_projection.longitude_of_projection_origin,
                                                           pixel_map.longitude_of_projection_origin))
     print('...done')
-    
+     
     # Map (orthorectify) and clip the image to the pixel map for each data variable we want
     for var in data_vars:
         print('\nMap (orthorectify) and clip the image to the pixel map for {}'.format(var))
@@ -359,7 +359,17 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
             # else, compute brightness temperature for bands 7-16
             else:
                 pixel_map['tb'] = goesBrightnessTemp(pixel_map[var], abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
-        
+          
+    # Map (orthorectify) the original ABI Fixed Grid coordinate values to the new pixels for reference
+    print('\nMap (orthorectify) and clip the image to the pixel map for ABI Fixed Grid coordinates')
+    abi_fixed_grid_x_values = abi_image.sel(x=pixel_map.dem_px_angle_x.values.ravel(), method='nearest').x.values
+    abi_fixed_grid_y_values = abi_image.sel(y=pixel_map.dem_px_angle_y.values.ravel(), method='nearest').y.values
+    abi_fixed_grid_x_values_reshaped = np.reshape(abi_fixed_grid_x_values, pixel_map.dem_px_angle_x.shape)
+    abi_fixed_grid_y_values_reshaped = np.reshape(abi_fixed_grid_y_values, pixel_map.dem_px_angle_y.shape)
+    pixel_map['abi_fixed_grid_x'] = (('latitude', 'longitude'), abi_fixed_grid_x_values_reshaped)
+    pixel_map['abi_fixed_grid_y'] = (('latitude', 'longitude'), abi_fixed_grid_y_values_reshaped)
+    print('...done')
+    
     # Output this result to a new NetCDF file
     print('\nOutput this result to a new NetCDF file')
     if out_filename == None:
