@@ -370,6 +370,18 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     pixel_map['abi_fixed_grid_y'] = (('latitude', 'longitude'), abi_fixed_grid_y_values_reshaped)
     print('...done')
     
+    print('\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)')
+    # Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
+    # Create unique values for every "zone" (the GOES ABI pixel footprints) with the same ABI Fixed Grid X and Y values
+    unique_values = pixel_map.abi_fixed_grid_x.values*(pixel_map.abi_fixed_grid_y.values.max()+1) + pixel_map.abi_fixed_grid_y.values
+    # Find the index of all unique values we just created
+    _,idx = np.unique(unique_values, return_inverse=True)
+    # Use these indices, reshaped to the original shape, as our zone labels
+    zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
+    # Add the zone_labels to the dataset
+    pixel_map['zone_labels'] = (('latitude', 'longitude'), zone_labels)
+    print('...done')
+    
     # Output this result to a new NetCDF file
     print('\nOutput this result to a new NetCDF file')
     if out_filename == None:
