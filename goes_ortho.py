@@ -234,10 +234,10 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     
                 # Information about the DEM source file
                 'dem_file': dem_filepath,
-                'dem_crs' : dem.crs,
-                'dem_transform' : dem.transform,
-                'dem_res' : dem.res,
-                'dem_ifov': -9999, # TO DO
+                #'dem_crs' : dem.crs,
+                #'dem_transform' : dem.transform,
+                #'dem_res' : dem.res,
+                #'dem_ifov': -9999, # TO DO
         
                 'dem_file_info': 'filename of dem file used to create this mapping',
                 'dem_crs_info' : 'coordinate reference system from DEM geotiff',
@@ -543,5 +543,44 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
     
     return df
 
+def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
+    
+    '''
+    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.
+        See more details from NOAA here: 
+        https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx
+    
+    Inputs:
+        GOES-R satellite position
+            lat_ssp: sub-satellite point latitude [degrees]
+            lon_ssp: sub-satellite point longitude [degrees]
+    
+        View point (on Earth's surface) position
+            lat: view point latitude on Earth's surfaace [degrees]
+            lon: view point longitude on Earth's surface [degrees]
+            elev: view point elevation (heigh above GRS80 ellispoid) [km]
+            
+        Earth model parameters (optional)
+            H: satellite distance to Earth center [km] (defaults to 42164.16 km)
+            r_eq: Earth semi-major axis (GRS80 ellipsoid) [km] (defaults to 6378.137 km)
+            
+    Returns:
+        LZA: local zenith angle [degrees]
+        is_point_visible: True/False flag indicating if the ground point is actually visible to the satellite
+    
+    '''
 
+    # intermediate calculation
+    B = np.arccos( np.cos(np.radians(lat)-np.radians(lat_ssp)) * np.cos(np.radians(lon)-np.radians(lon_ssp)) )
+
+    # determine if point is visible to the satellite
+    is_point_visible = (B < np.arccos(r_eq / (H+r_eq)))
+
+    # compute LZA
+    LZA_radians = np.arcsin( (H * np.sin(B) ) / ( np.sqrt( H**2 + r_eq**2 - 2*H*r_eq*np.cos(B) ) ) )
+    
+    # convert LZA from radians to degrees
+    LZA = LZA_radians * 180/np.pi
+    
+    return LZA, is_point_visible
 
