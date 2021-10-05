@@ -1,7 +1,7 @@
 # GOES ABI Terrain Correction 
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
 
-<img src="/images/GOES-terrain-correction.gif width="600">
+<img src="/images/GOES-terrain-correction.gif" width="600">
 
 ---
 
