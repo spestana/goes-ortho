@@ -1,0 +1,22 @@
+name: goes_ortho
+description: Tools for orthorectifying GOES-R ABI images
+author:
+  name: Steven Pestana
+  email: spestana@uw.edu
+dependencies:
+  - goespy
+  - pandas
+  - numpy
+  - xarray
+  - os
+  - glob
+  - sys
+  - argparse
+  - matplotlib
+  - mpl_toolkits
+  - rasterio
+  - gdal
+  - pyproj
+  - subprocess
+  - 
+github-id: spestana
