@@ -398,7 +398,7 @@ def ortho(goes_image_path, data_vars, bounds, new_goes_filename, dem_filepath=No
     '''Wraps around get_dem(), make_ortho_map(), orthorectify_abi()'''
     
     if dem_filepath == None:
-        dem_filepath = 'temp_{demtype}_DEM.tif'.format(demtype=demtype)
+        dem_filepath = 'temp_{demtype}_{bounds}_DEM.tif'.format(demtype=demtype,bounds='_'.join([str(b) for b in bounds]))
     get_dem(demtype=demtype, 
             bounds=bounds, 
             out_fn=dem_filepath, 
