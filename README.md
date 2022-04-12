@@ -1,4 +1,9 @@
 # GOES ABI Terrain Correction 
+
+
+[![DOI](https://zenodo.org/badge/281728618.svg)](https://zenodo.org/badge/latestdoi/281728618)
+
+
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
 
 <img src="images/GOES-terrain-correction.gif" width="600">
