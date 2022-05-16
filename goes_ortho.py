@@ -394,13 +394,14 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     return pixel_map
 
 
-def ortho(goes_image_path, data_vars, bounds, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True):
+def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True):
     '''Wraps around get_dem(), make_ortho_map(), orthorectify_abi()'''
     
     if dem_filepath == None:
         dem_filepath = 'temp_{demtype}_{bounds}_DEM.tif'.format(demtype=demtype,bounds='_'.join([str(b) for b in bounds]))
     get_dem(demtype=demtype, 
-            bounds=bounds, 
+            bounds=bounds,
+            api_key=api_key,
             out_fn=dem_filepath, 
             proj='+proj=lonlat +datum=GRS80') # make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses
     

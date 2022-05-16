@@ -119,7 +119,7 @@ def download_srtm(raster,outfn):
     elevation.clean()
     
     
-def get_dem(demtype, bounds, out_fn=None, proj='EPSG:4326'):
+def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
     download a DEM of choice from OpenTopography World DEM
     ## first written by David Shean
@@ -141,13 +141,13 @@ def get_dem(demtype, bounds, out_fn=None, proj='EPSG:4326'):
     import requests
     from distutils.spawn import find_executable
     ### From David Shean
-    base_url="https://portal.opentopography.org/API/globaldem?demtype={}&west={}&south={}&east={}&north={}&outputFormat=GTiff"
+    base_url="https://portal.opentopography.org/API/globaldem?demtype={}&west={}&south={}&east={}&north={}&outputFormat=GTiff&API_Key={}"
     if out_fn is None:
         out_fn = '{}.tif'.format(demtype)
     if not os.path.exists(out_fn):
         #Prepare API request url
         #Bounds should be [minlon, minlat, maxlon, maxlat]
-        url = base_url.format(demtype, *bounds)
+        url = base_url.format(demtype, *bounds, api_key)
         print(url)
         #Get
         response = requests.get(url)
