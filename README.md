@@ -1,7 +1,12 @@
 # GOES ABI Terrain Correction 
+
+
+[![DOI](https://zenodo.org/badge/281728618.svg)](https://zenodo.org/badge/latestdoi/281728618)
+
+
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
 
-<img src="https://github.com/spestana/goes-ortho/blob/master/images/GOES-terrain-correction.gif" width="600">
+<img src="images/GOES-terrain-correction.gif" width="600">
 
 ---
 
@@ -15,13 +20,13 @@ Before using observations from these instruments for observing the land surface 
 
 The terrain parallax is especially visually apparent when flipping between GOES-East and GOES-West views of a mountain range like the Sierra Nevada here:
 
-<img src="https://github.com/spestana/goes-ortho/blob/master/images/GOES_east-west_vis.gif" width="600">
+<img src="images/GOES_east-west_vis.gif" width="600">
 
 The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is **"sub-pixel"** because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.
 
 The figure below (from the GOES ABI ATBD) illustrates the satellite's viewing geometry. The orthorectification method developed here modifies point P on the Earth's surface using information from a DEM about its elevation relative to the reference ellipsoid.
 
-<img src="https://github.com/spestana/goes-ortho/blob/master/images/ABIgrid.png" width="600" >
+<img src="images/ABIgrid.png" width="600" >
 
 These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the [goespy](https://github.com/palexandremello/goes-py) library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California). 
 
@@ -117,11 +122,11 @@ goes_ortho.orthorectify_abi(abi_filepath, pixel_map, data_vars, out_filename='te
 
 **Note:** I've also included a copy of [asp_binder_utils.py](https://github.com/uw-cryo/asp-binder-demo/blob/6f03afadc7f4c6e13422da6d5f480c7f6762b47b/asp_binder_utils.py) here which has the extremely useful `get_dem()` function for downloading geotiffs of DEMs.
 
-See the [orthorectify_abi_example.ipynb](https://github.com/spestana/goes-ortho/blob/master/examples/orthorectify_abi_example.ipynb) notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
+See the [orthorectify_abi_example.ipynb](https://github.com/spestana/goes-ortho/blob/main/examples/orthorectify_abi_example.ipynb) notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
 
-See the [goes-orthorectify](https://github.com/spestana/goes-ortho/blob/master/goes-orthorectify.ipynb) notebook for an example of orthorectifying a single GOES ABI image.
+See the [goes-orthorectify](https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify.ipynb) notebook for an example of orthorectifying a single GOES ABI image.
 
-See the [goes-orthorectify-aster.py](https://github.com/spestana/goes-ortho/blob/master/goes-orthorectify-aster.py) script for an example of orthorectifying a batch of GOES ABI images.
+See the [goes-orthorectify-aster.py](https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify-aster.py) script for an example of orthorectifying a batch of GOES ABI images.
 
 #### Flowchart:
 
