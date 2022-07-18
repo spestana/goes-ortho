@@ -585,3 +585,11 @@ def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
     
     return LZA, is_point_visible
 
+def goes_azi(lat_ssp, lon_ssp, lat, lon):
+    
+    '''quick calculation of azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
+    http://tiij.org/issues/issues/3_2/3_2e.html'''
+    
+    azi = 180 + np.degrees( np.arctan(np.tan(np.radians(lon_ssp - lon))/np.sin(np.radians(lat))) )
+    
+    return azi.T
