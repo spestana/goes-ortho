@@ -473,63 +473,67 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                                                                                                  z=z))
     print('Reading:')
     for filename in file_list:
-        print('{}'.format(filename), end='\r')
+        try:
+            print('{}'.format(filename), end='\r')
     
-        with xr.open_dataset(filename, decode_times=False) as f:
-            # I've included "decode_times=False" to this xr.open_dataset because I've encountered some ABI-L2-ACMC files where the timestamp couldn't be read
-            # and xarray gave a "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False."
-            # I've also switched which timestamp from the ABI files I'm reading (was f.time_bounds.values.min(), now f.time_coverage_start)
+            with xr.open_dataset(filename, decode_times=False) as f:
+                # I've included "decode_times=False" to this xr.open_dataset because I've encountered some ABI-L2-ACMC files where the timestamp couldn't be read
+                # and xarray gave a "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False."
+                # I've also switched which timestamp from the ABI files I'm reading (was f.time_bounds.values.min(), now f.time_coverage_start)
                        
-            # Read goes_imager_projection values needed for geometry calculations           
-            # and compute the corresponding look angles (in radiance) for the lat, lon, elevation we are interested in
-            x_rad, y_rad = LonLat2ABIangle(lon,
-                                           lat,
-                                           z,
-                                           f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
-                                           f.goes_imager_projection.semi_major_axis,
-                                           f.goes_imager_projection.semi_minor_axis,
-                                           0.0818191910435, # GRS-80 eccentricity
-                                           f.goes_imager_projection.longitude_of_projection_origin)
+                # Read goes_imager_projection values needed for geometry calculations           
+                # and compute the corresponding look angles (in radiance) for the lat, lon, elevation we are interested in
+                x_rad, y_rad = LonLat2ABIangle(lon,
+                                               lat,
+                                               z,
+                                               f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
+                                               f.goes_imager_projection.semi_major_axis,
+                                               f.goes_imager_projection.semi_minor_axis,
+                                               0.0818191910435, # GRS-80 eccentricity
+                                               f.goes_imager_projection.longitude_of_projection_origin)
         
-            # get the timestamp for this observation (these should all be UTC, but I am removing timezone info because not all timestamps are converting the same way, and I was getting a "Cannot compare tz-naive and tz-aware timestamps" error)
-            timestamp = pd.Timestamp(f.time_coverage_start).replace(tzinfo=None)
+                # get the timestamp for this observation (these should all be UTC, but I am removing timezone info because not all timestamps are converting the same way, and I was getting a "Cannot compare tz-naive and tz-aware timestamps" error)
+                timestamp = pd.Timestamp(f.time_coverage_start).replace(tzinfo=None)
             
-            # create an empty dictionary we will populate with values from file f
-            this_row_dict = {}
+                # create an empty dictionary we will populate with values from file f
+                this_row_dict = {}
             
-            # create an empty list of the same length as data_vars to hold each variable's value
-            values = ['' for v in data_vars]
+                # create an empty list of the same length as data_vars to hold each variable's value
+                values = ['' for v in data_vars]
             
-            # For each variable we are interested, specified in the list "data_vars"
-            for i, var in enumerate(data_vars):
+                # For each variable we are interested, specified in the list "data_vars"
+                for i, var in enumerate(data_vars):
                             
-                # find corresponding pixel data_var value nearest to these scan angles y_rad and x_rad
-                values[i] = f[var].sel(y=y_rad, x=x_rad, method='nearest').values.mean()
+                    # find corresponding pixel data_var value nearest to these scan angles y_rad and x_rad
+                    values[i] = f[var].sel(y=y_rad, x=x_rad, method='nearest').values.mean()
                 
-                # For all other products set ref_or_tb to None
-                ref_or_tb = None
-                # For ABI-L1b-Rad products only:
-                if var == 'Rad':
-                    # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
-                    if f.band_id.values <= 6:
-                        ref_or_tb = goesReflectance(values[i], f.kappa0.values)
-                    # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
-                    else:
-                        ref_or_tb = goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
+                    # For all other products set ref_or_tb to None
+                    ref_or_tb = None
+                    # For ABI-L1b-Rad products only:
+                    if var == 'Rad':
+                        # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
+                        if f.band_id.values <= 6:
+                            ref_or_tb = goesReflectance(values[i], f.kappa0.values)
+                        # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
+                        else:
+                            ref_or_tb = goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
             
             
-            # create a dictionary for this row of values (where each row is a GOES-R observation time)
-            this_row_dict = dict( zip(data_vars, values ))
-            # add our time stamp to this dict before we update the dataframe
-            this_row_dict['time'] = timestamp
+                # create a dictionary for this row of values (where each row is a GOES-R observation time)
+                this_row_dict = dict( zip(data_vars, values ))
+                # add our time stamp to this dict before we update the dataframe
+                this_row_dict['time'] = timestamp
             
-            # If we have reflectance or brightness temperature to add to our dataframe
-            if ref_or_tb is not None:
-                # add reflectance or brightness temperature to this row's update dict
-                this_row_dict['ref_or_tb'] = ref_or_tb
+                # If we have reflectance or brightness temperature to add to our dataframe
+                if ref_or_tb is not None:
+                    # add reflectance or brightness temperature to this row's update dict
+                    this_row_dict['ref_or_tb'] = ref_or_tb
             
-            # Finally, append this_row_dict to our dataframe for this one GOES-R observation time
-            df = df.append(this_row_dict, ignore_index=True)
+                # Finally, append this_row_dict to our dataframe for this one GOES-R observation time
+                df = df.append(this_row_dict, ignore_index=True)
+        except AttributeError as e:
+            print(e)
+            pass
             
     # drop duplicates if there are any, keep the first one
     df.drop_duplicates(['time'], keep='first', inplace=True)
