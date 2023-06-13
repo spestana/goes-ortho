@@ -260,25 +260,3 @@ def make_nested_abi_timeseries(directory, product, data_vars, lon, lat, z, outfi
     return df
 
 
-def get_nested_coords(ds, x_rad, y_rad):
-    
-    ''' given the coordinates of a single point in radians: x_rad, y_rad (ABI Fixed Grid coordinates)
-        find within ds (GOES ABI-L1b-Rad, any of the 2km bands) the coordinates of the nearest "2 km" (56 urad) pixel center,
-        the coordinates of each of the pixel centers of the four "1 km" (28 urad) pixels,
-        and the sixteen "500 m" (14 urad) pixels that are nested within the "2 km" pixel. '''
-    
-    # "2 km" pixel coordinate
-    nearest_xs = ds.sel(x=x_rad, y=y_rad, method="nearest").x
-    nearest_ys = ds.sel(x=x_rad, y=y_rad, method="nearest").y
-    nearest_xs_2km, nearest_ys_2km = np.meshgrid(nearest_xs, nearest_ys)
-    
-    # "1 km" pixel coordinates
-    nearest_xs_1km, nearest_ys_1km = np.meshgrid(np.linspace(nearest_xs_2km[0][0]-(28e-6)*0.5, nearest_xs_2km[0][0]+(28e-6)*0.5, num=2), \
-                                                 np.linspace(nearest_ys_2km[0][0]-(28e-6)*0.5, nearest_ys_2km[0][0]+(28e-6)*0.5, num=2))
-
-    # "500 m" pixel coordinates
-    nearest_xs_500m, nearest_ys_500m = np.meshgrid(np.linspace(nearest_xs_2km[0][0]-(14e-6)*1.5, nearest_xs_2km[0][0]+(14e-6)*1.5, num=4), \
-                                                   np.linspace(nearest_ys_2km[0][0]-(14e-6)*1.5, nearest_ys_2km[0][0]+(14e-6)*1.5, num=4))
-
-
-    return nearest_xs_2km, nearest_ys_2km, nearest_xs_1km, nearest_ys_1km, nearest_xs_500m, nearest_ys_500m

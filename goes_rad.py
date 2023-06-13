@@ -8,7 +8,19 @@ For background information, see:
 """
 
 import pandas as pd
+import numpy as np
 
+
+def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2): 
+    ''' Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)'''
+    Tb = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
+    return Tb
+
+
+def goesReflectance(rad, kappa): 
+    ''' Convert Radiance to Reflectance for GOES-R ABI reflective bands (1-6)'''
+    ref = kappa * rad
+    return ref
 
 def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     ''' Convert GOES ABI Radiance units from
