@@ -9,6 +9,7 @@ import xarray as xr
 import os
 import glob
 from asp_binder_utils import get_dem, run_bash_command
+from goes_geometry import LonLat2ABIangle
 
   
 
