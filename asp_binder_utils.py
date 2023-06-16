@@ -3,7 +3,7 @@ import os,sys,glob
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import rasterio
-from osgeo import gdal
+from osgeo import gdal # can't just do import gdal, have to do import osgeo.gdal
 from pyproj import Proj, transform
 import subprocess
 
