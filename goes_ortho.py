@@ -204,6 +204,7 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     print('\nOpening DEM file...')
     dem = xr.open_rasterio(dem_filepath)
     dem = dem.where(dem!=dem.nodatavals[0])[0,:,:] # replace nodata with nans
+    dem = dem.fillna(0) # fill nans with zeros for the ocean (temporary fix for fog project)
     #dem = dem.where(dem!=0) # replace zeros with nans
     # Create 2D arrays of longitude and latitude from the DEM
     print('\nCreate 2D arrays of longitude and latitude from the DEM')
@@ -260,8 +261,8 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
                     'elevation':          (['latitude', 'longitude'], dem.values)
                     },
         
-                    coords={'longitude':  (['longitude'], dem.x),
-                            'latitude':   (['latitude'], dem.y),
+                    coords={'longitude':  (['longitude'], dem.x.data),
+                            'latitude':   (['latitude'], dem.y.data),
                             'dem_px_angle_x':     (['latitude', 'longitude'],  abi_grid_x),
                             'dem_px_angle_y':     (['latitude', 'longitude'],  abi_grid_y)},
                     
