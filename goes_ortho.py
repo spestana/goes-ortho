@@ -260,8 +260,8 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
                     'elevation':          (['latitude', 'longitude'], dem.values)
                     },
         
-                    coords={'longitude':  (['longitude'], dem.x),
-                            'latitude':   (['latitude'], dem.y),
+                    coords={'longitude':  (['longitude'], dem.x.data),
+                            'latitude':   (['latitude'], dem.y.data),
                             'dem_px_angle_x':     (['latitude', 'longitude'],  abi_grid_x),
                             'dem_px_angle_y':     (['latitude', 'longitude'],  abi_grid_y)},
                     
