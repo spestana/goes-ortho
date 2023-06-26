@@ -91,7 +91,9 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                     this_row_dict['ref_or_tb'] = ref_or_tb
             
                 # Finally, append this_row_dict to our dataframe for this one GOES-R observation time
-                df = df.append(this_row_dict, ignore_index=True)
+                this_row_df = pd.DataFrame(this_row_dict, index = [0])
+                df = pd.concat([df, this_row_df], ignore_index=True)
+
         except AttributeError as e:
             print(e)
             pass
@@ -258,5 +260,3 @@ def make_nested_abi_timeseries(directory, product, data_vars, lon, lat, z, outfi
         df.to_csv(outfilepath)
     
     return df
-
-
