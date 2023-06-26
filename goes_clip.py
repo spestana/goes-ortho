@@ -2,7 +2,6 @@
 Functions for clipping GOES ABI imagery to smaller areas
 '''
 
-
 import xarray as xr
 import os
 from goes_geometry import LonLat2ABIangle
@@ -19,14 +18,12 @@ def subset_abi_netcdf(filepath,bounds,new_filepath=None):
     # Show us the bounds we'll crop images to
     print('Subsetting \n{filepath}\n to these bounds:'.format(filepath=filepath))
     print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[1],w=bounds[2],e=bounds[3],s=bounds[0]))
-
     
     # get bounds: Lat_min Lat_max Lon_min Lon_max
     lat_south = bounds[0]
     lat_north = bounds[1]
     lon_west = bounds[2]
-    lon_east = bounds[3]
-    
+    lon_east = bounds[3]  
 
     with xr.open_dataset(filepath, decode_times=False) as file:
         # NOTE: for some reason (?) I sometimes get an error "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False." so I've added decode_times=False here.

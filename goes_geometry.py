@@ -3,8 +3,6 @@ Geometry functions for GOES-R ABI imagery
 """
 
 import numpy as np
-import pandas as pd
-import xarray as xr
 
 def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     '''This function finds the latitude and longitude (degrees) of point P 
