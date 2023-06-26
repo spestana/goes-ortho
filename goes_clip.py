@@ -93,9 +93,9 @@ def subsetNetCDF(filepath,bounds):
             x_rad_ne, y_rad_ne = LonLat2ABIangle_ellipsoid(lon_east,lat_north,H,req,rpol,e,lon_0)
             print('NE Corner: {}, {}'.format(x_rad_ne, y_rad_ne))
             # choose the bounds that cover the largest extent
-            y_rad_s = min(y_rad_sw, y_rad_se) # choose southern-most coordinate (latitudes ate -90 to 90)
+            y_rad_s = min(y_rad_sw, y_rad_se) # choose southern-most coordinate (scan angle in radians)
             y_rad_n = max(y_rad_nw, y_rad_ne) # northern-most
-            x_rad_e = max(x_rad_se, x_rad_ne) # eastern-most (longitudes are -180 to 180)
+            x_rad_e = max(x_rad_se, x_rad_ne) # eastern-most (scan angle in radians)
             x_rad_w = min(x_rad_sw, x_rad_nw) # western-most
             print('Corner coords chosen: N: {}, S: {}; E: {}, W: {}'.format(y_rad_n, y_rad_s, x_rad_e, x_rad_w))
             # Use these coordinates to subset the whole dataset
