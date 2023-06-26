@@ -83,12 +83,21 @@ def subsetNetCDF(filepath,bounds):
             lon_0 = f.goes_imager_projection.longitude_of_projection_origin
             e = 0.0818191910435 # GRS-80 eccentricity
 
-            # find corresponding look angles
-            x_rad_w, y_rad_s = LonLat2ABIangle_ellipsoid(lon_west,lat_south,H,req,rpol,e,lon_0)
-            #print('SW Corner: {}, {}'.format(x_rad_w, y_rad_s))
-            x_rad_e, y_rad_n = LonLat2ABIangle_ellipsoid(lon_east,lat_north,H,req,rpol,e,lon_0)
-            #print('NE Corner: {}, {}'.format(x_rad_e, y_rad_n))
-
+            # find corresponding look angles for the four corners
+            x_rad_sw, y_rad_sw = LonLat2ABIangle_ellipsoid(lon_west,lat_south,H,req,rpol,e,lon_0)
+            print('SW Corner: {}, {}'.format(x_rad_sw, y_rad_sw))
+            x_rad_se, y_rad_se = LonLat2ABIangle_ellipsoid(lon_east,lat_south,H,req,rpol,e,lon_0)
+            print('SE Corner: {}, {}'.format(x_rad_se, y_rad_se))
+            x_rad_nw, y_rad_nw = LonLat2ABIangle_ellipsoid(lon_west,lat_north,H,req,rpol,e,lon_0)
+            print('NW Corner: {}, {}'.format(x_rad_nw, y_rad_nw))
+            x_rad_ne, y_rad_ne = LonLat2ABIangle_ellipsoid(lon_east,lat_north,H,req,rpol,e,lon_0)
+            print('NE Corner: {}, {}'.format(x_rad_ne, y_rad_ne))
+            # choose the bounds that cover the largest extent
+            y_rad_s = min(y_rad_sw, y_rad_se) # choose southern-most coordinate (latitudes ate -90 to 90)
+            y_rad_n = max(y_rad_nw, y_rad_ne) # northern-most
+            x_rad_e = max(x_rad_se, x_rad_ne) # eastern-most (longitudes are -180 to 180)
+            x_rad_w = min(x_rad_sw, x_rad_nw) # western-most
+            print('Corner coords chosen: N: {}, S: {}; E: {}, W: {}'.format(y_rad_n, y_rad_s, x_rad_e, x_rad_w))
             # Use these coordinates to subset the whole dataset
             y_rad_bnds, x_rad_bnds = [y_rad_n, y_rad_s], [x_rad_w, x_rad_e]
             ds = f.sel(x=slice(*x_rad_bnds), y=slice(*y_rad_bnds))
