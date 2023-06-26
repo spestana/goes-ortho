@@ -33,38 +33,6 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     
     return (lon,lat)
 
-def LonLat2ABIangle_ellipsoid(lon_deg, lat_deg, H, req, rpol, e, lon_0_deg):
-    '''Find the ABI elevation (y) and scanning (x) angles (radians) of point P , given a latitude and longitude (degrees)
-    NOTE: this assumes the ideal ellipsoidal shape of the Earth defined by GRS80'''
-
-    # convert lat and lon from degrees to radians
-    lon = np.radians(lon_deg)
-    lat = np.radians(lat_deg)
-    lon_0 = np.radians(lon_0_deg)
-      
-    # geocentric latitude
-    lat_geo = np.arctan( (rpol**2 / req**2) * np.tan(lat) )
-
-    # geocentric distance to point on the ellipsoid
-    rc = rpol / np.sqrt(1 - (e**2)*(np.cos(lat_geo)**2)) # this is rc if point is on the ellipsoid
-
-    # intermediate calculations
-    Sx = H - rc * np.cos(lat_geo) * np.cos(lon - lon_0)
-    Sy = -rc * np.cos(lat_geo) * np.sin(lon - lon_0)
-    Sz = rc * np.sin(lat_geo)
-    
-    # calculate x and y scan angles
-    y = np.arctan( Sz / Sx )
-    x = np.arcsin( -Sy / np.sqrt( Sx**2 + Sy**2 + Sz**2 ) )
-    
-    # determine if this point is visible to the satellite
-    condition = ( H * (H-Sx) ) < ( Sy**2 + (req**2 / rpol**2)*Sz**2 )
-    if condition == True:
-        print('Point at {},{} not visible to satellite.'.format(lon_deg,lat_deg))
-        return (np.nan, np.nan)
-    else:
-        return (x,y)
-
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     '''This function finds the ABI elevation (y) and scanning (x) angles (radians) of point P, 
     given a latitude and longitude (degrees)'''
@@ -78,8 +46,9 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     lat_geo = np.arctan( (rpol**2 / req**2) * np.tan(lat) )
 
     # geocentric distance to point on the ellipsoid
-    _rc = rpol / np.sqrt(1 - (e**2)*(np.cos(lat_geo)**2)) # this is rc if point is on the ellipsoid
-    rc = _rc + z # this is rc if the point is offset from the ellipsoid by z (meters)
+    rc = rpol / np.sqrt(1 - (e**2)*(np.cos(lat_geo)**2)) # this is rc if point is on the ellipsoid
+    if z != 0:
+        rc = rc + z # this is rc if the point is offset from the ellipsoid by z (meters)
 
     # intermediate calculations
     Sx = H - rc * np.cos(lat_geo) * np.cos(lon - lon_0)
