@@ -45,7 +45,7 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
 
     # geocentric distance to point on the ellipsoid
     rc = rpol / np.sqrt(1 - (e**2)*(np.cos(lat_geo)**2)) # this is rc if point is on the ellipsoid
-    if z != 0:
+    if ~isinstance(z, int):
         rc = rc + z # this is rc if the point is offset from the ellipsoid by z (meters)
 
     # intermediate calculations
