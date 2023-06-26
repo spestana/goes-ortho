@@ -189,7 +189,8 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     
     # Open the GOES ABI image
     print('\nOpening GOES ABI image...')
-    abi_image = xr.open_dataset(goes_filepath)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
+    # NOTE: for some reason (?) I sometimes get an error "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False." so I've added decode_times=False here.
     # Get inputs: projection information from the ABI radiance product (values needed for geometry calculations)
     print('\nGet inputs: projection information from the ABI radiance product')
     req = abi_image.goes_imager_projection.semi_major_axis
@@ -331,7 +332,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     print('\nDoes the projection info in the image match our mapping?')
     # Open the GOES ABI image
     print('\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value')
-    abi_image = xr.open_dataset(goes_filepath)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
     print('perspective_point_height + semi_major_axis:\t{}\t{}'.format(abi_image.goes_imager_projection.perspective_point_height 
                                                                        + abi_image.goes_imager_projection.semi_major_axis,
                                                           pixel_map.satellite_height))
@@ -367,21 +368,24 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     abi_fixed_grid_y_values = abi_image.sel(y=pixel_map.dem_px_angle_y.values.ravel(), method='nearest').y.values
     abi_fixed_grid_x_values_reshaped = np.reshape(abi_fixed_grid_x_values, pixel_map.dem_px_angle_x.shape)
     abi_fixed_grid_y_values_reshaped = np.reshape(abi_fixed_grid_y_values, pixel_map.dem_px_angle_y.shape)
-    pixel_map['abi_fixed_grid_x'] = (('latitude', 'longitude'), abi_fixed_grid_x_values_reshaped)
-    pixel_map['abi_fixed_grid_y'] = (('latitude', 'longitude'), abi_fixed_grid_y_values_reshaped)
+    #pixel_map['abi_fixed_grid_x'] = (('latitude', 'longitude'), abi_fixed_grid_x_values_reshaped)
+    #pixel_map['abi_fixed_grid_y'] = (('latitude', 'longitude'), abi_fixed_grid_y_values_reshaped)
     print('...done')
+
+    # drop DEM from dataset
+    pixel_map = pixel_map.drop(['elevation'])
     
-    print('\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)')
-    # Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
-    # Create unique values for every "zone" (the GOES ABI pixel footprints) with the same ABI Fixed Grid X and Y values
-    unique_values = pixel_map.abi_fixed_grid_x.values*(pixel_map.abi_fixed_grid_y.values.max()+1) + pixel_map.abi_fixed_grid_y.values
-    # Find the index of all unique values we just created
-    _,idx = np.unique(unique_values, return_inverse=True)
-    # Use these indices, reshaped to the original shape, as our zone labels
-    zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
-    # Add the zone_labels to the dataset
-    pixel_map['zone_labels'] = (('latitude', 'longitude'), zone_labels)
-    print('...done')
+    #print('\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)')
+    ## Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
+    ## Create unique values for every "zone" (the GOES ABI pixel footprints) with the same ABI Fixed Grid X and Y values
+    #unique_values = pixel_map.abi_fixed_grid_x.values*(pixel_map.abi_fixed_grid_y.values.max()+1) + pixel_map.abi_fixed_grid_y.values
+    ## Find the index of all unique values we just created
+    #_,idx = np.unique(unique_values, return_inverse=True)
+    ## Use these indices, reshaped to the original shape, as our zone labels
+    #zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
+    ## Add the zone_labels to the dataset
+    #pixel_map['zone_labels'] = (('latitude', 'longitude'), zone_labels)
+    #print('...done')
     
     # Output this result to a new NetCDF file
     print('\nOutput this result to a new NetCDF file')
