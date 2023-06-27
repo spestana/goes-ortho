@@ -1,12 +1,18 @@
 name: Python Package using Conda
 
-on: [push]
+on:
+  push:
+    branches: [ "re-org" ]
+  pull_request:
+    branches: [ "re-org" ]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 5
 
     steps:
     - uses: actions/checkout@v3
