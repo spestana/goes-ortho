@@ -29,9 +29,9 @@ jobs:
         conda install mamba -c conda-forge
         mamba env update --file environment.yml --name goesenv
         source $CONDA/etc/profile.d/conda.sh
-        mamba activate goesenv
+        conda activate goesenv
         mamba install pytest
     - name: Test with pytest
       run: |
-        mamba activate goesenv
+        conda activate goesenv
         pytest
