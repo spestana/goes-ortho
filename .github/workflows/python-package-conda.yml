@@ -30,5 +30,6 @@ jobs:
         mamba env create --file environment.yml --name goesenv
     - name: Test with pytest
       run: |
+        mamba activate goesenv
         mamba install pytest
         pytest
