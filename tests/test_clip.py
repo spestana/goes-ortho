@@ -2,10 +2,11 @@
 
 from os import path
 import sys
+from pathlib import Path
 import xarray as xr
-sys.path.append("../")
+sys.path.append(Path("../goes-ortho/").as_posix())
 import goes_clip
-sys.path.append("./")
+sys.path.append(Path.cwd().as_posix())
 import get_data
 
 ### test functions for CONUS images ###
@@ -46,12 +47,11 @@ def test_goes_clip_fulldisk():
     assert ds.dims['x'] != 0, "x dimension should be non-zero, check the longitude bounds you've provided"
     ds.close()
 
-### get example/test data ###
 
 get_data.download_example_data()
-
-### run tests ###
 
 test_goes_clip_conus()
 
 test_goes_clip_fulldisk()
+
+#get_data.remove_example_data()

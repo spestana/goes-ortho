@@ -6,6 +6,8 @@ import os
 import tarfile
 import tempfile
 import urllib.request
+import shutil
+
 
 def download_example_data() -> None:
     """
@@ -17,6 +19,8 @@ def download_example_data() -> None:
     # The URL from which to download the tarball
     url = f"https://github.com/spestana/goes-ortho-data/tarball/main#commit={commit}"
 
+    # Make resources directory
+    os.mkdir("./resources/")
     # Path and filename for tarball
     tar_path = "./resources/data.tar.gz"
 
@@ -31,3 +35,6 @@ def download_example_data() -> None:
     # Extract the tarball
     with tarfile.open(tar_path) as tar:
         tar.extractall("./resources/")
+
+def remove_example_data() -> None:
+    shutil.rmtree("./resources")
