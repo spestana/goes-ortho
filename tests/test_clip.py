@@ -5,6 +5,7 @@ import sys
 import xarray as xr
 sys.path.append("../")
 import goes_clip
+sys.path.append("./")
 import get_data
 
 ### test functions for CONUS images ###
