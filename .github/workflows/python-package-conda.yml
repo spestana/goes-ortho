@@ -27,11 +27,8 @@ jobs:
     - name: Install dependencies
       run: |
         conda install mamba -c conda-forge
-        mamba env create --file environment.yml --name goesenv
-        conda info         
-        $CONDA/bin/activate goesenv
+        mamba env create --file environment.yml --name base
         mamba install pytest
     - name: Test with pytest
       run: |
-        $CONDA/bin/activate goesenv
         pytest
