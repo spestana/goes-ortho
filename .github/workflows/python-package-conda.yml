@@ -26,7 +26,7 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda install mamba
+        conda install mamba -c conda-forge
         mamba env create --file environment.yml --name goesenv
     - name: Test with pytest
       run: |
