@@ -1,13 +1,16 @@
 '''Functions for testing goes_clip module.'''
 
 from os import path
+import sys
 import xarray as xr
+sys.path.append("../")
 import goes_clip
+import get_data
 
 ### test functions for CONUS images ###
 
 def goes_clip_conus():
-    filepath = './tests/resources/C/'
+    filepath = './resources/spestana-goes-ortho-data-bc4e02e/data/C/'
     bounds = [30, 40, -110, -100]
     newfilepath = path.abspath('./tmp.nc')
     goes_clip.subsetNetCDF(filepath,bounds,newfilepath)
@@ -26,7 +29,7 @@ def test_goes_clip_conus():
 ### test functions for Full Disk images ###
 
 def goes_clip_fulldisk():   
-    filepath = './tests/resources/F/'
+    filepath = './resources/spestana-goes-ortho-data-bc4e02e/data/F/'
     bounds = [-40, 40, -170, 20]
     newfilepath = path.abspath('./tmp.nc')
     goes_clip.subsetNetCDF(filepath,bounds,newfilepath)
@@ -41,6 +44,10 @@ def test_goes_clip_fulldisk():
     assert ds.dims['y'] != 0, "y dimension should be non-zero, check the latitude bounds you've provided"
     assert ds.dims['x'] != 0, "x dimension should be non-zero, check the longitude bounds you've provided"
     ds.close()
+
+### get example/test data ###
+
+get_data.download_example_data()
 
 ### run tests ###
 
