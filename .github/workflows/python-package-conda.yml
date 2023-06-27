@@ -33,5 +33,6 @@ jobs:
         mamba install pytest
     - name: Test with pytest
       run: |
+        source $CONDA/etc/profile.d/conda.sh
         conda activate goesenv
         pytest
