@@ -85,20 +85,21 @@ def download_example_data() -> None:
     # Make resources directory
     if not os.path.exists("./resources/"):
         os.mkdir("./resources/")
+		
     # Path and filename for tarball
     tar_path = "./resources/data.tar.gz"
-
-    response = urllib.request.urlopen(url)
-    # If the response was right, download the tarball
-    if response.getcode() == 200:
-        with open(tar_path, "wb") as outfile:
-            outfile.write(response.read())
-    else:
-        raise ValueError(f"Example GOES ABI data fetch gave non-200 response: {response.status_code}")
-
-    # Extract the tarball
-    with tarfile.open(tar_path) as tar:
-        tar.extractall("./resources/")
+    if not os.path.exists(tar_path):
+        response = urllib.request.urlopen(url)
+        # If the response was right, download the tarball
+        if response.getcode() == 200:
+            with open(tar_path, "wb") as outfile:
+                outfile.write(response.read())
+        else:
+            raise ValueError(f"Example GOES ABI data fetch gave non-200 response: {response.status_code}")
+    
+        # Extract the tarball
+        with tarfile.open(tar_path) as tar:
+            tar.extractall("./resources/")
 
 def remove_example_data() -> None:
     shutil.rmtree("./resources")
