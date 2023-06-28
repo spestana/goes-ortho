@@ -1,4 +1,4 @@
-name: Python Package using Conda
+name: Tests
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-linux:
+  build-linux-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
+    - name: Install mamba and dependencies
       run: |
         conda install mamba -c conda-forge
         mamba env update --file environment.yml --name goesenv
