@@ -4,7 +4,7 @@ Functions for clipping GOES ABI imagery to smaller areas
 
 import xarray as xr
 import os
-from goes_geometry import LonLat2ABIangle
+from goes_ortho.goes_geometry import LonLat2ABIangle
 
 def subsetNetCDF(filepath,bounds,newfilepath=None):
     '''Function to crop a GOES ABI netcdf file to lat/lon bounds.
