@@ -30,6 +30,7 @@ jobs:
         mamba env update --file environment.yml --name goesenv
         source $CONDA/etc/profile.d/conda.sh
         conda activate goesenv
+        pip install .
         mamba install pytest
     - name: Test with pytest
       run: |
