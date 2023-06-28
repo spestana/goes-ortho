@@ -29,6 +29,10 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     lat = np.degrees(lat) #*
     lon = lon_0_deg - np.degrees( np.arctan( Sy / ( H - Sx )) )
     
+    # handle when longidue is further west of -180 degrees
+    if lon < -180:
+        lon = lon + 360
+    
     return (lon,lat)
 
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
