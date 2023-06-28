@@ -5,4 +5,5 @@ setup(name='goes_ortho',
       version='0.2',
       description='Functions for downloading GOES-R ABI imagery, orthorectifying with a DEM, creating timeseries for a single point from a stack of ABI images',
       packages=setuptools.find_packages(),
+      include_package_data=True
      )
