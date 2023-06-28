@@ -36,7 +36,7 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     '''
     
     # Read in Band Equivalent Widths file for GOES16 or GOES17
-    eqw = pd.read_csv('GOES{goes}_ABI_ALLBANDS_MAR2016.eqw'.format(goes=str(goes)), sep='\s+', skiprows=1, index_col='CHANNEL')    
+    eqw = pd.read_csv('GOES{goes}_ABI_ALLBANDS_MAR2016.eqw'.format(goes=str(goes)), sep=r'\s+', skiprows=1, index_col='CHANNEL')    
     
     # Divide milliwats by 1000 to get watts
     scale_milliwatts_by = 1000 
