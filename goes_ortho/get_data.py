@@ -20,7 +20,8 @@ def download_example_data() -> None:
     url = f"https://github.com/spestana/goes-ortho-data/tarball/main#commit={commit}"
 
     # Make resources directory
-    os.mkdir("./resources/")
+    if not os.path.exists("./resources/"):
+        os.mkdir("./resources/")
     # Path and filename for tarball
     tar_path = "./resources/data.tar.gz"
 
