@@ -4,8 +4,8 @@ from os import path
 import sys
 from pathlib import Path
 import xarray as xr
-import goes_ortho.goes_clip
-import get_data
+from goes_ortho import goes_clip
+from goes_ortho import get_data
 
 ### test functions for CONUS images ###
 
