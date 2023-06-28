@@ -4,9 +4,7 @@ from os import path
 import sys
 from pathlib import Path
 import xarray as xr
-sys.path.append(Path("../goes-ortho/").as_posix())
-import goes_clip
-sys.path.append(Path.cwd().as_posix())
+import goes_ortho.goes_clip
 import get_data
 
 ### test functions for CONUS images ###

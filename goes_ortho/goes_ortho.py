@@ -5,9 +5,9 @@ Functions to orthorectify GOES-R ABI images using a DEM
 import numpy as np
 import xarray as xr
 import os
-from asp_binder_utils import get_dem
-from goes_geometry import LonLat2ABIangle
-from goes_rad import goesBrightnessTemp, goesReflectance
+from goes_ortho.asp_binder_utils import get_dem
+from goes_ortho.goes_geometry import LonLat2ABIangle
+from goes_ortho.goes_rad import goesBrightnessTemp, goesReflectance
 
 
 def ABIpixelMap(abi_grid_x, abi_grid_y):
