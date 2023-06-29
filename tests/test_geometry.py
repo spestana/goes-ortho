@@ -6,9 +6,9 @@ import numpy as np
 from goes_ortho import goes_geometry
 from goes_ortho import get_data
 
-def test_LonLat2ABIangle():
+def test_LonLat2ABIangle(setup_session):
     # get geometry metadata from one of our CONUS test/example datasets
-    filepaths = glob.glob(f'./resources/spestana-goes-ortho-data-bc4e02e/data/C/*.nc')
+    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-bc4e02e/data/C/*.nc')
     with xr.open_dataset(filepaths[0]) as ds:
         req = ds.goes_imager_projection.semi_major_axis
         rpol = ds.goes_imager_projection.semi_minor_axis
@@ -17,13 +17,13 @@ def test_LonLat2ABIangle():
         e = 0.0818191910435 # GRS-80 eccentricity
     # run LonLat2ABIangle
     (x,y) = goes_geometry.LonLat2ABIangle(-100, 45, 1000, H, req, rpol, e, lon_0)
-    assert type(x) == np.float64, "ABI Fixed Grid x coordinate (radians) should be a numpy.float64"
-    assert type(y) == np.float64, "ABI Fixed Grid y coordinate (radians) should be a numpy.float64"
+    assert x == 0.06993880298923384, "ABI Fixed Grid x coordinate (radians) should be a numpy.float64"
+    assert y == 0.11588291952114481, "ABI Fixed Grid y coordinate (radians) should be a numpy.float64"
 
 
-def test_both():
+def test_both(setup_session):
     # get geometry metadata from one of our Full Disk test/example datasets
-    filepaths = glob.glob(f'./resources/spestana-goes-ortho-data-bc4e02e/data/F/*.nc')
+    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-bc4e02e/data/F/*.nc')
     with xr.open_dataset(filepaths[0]) as ds:
         req = ds.goes_imager_projection.semi_major_axis
         rpol = ds.goes_imager_projection.semi_minor_axis
@@ -38,10 +38,3 @@ def test_both():
     # allowing a very small difference (1e-9) due to rounding errors/precision limits in the functions
     assert abs(lon - original_lon) < 1e-9, "Longitude does not match original longitude after conversions"
     assert abs(lat - original_lat) < 1e-9, "Latitude does not match original latitude after conversions"
-
-get_data.download_example_data()
-
-# test for CONUS
-test_LonLat2ABIangle()
-
-test_both()

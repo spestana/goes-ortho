@@ -83,11 +83,12 @@ def download_example_data() -> None:
     url = f"https://github.com/spestana/goes-ortho-data/tarball/main#commit={commit}"
 
     # Make resources directory
-    if not os.path.exists("./resources/"):
-        os.mkdir("./resources/")
+    tmp_dir = "./tests/resources/"
+    if not os.path.exists(tmp_dir):
+        os.mkdir(tmp_dir)
 		
     # Path and filename for tarball
-    tar_path = "./resources/data.tar.gz"
+    tar_path = tmp_dir + "data.tar.gz"
     if not os.path.exists(tar_path):
         response = urllib.request.urlopen(url)
         # If the response was right, download the tarball
@@ -99,7 +100,8 @@ def download_example_data() -> None:
     
         # Extract the tarball
         with tarfile.open(tar_path) as tar:
-            tar.extractall("./resources/")
+            tar.extractall(tmp_dir)
 
 def remove_example_data() -> None:
-    shutil.rmtree("./resources")
+    tmp_dir = "./tests/resources/"
+    shutil.rmtree(tmp_dir)
