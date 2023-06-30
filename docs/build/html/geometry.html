@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>geometry &#8212; goes_ortho 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rad" href="rad.html" />
+    <link rel="prev" title="orthorectify" href="orthorectify.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="rad.html" title="rad"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="orthorectify.html" title="orthorectify"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geometry</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="geometry">
+<h1>geometry<a class="headerlink" href="#geometry" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.ABIangle2LonLat">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">ABIangle2LonLat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_0_deg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.ABIangle2LonLat" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds the latitude and longitude (degrees) of point P 
+given x and y, the ABI elevation and scanning angle (radians)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.LonLat2ABIangle">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">LonLat2ABIangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">req</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_0_deg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.LonLat2ABIangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds the ABI elevation (y) and scanning (x) angles (radians) of point P, 
+given a latitude and longitude (degrees)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.calcLookAngles">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">calcLookAngles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_0_deg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.calcLookAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate azimuth and elevation angles (view from Earth’s surface to satellite position)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.goes_lza">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">goes_lza</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat_ssp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_ssp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42164.16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6378.137</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.goes_lza" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.</dt><dd><p>See more details from NOAA here: 
+<a class="reference external" href="https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx">https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx</a></p>
+</dd>
+<dt>Inputs:</dt><dd><dl class="simple">
+<dt>GOES-R satellite position</dt><dd><p>lat_ssp: sub-satellite point latitude [degrees]
+lon_ssp: sub-satellite point longitude [degrees]</p>
+</dd>
+<dt>View point (on Earth’s surface) position</dt><dd><p>lat: view point latitude on Earth’s surfaace [degrees]
+lon: view point longitude on Earth’s surface [degrees]
+elev: view point elevation (heigh above GRS80 ellispoid) [km]</p>
+</dd>
+<dt>Earth model parameters (optional)</dt><dd><p>H: satellite distance to Earth center [km] (defaults to 42164.16 km)
+r_eq: Earth semi-major axis (GRS80 ellipsoid) [km] (defaults to 6378.137 km)</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>LZA: local zenith angle [degrees]
+is_point_visible: True/False flag indicating if the ground point is actually visible to the satellite</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.goes_azi">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">goes_azi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat_ssp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_ssp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.goes_azi" title="Permalink to this definition">¶</a></dt>
+<dd><p>quick calculation of azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
+<a class="reference external" href="http://tiij.org/issues/issues/3_2/3_2e.html">http://tiij.org/issues/issues/3_2/3_2e.html</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.geometry.get_nested_coords">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.geometry.</span></span><span class="sig-name descname"><span class="pre">get_nested_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_rad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_rad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.geometry.get_nested_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>given the coordinates of a single point in radians: x_rad, y_rad (ABI Fixed Grid coordinates)
+find within ds (GOES ABI-L1b-Rad, any of the 2km bands) the coordinates of the nearest “2 km” (56 urad) pixel center,
+the coordinates of each of the pixel centers of the four “1 km” (28 urad) pixels,
+and the sixteen “500 m” (14 urad) pixels that are nested within the “2 km” pixel.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="orthorectify.html">orthorectify</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">geometry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.ABIangle2LonLat"><code class="docutils literal notranslate"><span class="pre">ABIangle2LonLat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.LonLat2ABIangle"><code class="docutils literal notranslate"><span class="pre">LonLat2ABIangle()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.calcLookAngles"><code class="docutils literal notranslate"><span class="pre">calcLookAngles()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.goes_lza"><code class="docutils literal notranslate"><span class="pre">goes_lza()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.goes_azi"><code class="docutils literal notranslate"><span class="pre">goes_azi()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.geometry.get_nested_coords"><code class="docutils literal notranslate"><span class="pre">get_nested_coords()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rad.html">rad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clip.html">clip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_data.html">get_data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">timeseries</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="orthorectify.html"
+                          title="previous chapter">orthorectify</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="rad.html"
+                          title="next chapter">rad</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/geometry.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="rad.html" title="rad"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="orthorectify.html" title="orthorectify"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geometry</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Steven Pestana.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
+</html>

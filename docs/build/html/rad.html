@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rad &#8212; goes_ortho 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="clip" href="clip.html" />
+    <link rel="prev" title="geometry" href="geometry.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="clip.html" title="clip"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="geometry"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">rad</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="rad">
+<h1>rad<a class="headerlink" href="#rad" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.rad.goesBrightnessTemp">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.rad.</span></span><span class="sig-name descname"><span class="pre">goesBrightnessTemp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fk1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fk2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.rad.goesBrightnessTemp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.rad.goesReflectance">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.rad.</span></span><span class="sig-name descname"><span class="pre">goesReflectance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kappa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.rad.goesReflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Radiance to Reflectance for GOES-R ABI reflective bands (1-6)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.rad.abi_radiance_wavenumber_to_wavelength">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.rad.</span></span><span class="sig-name descname"><span class="pre">abi_radiance_wavenumber_to_wavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rad_wn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.rad.abi_radiance_wavenumber_to_wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Convert GOES ABI Radiance units from</dt><dd><blockquote>
+<div><p>mW / m^2 sr cm^-1</p>
+</div></blockquote>
+<dl class="simple">
+<dt>to</dt><dd><p>W / m^2 sr um</p>
+</dd>
+</dl>
+</dd>
+<dt>Inputs</dt><dd><ul class="simple">
+<li><p>goes = 16 or 17 (int); GOES-16 or GOES-17</p></li>
+<li><p>channel = 1-16 (int); GOES ABI channel/band</p></li>
+<li><p>rad_wn = GOES ABI Radiance in “wavenumber” units [mW / m^2 sr cm^-1]</p></li>
+</ul>
+</dd>
+<dt>Outputs</dt><dd><ul class="simple">
+<li><p>rad_wl = GOES ABI Radiance in “wavelength” units [W / m^2 sr um]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <p class="caption" role="heading"><span class="caption-text">Getting started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="orthorectify.html">orthorectify</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometry.html">geometry</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rad</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.rad.goesBrightnessTemp"><code class="docutils literal notranslate"><span class="pre">goesBrightnessTemp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.rad.goesReflectance"><code class="docutils literal notranslate"><span class="pre">goesReflectance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.rad.abi_radiance_wavenumber_to_wavelength"><code class="docutils literal notranslate"><span class="pre">abi_radiance_wavenumber_to_wavelength()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clip.html">clip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_data.html">get_data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">timeseries</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="geometry.html"
+                          title="previous chapter">geometry</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="clip.html"
+                          title="next chapter">clip</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/rad.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="clip.html" title="clip"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="geometry"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">rad</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Steven Pestana.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
+</html>

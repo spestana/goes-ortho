@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Usage &#8212; goes_ortho 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Quick start" href="quick_start.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quick_start.html" title="Quick start"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Usage</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h1>
+<p>you can use the <code class="docutils literal notranslate"><span class="pre">goes_ortho.orthorectify.ortho()</span></code> function:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.orthorectify.ortho">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.orthorectify.</span></span><span class="sig-name descname"><span class="pre">ortho</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goes_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_goes_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dem_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SRTMGL3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_dem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.orthorectify.ortho" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps around get_dem(), make_ortho_map(), orthorectify_abi()</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.get_data.get_dem">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">demtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'EPSG:4326'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.get_data.get_dem" title="Permalink to this definition">¶</a></dt>
+<dd><p>download a DEM of choice from OpenTopography World DEM
+## first written by David Shean
+Parameters
+————
+demtype: str</p>
+<blockquote>
+<div><p>type of DEM to fetch (e.g., SRTMGL1, SRTMGL1_E, SRTMGL3 etc)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>bounds: list</dt><dd><p>geographic aoi extent in format (minx,miny,maxx,maxy)</p>
+</dd>
+<dt>out_fn: str</dt><dd><p>path to output filename</p>
+</dd>
+<dt>t_srs: str</dt><dd><p>output DEM projection</p>
+</dd>
+</dl>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>out_DEM: str</dt><dd><p>path to output DEM (useful if the downloaded DEM is reprojected to custom proj)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.orthorectify.make_ortho_map">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.orthorectify.</span></span><span class="sig-name descname"><span class="pre">make_ortho_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goes_filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dem_filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.orthorectify.make_ortho_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, 
+taking into account the underlying terrain and satellite’s viewing geometry.</p>
+<p>Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="goes_ortho.orthorectify.orthorectify_abi">
+<span class="sig-prename descclassname"><span class="pre">goes_ortho.orthorectify.</span></span><span class="sig-name descname"><span class="pre">orthorectify_abi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goes_filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#goes_ortho.orthorectify.orthorectify_abi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+orthorectify the ABI radiance values and return an xarray dataarray with those values.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_install.html">How to install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.orthorectify.ortho"><code class="docutils literal notranslate"><span class="pre">ortho()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.get_data.get_dem"><code class="docutils literal notranslate"><span class="pre">get_dem()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.orthorectify.make_ortho_map"><code class="docutils literal notranslate"><span class="pre">make_ortho_map()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#goes_ortho.orthorectify.orthorectify_abi"><code class="docutils literal notranslate"><span class="pre">orthorectify_abi()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quick_start.html"
+                          title="previous chapter">Quick start</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quick_start.html" title="Quick start"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">goes_ortho 0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Usage</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Steven Pestana.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
+</html>
