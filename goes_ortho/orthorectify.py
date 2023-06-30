@@ -6,8 +6,8 @@ import numpy as np
 import xarray as xr
 import os
 from goes_ortho.get_data import get_dem
-from goes_ortho.goes_geometry import LonLat2ABIangle
-from goes_ortho.goes_rad import goesBrightnessTemp, goesReflectance
+from goes_ortho.geometry import LonLat2ABIangle
+from goes_ortho.rad import goesBrightnessTemp, goesReflectance
 
 
 def ABIpixelMap(abi_grid_x, abi_grid_y):

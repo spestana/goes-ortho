@@ -9,7 +9,7 @@ import glob
 import numpy as np
 import pandas as pd
 import fnmatch
-from goes_ortho.goes_geometry import get_nested_coords
+from goes_ortho.geometry import get_nested_coords
 
 def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=None):
     '''Given a directory of GOES ABI products, create a timeseries of data variables (specified in data_vars) for a single point (at lon, lat, elevation).

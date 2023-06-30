@@ -1,11 +1,8 @@
 '''Functions for testing goes_clip module.'''
 
 from os import path
-import sys
-from pathlib import Path
 import xarray as xr
-from goes_ortho import goes_clip
-from goes_ortho import get_data
+import goes_ortho as go
 
 ### test function for CONUS images ###
 
@@ -14,7 +11,7 @@ def test_goes_clip_conus(setup_session):
     filepath = './tests/resources/spestana-goes-ortho-data-bc4e02e/data/C/'
     bounds = [30, 40, -110, -100]
     newfilepath = path.abspath('./tmp.nc')
-    goes_clip.subsetNetCDF(filepath,bounds,newfilepath)
+    go.clip.subsetNetCDF(filepath,bounds,newfilepath)
     # do we have a dataset?
     assert type(xr.open_dataset('tmp.nc')) == xr.core.dataset.Dataset, "unable to open file"
     ds = xr.open_dataset('tmp.nc')
@@ -30,7 +27,7 @@ def test_goes_clip_fulldisk(setup_session):
     filepath = './tests/resources/spestana-goes-ortho-data-bc4e02e/data/F/'
     bounds = [-40, 40, -170, 20]
     newfilepath = path.abspath('./tmp.nc')
-    goes_clip.subsetNetCDF(filepath,bounds,newfilepath)
+    go.clip.subsetNetCDF(filepath,bounds,newfilepath)
     # do we have a dataset?
     assert type(xr.open_dataset('tmp.nc')) == xr.core.dataset.Dataset, "unable to open file"
     ds = xr.open_dataset('tmp.nc')
