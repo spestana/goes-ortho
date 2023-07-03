@@ -44,11 +44,11 @@ jobs:
       - run: |
           source $CONDA/etc/profile.d/conda.sh
           conda activate goesenv
-          pdoc --html goes_ortho --force
+          pdoc --html goes_ortho --force --output-dir docs/
 
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/
+          path: docs/goes_ortho/
 
   # Deploy the artifact to GitHub pages.
   # This is a separate job so that only actions/deploy-pages has the necessary permissions.
