@@ -39,7 +39,9 @@ jobs:
           pip install pdoc3
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
-      - run: pdoc --html goes_ortho --force
+      - run: |
+          source $CONDA/etc/profile.d/conda.sh
+          pdoc --html goes_ortho --force
 
       - uses: actions/upload-pages-artifact@v1
         with:
