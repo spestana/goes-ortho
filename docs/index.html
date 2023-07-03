@@ -1,3 +1,5 @@
+<html><head></head>
+<body>
 <h1><b>goes_ortho</b>: a python library for orthorectifying GOES-R ABI image products</h1>
 
 <p><a href="./goes_ortho/index.html">docs</a></p>
@@ -9,3 +11,6 @@
 <p>Before using observations from these instruments for observing the land surface over mountains, orthorectification is needed to try and account for the off-nadir view angles and topographic effects in the geostationary satellite imagery.</p>
 
 <p>The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is "sub-pixel" because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.</p>
+
+</body>
+</html>
