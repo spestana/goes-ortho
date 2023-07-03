@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>goes_ortho.orthorectify API documentation</title>
+<meta name="description" content="Functions to orthorectify GOES-R ABI images using a DEM" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>goes_ortho.orthorectify</code></h1>
+</header>
+<section id="section-intro">
+<p>Functions to orthorectify GOES-R ABI images using a DEM</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Functions to orthorectify GOES-R ABI images using a DEM
+&#34;&#34;&#34;
+
+import numpy as np
+import xarray as xr
+import os
+from goes_ortho.get_data import get_dem
+from goes_ortho.geometry import LonLat2ABIangle
+from goes_ortho.rad import goesBrightnessTemp, goesReflectance
+
+
+def ABIpixelMap(abi_grid_x, abi_grid_y):
+    &#34;&#34;&#34;
+    Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
+    NOTE: This function isn&#39;t needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we&#39;re doing.
+    
+    Parameters
+    ------------
+    abi_grid_x: np.array
+        2-dimensional array of x coordinates (scan angle) in ABI Fixed Grid [radians]
+    abi_grid_y: np.array
+        2-dimensional array of y coordinates (elevation angle) in ABI Fixed Grid [radians]
+    Returns
+    ------------
+    center_x: np.array
+        pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]
+    center_y: np.array
+        pixel center y coordinates (elevation angle) in ABI Fixed Grid [radians]
+    &#34;&#34;&#34;
+    
+    # IFOV values for GOES ABI bands (&#34;500 m&#34; 14 urad; &#34;1 km&#34; 28 urad; &#34;2 km&#34; 56 urad)
+    ifov=np.array([14e-6, 28e-6, 56e-6])
+    
+    # Convert from scan angle to pixel row/column coordinates 
+    x_px = np.array([np.divide(abi_grid_x,i) for i in ifov])
+    y_px = np.array([np.divide(abi_grid_y,i) for i in ifov])
+
+    # Get the center coordinate of the pixel each grid cell lies within
+    center_x = ((np.floor(np.abs(x_px))+0.5)*np.sign(x_px)) * ifov[:,None,None]
+    center_y = ((np.floor(np.abs(y_px))+0.5)*np.sign(y_px)) * ifov[:,None,None]
+
+    # Get the pixel coordinate (row/column) that each grid cell lies within
+    #center_col = (np.floor(x_px))
+    #center_row = (np.floor(y_px))
+
+    return center_x, center_y#, center_col, center_row
+ 
+
+def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
+    &#34;&#34;&#34;
+    For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, taking into account the underlying terrain and satellite&#39;s viewing geometry. Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)
+    
+    Parameters
+    ------------
+    goes_filepath: str
+        filepath to GOES ABI NetCDF file
+    dem_filepath: str
+        filepath to digital elevation model (DEM), GeoTiff file
+    out_filepath: str
+        optional filepath and filename to save this map to, defaults to None
+    Returns
+    ------------
+    ds: xarray.Dataset
+        dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
+    &#34;&#34;&#34;
+    
+    print(&#39;\nRUNNING: make_ortho_map()&#39;)
+    
+    # Open the GOES ABI image
+    print(&#39;\nOpening GOES ABI image...&#39;)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
+    # NOTE: for some reason (?) I sometimes get an error &#34;ValueError: unable to decode time units &#39;seconds since 2000-01-01 12:00:00&#39; with the default calendar. Try opening your dataset with decode_times=False.&#34; so I&#39;ve added decode_times=False here.
+    # Get inputs: projection information from the ABI radiance product (values needed for geometry calculations)
+    print(&#39;\nGet inputs: projection information from the ABI radiance product&#39;)
+    req = abi_image.goes_imager_projection.semi_major_axis
+    rpol = abi_image.goes_imager_projection.semi_minor_axis
+    H = abi_image.goes_imager_projection.perspective_point_height + abi_image.goes_imager_projection.semi_major_axis
+    lon_0 = abi_image.goes_imager_projection.longitude_of_projection_origin
+    e = 0.0818191910435 # GRS-80 eccentricity
+    print(&#39;...done&#39;)
+    
+    
+    # Load DEM
+    print(&#39;\nOpening DEM file...&#39;)
+    dem = xr.open_rasterio(dem_filepath)
+    dem = dem.where(dem!=dem.nodatavals[0])[0,:,:] # replace nodata with nans
+    dem = dem.fillna(0) # fill nans with zeros for the ocean (temporary fix for fog project)
+    #dem = dem.where(dem!=0) # replace zeros with nans
+    # Create 2D arrays of longitude and latitude from the DEM
+    print(&#39;\nCreate 2D arrays of longitude and latitude from the DEM&#39;)
+    X, Y = np.meshgrid(dem.x,dem.y) # Lon and Lat of each DEM grid cell
+    Z = dem.values # elevation of each DEM grid cell
+    print(&#39;...done&#39;)
+    
+    # For each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)
+    print(&#39;\nFor each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)&#39;)
+    abi_grid_x, abi_grid_y = LonLat2ABIangle(X,Y,Z,H,req,rpol,e,lon_0)
+    print(&#39;...done&#39;)
+    
+    # Create metadata dictionary about this map (should probably clean up metadata, adhere to some set of standards)
+    print(&#39;\nCreate metadata dictionary about this map&#39;)
+    metadata = {
+                # Information about the projection geometry:
+                &#39;longitude_of_projection_origin&#39;: lon_0,
+                &#39;semi_major_axis&#39;: req,
+                &#39;semi_minor_axis&#39;: rpol,
+                &#39;satellite_height&#39;: H,
+                &#39;grs80_eccentricity&#39;: e,
+        
+                &#39;longitude_of_projection_origin_info&#39;: &#39;longitude of geostationary satellite orbit&#39;,
+                &#39;semi_major_axis_info&#39;: &#39;semi-major axis of GRS 80 reference ellipsoid&#39;,
+                &#39;semi_minor_axis_info&#39;: &#39;semi-minor axis of GRS 80 reference ellipsoid&#39;,
+                &#39;satellite_height_info&#39;: &#39;distance from center of ellipsoid to satellite (perspective_point_height + semi_major_axis_info)&#39;,
+                &#39;grs80_eccentricity_info&#39;: &#39;eccentricity of GRS 80 reference ellipsoid&#39;,
+    
+                # Information about the DEM source file
+                &#39;dem_file&#39;: dem_filepath,
+                #&#39;dem_crs&#39; : dem.crs,
+                #&#39;dem_transform&#39; : dem.transform,
+                #&#39;dem_res&#39; : dem.res,
+                #&#39;dem_ifov&#39;: -9999, # TO DO
+        
+                &#39;dem_file_info&#39;: &#39;filename of dem file used to create this mapping&#39;,
+                &#39;dem_crs_info&#39; : &#39;coordinate reference system from DEM geotiff&#39;,
+                &#39;dem_transform_info&#39; : &#39;transform matrix from DEM geotiff&#39;, 
+                &#39;dem_res_info&#39; : &#39;resolution of DEM geotiff&#39;,
+                &#39;dem_ifov_info&#39;: &#39;instantaneous field of view (angular size of DEM grid cell)&#39;,
+        
+                # For each DEM grid cell, we have...
+                &#39;dem_px_angle_x_info&#39;: &#39;DEM grid cell X coordinate (east/west) scan angle in the ABI Fixed Grid&#39;,
+                &#39;dem_px_angle_y_info&#39;: &#39;DEM grid cell Y coordinate (north/south) scan angle in the ABI Fixed Grid&#39;,
+                &#39;longitude_info&#39;: &#39;longitude from DEM file&#39;,
+                &#39;latitude_info&#39;: &#39;latitude from DEM file&#39;,
+                &#39;elevation_info&#39;: &#39;elevation from DEM file&#39;
+    }
+    print(&#39;...done&#39;)
+    
+    # Create pixel map dataset
+    print(&#39;\nCreate pixel map dataset&#39;)
+    ds = xr.Dataset({    
+                    &#39;elevation&#39;:          ([&#39;latitude&#39;, &#39;longitude&#39;], dem.values)
+                    },
+        
+                    coords={&#39;longitude&#39;:  ([&#39;longitude&#39;], dem.x.data),
+                            &#39;latitude&#39;:   ([&#39;latitude&#39;], dem.y.data),
+                            &#39;dem_px_angle_x&#39;:     ([&#39;latitude&#39;, &#39;longitude&#39;],  abi_grid_x),
+                            &#39;dem_px_angle_y&#39;:     ([&#39;latitude&#39;, &#39;longitude&#39;],  abi_grid_y)},
+                    
+                    attrs=metadata)
+    print(ds)
+    print(&#39;...done&#39;)
+                     
+    if out_filepath != None:
+        print(&#39;\nExport this pixel map along with the metadata (NetCDF with xarray)&#39;)
+        # Export this pixel map along with the metadata (NetCDF with xarray)
+        ds.to_netcdf(out_filepath,mode=&#39;w&#39;)
+        print(&#39;...done&#39;)
+    
+    # Return the pixel map dataset
+    print(&#39;\nReturn the pixel map dataset.&#39;)
+    
+    return ds
+
+
+def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
+    &#34;&#34;&#34;
+    Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+    orthorectify the ABI radiance values and return an xarray dataarray with those values.
+    
+    Parameters
+    ------------
+    goes_filepath: str
+        filepath to GOES ABI NetCDF file
+    pixel_map: xarray.Dataset
+        dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
+    data_vars: list
+        list of variable names from the GOES ABI NetCDF file we wish to extract
+    out_filename: str
+        optional filepath and filename to save the orthorectified image to, defaults to None
+    Returns
+    ------------
+    pixel_map: xarray.Dataset
+        dataset of the orthorectified GOES ABI image
+    &#34;&#34;&#34;
+    print(&#39;\nRUNNING: orthorectify_abi_rad()&#39;)
+    
+    # First check, Does the projection info in the image match our mapping?
+    print(&#39;\nDoes the projection info in the image match our mapping?&#39;)
+    # Open the GOES ABI image
+    print(&#39;\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value&#39;)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
+    print(&#39;perspective_point_height + semi_major_axis:\t{}\t{}&#39;.format(abi_image.goes_imager_projection.perspective_point_height 
+                                                                       + abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.satellite_height))
+    print(&#39;semi_major_axis:\t\t\t\t{}\t{}&#39;.format(abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.semi_major_axis))
+    print(&#39;semi_minor_axis:\t\t\t\t{}\t{}&#39;.format(abi_image.goes_imager_projection.semi_minor_axis,
+                                                          pixel_map.semi_minor_axis))
+    print(&#39;longitude_of_projection_origin:\t\t\t{}\t\t{}&#39;.format(abi_image.goes_imager_projection.longitude_of_projection_origin,
+                                                          pixel_map.longitude_of_projection_origin))
+    print(&#39;...done&#39;)
+     
+    # Map (orthorectify) and clip the image to the pixel map for each data variable we want
+    for var in data_vars:
+        print(&#39;\nMap (orthorectify) and clip the image to the pixel map for {}&#39;.format(var))
+        abi_var_values = abi_image.sel(x=pixel_map.dem_px_angle_x, y=pixel_map.dem_px_angle_y, method=&#39;nearest&#39;)[var].values
+        print(&#39;...done&#39;)
+        
+        #Create a new xarray dataset with the orthorectified ABI radiance values, 
+        #Lat, Lon, Elevation, and metadata from the pixel map. 
+        pixel_map[var] = ([&#39;latitude&#39;, &#39;longitude&#39;], abi_var_values)
+        # If we are looking at an ABI-L1b-Rad product, create either a reflectance (bands 1-6) or brightness temperautre (bands 7-16) dataset
+        if var == &#39;Rad&#39;:
+            # if we are looking at bands 1-6, compute reflectance
+            if abi_image.band_id.values[0] &lt;= 6:
+                pixel_map[&#39;ref&#39;] = ref_or_tb = goesReflectance(pixel_map[var], abi_image.kappa0.values)
+            # else, compute brightness temperature for bands 7-16
+            else:
+                pixel_map[&#39;tb&#39;] = goesBrightnessTemp(pixel_map[var], abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
+          
+    # Map (orthorectify) the original ABI Fixed Grid coordinate values to the new pixels for reference
+    print(&#39;\nMap (orthorectify) and clip the image to the pixel map for ABI Fixed Grid coordinates&#39;)
+    abi_fixed_grid_x_values = abi_image.sel(x=pixel_map.dem_px_angle_x.values.ravel(), method=&#39;nearest&#39;).x.values
+    abi_fixed_grid_y_values = abi_image.sel(y=pixel_map.dem_px_angle_y.values.ravel(), method=&#39;nearest&#39;).y.values
+    abi_fixed_grid_x_values_reshaped = np.reshape(abi_fixed_grid_x_values, pixel_map.dem_px_angle_x.shape)
+    abi_fixed_grid_y_values_reshaped = np.reshape(abi_fixed_grid_y_values, pixel_map.dem_px_angle_y.shape)
+    pixel_map[&#39;abi_fixed_grid_x&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), abi_fixed_grid_x_values_reshaped)
+    pixel_map[&#39;abi_fixed_grid_y&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), abi_fixed_grid_y_values_reshaped)
+    print(&#39;...done&#39;)
+
+    # drop DEM from dataset
+    #pixel_map = pixel_map.drop([&#39;elevation&#39;])
+    
+    print(&#39;\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)&#39;)
+    # Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
+    # Create unique values for every &#34;zone&#34; (the GOES ABI pixel footprints) with the same ABI Fixed Grid X and Y values
+    unique_values = pixel_map.abi_fixed_grid_x.values*(pixel_map.abi_fixed_grid_y.values.max()+1) + pixel_map.abi_fixed_grid_y.values
+    # Find the index of all unique values we just created
+    _,idx = np.unique(unique_values, return_inverse=True)
+    # Use these indices, reshaped to the original shape, as our zone labels
+    zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
+    # Add the zone_labels to the dataset
+    pixel_map[&#39;zone_labels&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), zone_labels)
+    print(&#39;...done&#39;)
+    
+    # Output this result to a new NetCDF file
+    print(&#39;\nOutput this result to a new NetCDF file&#39;)
+    if out_filename == None:
+        out_filename=abi_image.dataset_name+&#39;_ortho.nc&#39;
+    print(&#39;Saving file as: {}&#39;.format(out_filename))
+    
+    pixel_map.to_netcdf(out_filename)
+    print(&#39;...done&#39;)
+    
+    return pixel_map
+
+
+def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype=&#39;SRTMGL3&#39;, keep_dem=True):
+    &#34;&#34;&#34;
+    Wraps around get_dem(), make_ortho_map(), orthorectify_abi()
+    
+    Parameters
+    ------------
+    goes_image_path: str
+        filepath to GOES ABI NetCDF file
+    data_vars: list
+        list of variable names from the GOES ABI NetCDF file we wish to extract
+    bounds: list
+        longitude and latitude bounds to clip and orthorectify GOES ABI image, like [min_lon, min_lat, max_lon, max_lat]
+    api_key: str
+        Opentopography.org ABI key, can be created at https://portal.opentopography.org/requestService?service=api
+    new_goes_filename: str
+        new filepath and filename to save the orthorectified image to
+    dem_filepath: str
+        filepath to save DEM to, defaults to None
+    demtype:str
+        DEM from Opentopography.org, see documentation in get_data.get_dem()
+    keep_dem: bool
+        option to save DEM file or delete after use
+    Returns
+    ------------
+    None
+    &#34;&#34;&#34;
+    
+    if dem_filepath == None:
+        dem_filepath = &#39;temp_{demtype}_{bounds}_DEM.tif&#39;.format(demtype=demtype,bounds=&#39;_&#39;.join([str(b) for b in bounds]))
+    get_dem(demtype=demtype, 
+            bounds=bounds,
+            api_key=api_key,
+            out_fn=dem_filepath, 
+            proj=&#39;+proj=lonlat +datum=GRS80&#39;) # make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses
+    
+    # create the mapping between scan angle coordinates and lat/lon given the GOES satellite position and our DEM
+    goes_ortho_map = make_ortho_map(goes_image_path, 
+                                    dem_filepath)
+    
+    # Apply the &#34;ortho map&#34; and save a new NetCDF file with data variables from the original file
+    goes_ds = orthorectify_abi(goes_image_path, 
+                               goes_ortho_map,
+                               data_vars,
+                               out_filename=new_goes_filename)
+    
+    # If keep_dem is False, delete the temporary DEM file we downloaded
+    if keep_dem == False:
+        os.remove(dem_filepath)
+    
+    return None</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="goes_ortho.orthorectify.ABIpixelMap"><code class="name flex">
+<span>def <span class="ident">ABIpixelMap</span></span>(<span>abi_grid_x, abi_grid_y)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
+NOTE: This function isn't needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we're doing.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>abi_grid_x</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>2-dimensional array of x coordinates (scan angle) in ABI Fixed Grid [radians]</dd>
+<dt><strong><code>abi_grid_y</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>2-dimensional array of y coordinates (elevation angle) in ABI Fixed Grid [radians]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>center_x</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]</dd>
+<dt><strong><code>center_y</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>pixel center y coordinates (elevation angle) in ABI Fixed Grid [radians]</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ABIpixelMap(abi_grid_x, abi_grid_y):
+    &#34;&#34;&#34;
+    Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
+    NOTE: This function isn&#39;t needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we&#39;re doing.
+    
+    Parameters
+    ------------
+    abi_grid_x: np.array
+        2-dimensional array of x coordinates (scan angle) in ABI Fixed Grid [radians]
+    abi_grid_y: np.array
+        2-dimensional array of y coordinates (elevation angle) in ABI Fixed Grid [radians]
+    Returns
+    ------------
+    center_x: np.array
+        pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]
+    center_y: np.array
+        pixel center y coordinates (elevation angle) in ABI Fixed Grid [radians]
+    &#34;&#34;&#34;
+    
+    # IFOV values for GOES ABI bands (&#34;500 m&#34; 14 urad; &#34;1 km&#34; 28 urad; &#34;2 km&#34; 56 urad)
+    ifov=np.array([14e-6, 28e-6, 56e-6])
+    
+    # Convert from scan angle to pixel row/column coordinates 
+    x_px = np.array([np.divide(abi_grid_x,i) for i in ifov])
+    y_px = np.array([np.divide(abi_grid_y,i) for i in ifov])
+
+    # Get the center coordinate of the pixel each grid cell lies within
+    center_x = ((np.floor(np.abs(x_px))+0.5)*np.sign(x_px)) * ifov[:,None,None]
+    center_y = ((np.floor(np.abs(y_px))+0.5)*np.sign(y_px)) * ifov[:,None,None]
+
+    # Get the pixel coordinate (row/column) that each grid cell lies within
+    #center_col = (np.floor(x_px))
+    #center_row = (np.floor(y_px))
+
+    return center_x, center_y#, center_col, center_row</code></pre>
+</details>
+</dd>
+<dt id="goes_ortho.orthorectify.make_ortho_map"><code class="name flex">
+<span>def <span class="ident">make_ortho_map</span></span>(<span>goes_filepath, dem_filepath, out_filepath=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, taking into account the underlying terrain and satellite's viewing geometry. Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>goes_filepath</code></strong> :&ensp;<code>str</code></dt>
+<dd>filepath to GOES ABI NetCDF file</dd>
+<dt><strong><code>dem_filepath</code></strong> :&ensp;<code>str</code></dt>
+<dd>filepath to digital elevation model (DEM), GeoTiff file</dd>
+<dt><strong><code>out_filepath</code></strong> :&ensp;<code>str</code></dt>
+<dd>optional filepath and filename to save this map to, defaults to None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>ds</code></strong> :&ensp;<code>xarray.Dataset</code></dt>
+<dd>dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
+    &#34;&#34;&#34;
+    For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, taking into account the underlying terrain and satellite&#39;s viewing geometry. Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)
+    
+    Parameters
+    ------------
+    goes_filepath: str
+        filepath to GOES ABI NetCDF file
+    dem_filepath: str
+        filepath to digital elevation model (DEM), GeoTiff file
+    out_filepath: str
+        optional filepath and filename to save this map to, defaults to None
+    Returns
+    ------------
+    ds: xarray.Dataset
+        dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
+    &#34;&#34;&#34;
+    
+    print(&#39;\nRUNNING: make_ortho_map()&#39;)
+    
+    # Open the GOES ABI image
+    print(&#39;\nOpening GOES ABI image...&#39;)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
+    # NOTE: for some reason (?) I sometimes get an error &#34;ValueError: unable to decode time units &#39;seconds since 2000-01-01 12:00:00&#39; with the default calendar. Try opening your dataset with decode_times=False.&#34; so I&#39;ve added decode_times=False here.
+    # Get inputs: projection information from the ABI radiance product (values needed for geometry calculations)
+    print(&#39;\nGet inputs: projection information from the ABI radiance product&#39;)
+    req = abi_image.goes_imager_projection.semi_major_axis
+    rpol = abi_image.goes_imager_projection.semi_minor_axis
+    H = abi_image.goes_imager_projection.perspective_point_height + abi_image.goes_imager_projection.semi_major_axis
+    lon_0 = abi_image.goes_imager_projection.longitude_of_projection_origin
+    e = 0.0818191910435 # GRS-80 eccentricity
+    print(&#39;...done&#39;)
+    
+    
+    # Load DEM
+    print(&#39;\nOpening DEM file...&#39;)
+    dem = xr.open_rasterio(dem_filepath)
+    dem = dem.where(dem!=dem.nodatavals[0])[0,:,:] # replace nodata with nans
+    dem = dem.fillna(0) # fill nans with zeros for the ocean (temporary fix for fog project)
+    #dem = dem.where(dem!=0) # replace zeros with nans
+    # Create 2D arrays of longitude and latitude from the DEM
+    print(&#39;\nCreate 2D arrays of longitude and latitude from the DEM&#39;)
+    X, Y = np.meshgrid(dem.x,dem.y) # Lon and Lat of each DEM grid cell
+    Z = dem.values # elevation of each DEM grid cell
+    print(&#39;...done&#39;)
+    
+    # For each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)
+    print(&#39;\nFor each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)&#39;)
+    abi_grid_x, abi_grid_y = LonLat2ABIangle(X,Y,Z,H,req,rpol,e,lon_0)
+    print(&#39;...done&#39;)
+    
+    # Create metadata dictionary about this map (should probably clean up metadata, adhere to some set of standards)
+    print(&#39;\nCreate metadata dictionary about this map&#39;)
+    metadata = {
+                # Information about the projection geometry:
+                &#39;longitude_of_projection_origin&#39;: lon_0,
+                &#39;semi_major_axis&#39;: req,
+                &#39;semi_minor_axis&#39;: rpol,
+                &#39;satellite_height&#39;: H,
+                &#39;grs80_eccentricity&#39;: e,
+        
+                &#39;longitude_of_projection_origin_info&#39;: &#39;longitude of geostationary satellite orbit&#39;,
+                &#39;semi_major_axis_info&#39;: &#39;semi-major axis of GRS 80 reference ellipsoid&#39;,
+                &#39;semi_minor_axis_info&#39;: &#39;semi-minor axis of GRS 80 reference ellipsoid&#39;,
+                &#39;satellite_height_info&#39;: &#39;distance from center of ellipsoid to satellite (perspective_point_height + semi_major_axis_info)&#39;,
+                &#39;grs80_eccentricity_info&#39;: &#39;eccentricity of GRS 80 reference ellipsoid&#39;,
+    
+                # Information about the DEM source file
+                &#39;dem_file&#39;: dem_filepath,
+                #&#39;dem_crs&#39; : dem.crs,
+                #&#39;dem_transform&#39; : dem.transform,
+                #&#39;dem_res&#39; : dem.res,
+                #&#39;dem_ifov&#39;: -9999, # TO DO
+        
+                &#39;dem_file_info&#39;: &#39;filename of dem file used to create this mapping&#39;,
+                &#39;dem_crs_info&#39; : &#39;coordinate reference system from DEM geotiff&#39;,
+                &#39;dem_transform_info&#39; : &#39;transform matrix from DEM geotiff&#39;, 
+                &#39;dem_res_info&#39; : &#39;resolution of DEM geotiff&#39;,
+                &#39;dem_ifov_info&#39;: &#39;instantaneous field of view (angular size of DEM grid cell)&#39;,
+        
+                # For each DEM grid cell, we have...
+                &#39;dem_px_angle_x_info&#39;: &#39;DEM grid cell X coordinate (east/west) scan angle in the ABI Fixed Grid&#39;,
+                &#39;dem_px_angle_y_info&#39;: &#39;DEM grid cell Y coordinate (north/south) scan angle in the ABI Fixed Grid&#39;,
+                &#39;longitude_info&#39;: &#39;longitude from DEM file&#39;,
+                &#39;latitude_info&#39;: &#39;latitude from DEM file&#39;,
+                &#39;elevation_info&#39;: &#39;elevation from DEM file&#39;
+    }
+    print(&#39;...done&#39;)
+    
+    # Create pixel map dataset
+    print(&#39;\nCreate pixel map dataset&#39;)
+    ds = xr.Dataset({    
+                    &#39;elevation&#39;:          ([&#39;latitude&#39;, &#39;longitude&#39;], dem.values)
+                    },
+        
+                    coords={&#39;longitude&#39;:  ([&#39;longitude&#39;], dem.x.data),
+                            &#39;latitude&#39;:   ([&#39;latitude&#39;], dem.y.data),
+                            &#39;dem_px_angle_x&#39;:     ([&#39;latitude&#39;, &#39;longitude&#39;],  abi_grid_x),
+                            &#39;dem_px_angle_y&#39;:     ([&#39;latitude&#39;, &#39;longitude&#39;],  abi_grid_y)},
+                    
+                    attrs=metadata)
+    print(ds)
+    print(&#39;...done&#39;)
+                     
+    if out_filepath != None:
+        print(&#39;\nExport this pixel map along with the metadata (NetCDF with xarray)&#39;)
+        # Export this pixel map along with the metadata (NetCDF with xarray)
+        ds.to_netcdf(out_filepath,mode=&#39;w&#39;)
+        print(&#39;...done&#39;)
+    
+    # Return the pixel map dataset
+    print(&#39;\nReturn the pixel map dataset.&#39;)
+    
+    return ds</code></pre>
+</details>
+</dd>
+<dt id="goes_ortho.orthorectify.ortho"><code class="name flex">
+<span>def <span class="ident">ortho</span></span>(<span>goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wraps around get_dem(), make_ortho_map(), orthorectify_abi()</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>goes_image_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>filepath to GOES ABI NetCDF file</dd>
+<dt><strong><code>data_vars</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of variable names from the GOES ABI NetCDF file we wish to extract</dd>
+<dt><strong><code>bounds</code></strong> :&ensp;<code>list</code></dt>
+<dd>longitude and latitude bounds to clip and orthorectify GOES ABI image, like [min_lon, min_lat, max_lon, max_lat]</dd>
+<dt><strong><code>api_key</code></strong> :&ensp;<code>str</code></dt>
+<dd>Opentopography.org ABI key, can be created at <a href="https://portal.opentopography.org/requestService?service=api">https://portal.opentopography.org/requestService?service=api</a></dd>
+<dt><strong><code>new_goes_filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>new filepath and filename to save the orthorectified image to</dd>
+<dt><strong><code>dem_filepath</code></strong> :&ensp;<code>str</code></dt>
+<dd>filepath to save DEM to, defaults to None</dd>
+<dt>demtype:str</dt>
+<dt>DEM from Opentopography.org, see documentation in get_data.get_dem()</dt>
+<dt><strong><code>keep_dem</code></strong> :&ensp;<code>bool</code></dt>
+<dd>option to save DEM file or delete after use</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype=&#39;SRTMGL3&#39;, keep_dem=True):
+    &#34;&#34;&#34;
+    Wraps around get_dem(), make_ortho_map(), orthorectify_abi()
+    
+    Parameters
+    ------------
+    goes_image_path: str
+        filepath to GOES ABI NetCDF file
+    data_vars: list
+        list of variable names from the GOES ABI NetCDF file we wish to extract
+    bounds: list
+        longitude and latitude bounds to clip and orthorectify GOES ABI image, like [min_lon, min_lat, max_lon, max_lat]
+    api_key: str
+        Opentopography.org ABI key, can be created at https://portal.opentopography.org/requestService?service=api
+    new_goes_filename: str
+        new filepath and filename to save the orthorectified image to
+    dem_filepath: str
+        filepath to save DEM to, defaults to None
+    demtype:str
+        DEM from Opentopography.org, see documentation in get_data.get_dem()
+    keep_dem: bool
+        option to save DEM file or delete after use
+    Returns
+    ------------
+    None
+    &#34;&#34;&#34;
+    
+    if dem_filepath == None:
+        dem_filepath = &#39;temp_{demtype}_{bounds}_DEM.tif&#39;.format(demtype=demtype,bounds=&#39;_&#39;.join([str(b) for b in bounds]))
+    get_dem(demtype=demtype, 
+            bounds=bounds,
+            api_key=api_key,
+            out_fn=dem_filepath, 
+            proj=&#39;+proj=lonlat +datum=GRS80&#39;) # make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses
+    
+    # create the mapping between scan angle coordinates and lat/lon given the GOES satellite position and our DEM
+    goes_ortho_map = make_ortho_map(goes_image_path, 
+                                    dem_filepath)
+    
+    # Apply the &#34;ortho map&#34; and save a new NetCDF file with data variables from the original file
+    goes_ds = orthorectify_abi(goes_image_path, 
+                               goes_ortho_map,
+                               data_vars,
+                               out_filename=new_goes_filename)
+    
+    # If keep_dem is False, delete the temporary DEM file we downloaded
+    if keep_dem == False:
+        os.remove(dem_filepath)
+    
+    return None</code></pre>
+</details>
+</dd>
+<dt id="goes_ortho.orthorectify.orthorectify_abi"><code class="name flex">
+<span>def <span class="ident">orthorectify_abi</span></span>(<span>goes_filepath, pixel_map, data_vars, out_filename=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+orthorectify the ABI radiance values and return an xarray dataarray with those values.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>goes_filepath</code></strong> :&ensp;<code>str</code></dt>
+<dd>filepath to GOES ABI NetCDF file</dd>
+<dt><strong><code>pixel_map</code></strong> :&ensp;<code>xarray.Dataset</code></dt>
+<dd>dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude</dd>
+<dt><strong><code>data_vars</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of variable names from the GOES ABI NetCDF file we wish to extract</dd>
+<dt><strong><code>out_filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>optional filepath and filename to save the orthorectified image to, defaults to None</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>pixel_map</code></strong> :&ensp;<code>xarray.Dataset</code></dt>
+<dd>dataset of the orthorectified GOES ABI image</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
+    &#34;&#34;&#34;
+    Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+    orthorectify the ABI radiance values and return an xarray dataarray with those values.
+    
+    Parameters
+    ------------
+    goes_filepath: str
+        filepath to GOES ABI NetCDF file
+    pixel_map: xarray.Dataset
+        dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
+    data_vars: list
+        list of variable names from the GOES ABI NetCDF file we wish to extract
+    out_filename: str
+        optional filepath and filename to save the orthorectified image to, defaults to None
+    Returns
+    ------------
+    pixel_map: xarray.Dataset
+        dataset of the orthorectified GOES ABI image
+    &#34;&#34;&#34;
+    print(&#39;\nRUNNING: orthorectify_abi_rad()&#39;)
+    
+    # First check, Does the projection info in the image match our mapping?
+    print(&#39;\nDoes the projection info in the image match our mapping?&#39;)
+    # Open the GOES ABI image
+    print(&#39;\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value&#39;)
+    abi_image = xr.open_dataset(goes_filepath, decode_times=False)
+    print(&#39;perspective_point_height + semi_major_axis:\t{}\t{}&#39;.format(abi_image.goes_imager_projection.perspective_point_height 
+                                                                       + abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.satellite_height))
+    print(&#39;semi_major_axis:\t\t\t\t{}\t{}&#39;.format(abi_image.goes_imager_projection.semi_major_axis,
+                                                          pixel_map.semi_major_axis))
+    print(&#39;semi_minor_axis:\t\t\t\t{}\t{}&#39;.format(abi_image.goes_imager_projection.semi_minor_axis,
+                                                          pixel_map.semi_minor_axis))
+    print(&#39;longitude_of_projection_origin:\t\t\t{}\t\t{}&#39;.format(abi_image.goes_imager_projection.longitude_of_projection_origin,
+                                                          pixel_map.longitude_of_projection_origin))
+    print(&#39;...done&#39;)
+     
+    # Map (orthorectify) and clip the image to the pixel map for each data variable we want
+    for var in data_vars:
+        print(&#39;\nMap (orthorectify) and clip the image to the pixel map for {}&#39;.format(var))
+        abi_var_values = abi_image.sel(x=pixel_map.dem_px_angle_x, y=pixel_map.dem_px_angle_y, method=&#39;nearest&#39;)[var].values
+        print(&#39;...done&#39;)
+        
+        #Create a new xarray dataset with the orthorectified ABI radiance values, 
+        #Lat, Lon, Elevation, and metadata from the pixel map. 
+        pixel_map[var] = ([&#39;latitude&#39;, &#39;longitude&#39;], abi_var_values)
+        # If we are looking at an ABI-L1b-Rad product, create either a reflectance (bands 1-6) or brightness temperautre (bands 7-16) dataset
+        if var == &#39;Rad&#39;:
+            # if we are looking at bands 1-6, compute reflectance
+            if abi_image.band_id.values[0] &lt;= 6:
+                pixel_map[&#39;ref&#39;] = ref_or_tb = goesReflectance(pixel_map[var], abi_image.kappa0.values)
+            # else, compute brightness temperature for bands 7-16
+            else:
+                pixel_map[&#39;tb&#39;] = goesBrightnessTemp(pixel_map[var], abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
+          
+    # Map (orthorectify) the original ABI Fixed Grid coordinate values to the new pixels for reference
+    print(&#39;\nMap (orthorectify) and clip the image to the pixel map for ABI Fixed Grid coordinates&#39;)
+    abi_fixed_grid_x_values = abi_image.sel(x=pixel_map.dem_px_angle_x.values.ravel(), method=&#39;nearest&#39;).x.values
+    abi_fixed_grid_y_values = abi_image.sel(y=pixel_map.dem_px_angle_y.values.ravel(), method=&#39;nearest&#39;).y.values
+    abi_fixed_grid_x_values_reshaped = np.reshape(abi_fixed_grid_x_values, pixel_map.dem_px_angle_x.shape)
+    abi_fixed_grid_y_values_reshaped = np.reshape(abi_fixed_grid_y_values, pixel_map.dem_px_angle_y.shape)
+    pixel_map[&#39;abi_fixed_grid_x&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), abi_fixed_grid_x_values_reshaped)
+    pixel_map[&#39;abi_fixed_grid_y&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), abi_fixed_grid_y_values_reshaped)
+    print(&#39;...done&#39;)
+
+    # drop DEM from dataset
+    #pixel_map = pixel_map.drop([&#39;elevation&#39;])
+    
+    print(&#39;\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)&#39;)
+    # Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
+    # Create unique values for every &#34;zone&#34; (the GOES ABI pixel footprints) with the same ABI Fixed Grid X and Y values
+    unique_values = pixel_map.abi_fixed_grid_x.values*(pixel_map.abi_fixed_grid_y.values.max()+1) + pixel_map.abi_fixed_grid_y.values
+    # Find the index of all unique values we just created
+    _,idx = np.unique(unique_values, return_inverse=True)
+    # Use these indices, reshaped to the original shape, as our zone labels
+    zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
+    # Add the zone_labels to the dataset
+    pixel_map[&#39;zone_labels&#39;] = ((&#39;latitude&#39;, &#39;longitude&#39;), zone_labels)
+    print(&#39;...done&#39;)
+    
+    # Output this result to a new NetCDF file
+    print(&#39;\nOutput this result to a new NetCDF file&#39;)
+    if out_filename == None:
+        out_filename=abi_image.dataset_name+&#39;_ortho.nc&#39;
+    print(&#39;Saving file as: {}&#39;.format(out_filename))
+    
+    pixel_map.to_netcdf(out_filename)
+    print(&#39;...done&#39;)
+    
+    return pixel_map</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="goes_ortho" href="index.html">goes_ortho</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="goes_ortho.orthorectify.ABIpixelMap" href="#goes_ortho.orthorectify.ABIpixelMap">ABIpixelMap</a></code></li>
+<li><code><a title="goes_ortho.orthorectify.make_ortho_map" href="#goes_ortho.orthorectify.make_ortho_map">make_ortho_map</a></code></li>
+<li><code><a title="goes_ortho.orthorectify.ortho" href="#goes_ortho.orthorectify.ortho">ortho</a></code></li>
+<li><code><a title="goes_ortho.orthorectify.orthorectify_abi" href="#goes_ortho.orthorectify.orthorectify_abi">orthorectify_abi</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
