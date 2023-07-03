@@ -9,8 +9,9 @@ from goes_ortho.geometry import LonLat2ABIangle
 def subsetNetCDF(filepath,bounds,newfilepath=None):
     """
     Crop a GOES-R ABI NetCDF file to latitude/longitude bounds.
+    
     Parameters
-    ------------          
+    ------------
     filepath: str
         path to a NetCDF file
     ilepath: str
@@ -19,7 +20,7 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     newfilepath: str
         path and filename for a new NetCDF file to write out to, otherwise overwrites input NetCDF file, defaults to None
     Returns
-    ------------   
+    ------------
     None
     """
     # get all the files we just downloaded to "filepath"
@@ -73,12 +74,13 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
 def getListOfFiles(dirName):
     """
     Create a list of file paths contained in the given directory, searching subdirectories. 
+    
     Parameters
-    ------------         
+    ------------
     dirName: str
         path of directory to search within
     Returns
-    ------------     
+    ------------
     allFiles: list
         list of file paths
     """

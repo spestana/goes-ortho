@@ -7,8 +7,9 @@ import numpy as np
 def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     """
     Computes the latitude and longitude (degrees) of a ground point given GOES-R ABI Fixed Grid image coordinates
+    
     Parameters
-    ------------        
+    ------------
     x: float 
         coordinate in the ABI Fixed Grid, scan angle [radians]
     y: float
@@ -16,7 +17,7 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     H: float
         satellite distance to Earth center [km]
     req: float
-        Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km] 
+        Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km]
     rpol: float
         Earth semi-minor axis of GRS80 ellipsoid (polar radius) [km] 
     lon_0_deg: float
@@ -26,7 +27,7 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     lon: float
         longitude of ground point [degrees]
     lat: float
-        latitude of ground point [degrees]         
+        latitude of ground point [degrees]
     """
     
     # intermediate calculations
@@ -59,8 +60,9 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     """
     Computes the GOES-R ABI Fixed Grid image coordinates given latitude and longitude (degrees) of a ground point.
+    
     Parameters
-    ------------  
+    ------------
     lon_deg: float
         longitude of ground point [degrees]
     lat_deg: float
@@ -70,19 +72,19 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     H: float
         satellite distance to Earth center [km]
     req: float
-        Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km] 
+        Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km]
     rpol: float
-        Earth semi-minor axis of GRS80 ellipsoid (polar radius) [km] 
+        Earth semi-minor axis of GRS80 ellipsoid (polar radius) [km]
     e: float
-        eccentricity of ellipsoid (e=0.0818191910435 for GRS80) [unitless] 
+        eccentricity of ellipsoid (e=0.0818191910435 for GRS80) [unitless]
     lon_0_deg: float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
     Returns
-    ------------ 
+    ------------
     x: float
         ABI Fixed Grid x coordinate (scan angle) [radians]
     y: float
-        ABI Fixed Grid y coordinate (elevation angle) [radians]           
+        ABI Fixed Grid y coordinate (elevation angle) [radians]
     """
     
     # convert lat and lon from degrees to radians
@@ -119,8 +121,9 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
 def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
     """
     Calculate azimuth and elevation angles for a geostationary satellite viewed from Earth's surface.
+    
     Parameters
-    ------------  
+    ------------
     lon_deg: float 
         longitude of ground point [degrees]
     lat_deg: float
@@ -128,11 +131,11 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
     lon_0_deg: float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
     Returns
-    ------------ 
+    ------------
     az: float
         azimuth angle [degrees]
     el: float
-        elevation angle [degrees]          
+        elevation angle [degrees]
     """
     
     
@@ -152,10 +155,11 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
 def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
     
     """
-    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.  
+    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.
     See more details from NOAA here: https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx
+    
     Parameters
-    ------------  
+    ------------
     lat_ssp: float
        sub-satellite point latitude [degrees]
     lon_ssp: float
@@ -197,8 +201,9 @@ def goes_azi(lat_ssp, lon_ssp, lat, lon):
     """
     Compute azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
     See also: http://tiij.org/issues/issues/3_2/3_2e.html
+    
     Parameters
-    ------------ 
+    ------------
     lat_ssp: float
         sub-satellite point latitude [degrees]
     lon_ssp: float
@@ -208,7 +213,7 @@ def goes_azi(lat_ssp, lon_ssp, lat, lon):
     lon: float
         view point longitude on Earth's surface [degrees]
     Returns
-    ------------ 
+    ------------
     azi: float
         azimuth angle [degrees]
     """
@@ -221,6 +226,7 @@ def get_nested_coords(ds, x_rad, y_rad):
     
     """
     Given the coordinates of a single point in the ABI Fixed Grid coordinates (x_rad and y_rad, in radians) find within a GOES ABI-L1b-Rad dataset, (any of the 2km bands) the coordinates of the nearest "2 km" (56 urad) pixel center, the coordinates of each of the pixel centers of the four "1 km" (28 urad) pixels, and the sixteen "500 m" (14 urad) pixels that are nested within the "2 km" pixel. 
+    
     Parameters
     ------------ 
     ds: xarray.Dataset

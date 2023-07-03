@@ -15,7 +15,7 @@ def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2):
     """
     Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)
     Parameters
-    ------------ 
+    ------------
     rad: float, np.array, or xarray.DataArray
         radiance [mW / m^2 sr cm^-1]
     fk1: float
@@ -27,7 +27,7 @@ def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2):
     bc2: float
         spectral response function scale correction term, from GOES ABI product metadata
     Returns
-    ------------ 
+    ------------
     Tb: float, np.array, or xarray.DataArray
         brightness temperature [K]
     """
@@ -38,14 +38,15 @@ def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2):
 def goesReflectance(rad, kappa): 
     """
     Convert Radiance to Reflectance for GOES-R ABI reflective bands (1-6)
+    
     Parameters
-    ------------ 
+    ------------
     rad: float, np.array, or xarray.DataArray
         radiance [mW / m^2 sr cm^-1]
     kappa: float
         incident Lambertian equivalent radiance, from GOES ABI product metadata
     Returns
-    ------------ 
+    ------------
     ref: float, np.array, or xarray.DataArray
         reflectance factor
     """
@@ -55,8 +56,9 @@ def goesReflectance(rad, kappa):
 def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     """
     Convert GOES ABI Radiance units from [mW / m^2 sr cm^-1] to [W / m^2 sr um]
+    
     Parameters
-    ------------ 
+    ------------
     goes: int
         16 or 17 to select GOES-16 or GOES-17
     channel: int
@@ -64,7 +66,7 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     rad_wn: float, np.array, or xarray.DataArray
         GOES ABI Radiance in "wavenumber" units [mW / m^2 sr cm^-1]
     Returns
-    ------------ 
+    ------------
     rad_wl:  float, np.array, or xarray.DataArray
         GOES ABI Radiance in "wavelength" units [W / m^2 sr um]
     """

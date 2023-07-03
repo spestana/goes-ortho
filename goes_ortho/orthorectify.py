@@ -14,14 +14,15 @@ def ABIpixelMap(abi_grid_x, abi_grid_y):
     """
     Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
     NOTE: This function isn't needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we're doing.
+    
     Parameters
-    ------------ 
+    ------------
     abi_grid_x: np.array
         2-dimensional array of x coordinates (scan angle) in ABI Fixed Grid [radians]
     abi_grid_y: np.array
         2-dimensional array of y coordinates (elevation angle) in ABI Fixed Grid [radians]
     Returns
-    ------------ 
+    ------------
     center_x: np.array
         pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]
     center_y: np.array
@@ -49,8 +50,9 @@ def ABIpixelMap(abi_grid_x, abi_grid_y):
 def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     """
     For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, taking into account the underlying terrain and satellite's viewing geometry. Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)
+    
     Parameters
-    ------------ 
+    ------------
     goes_filepath: str
         filepath to GOES ABI NetCDF file
     dem_filepath: str
@@ -58,7 +60,7 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     out_filepath: str
         optional filepath and filename to save this map to, defaults to None
     Returns
-    ------------ 
+    ------------
     ds: xarray.Dataset
         dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
     """
@@ -165,8 +167,9 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     """
     Using the pixel mapping for a specific ABI viewing geometry over a particular location,
     orthorectify the ABI radiance values and return an xarray dataarray with those values.
+    
     Parameters
-    ------------ 
+    ------------
     goes_filepath: str
         filepath to GOES ABI NetCDF file
     pixel_map: xarray.Dataset
@@ -174,9 +177,9 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     data_vars: list
         list of variable names from the GOES ABI NetCDF file we wish to extract
     out_filename: str
-        optional filepath and filename to save the orthorectified image to, defaults to None    
+        optional filepath and filename to save the orthorectified image to, defaults to None
     Returns
-    ------------ 
+    ------------
     pixel_map: xarray.Dataset
         dataset of the orthorectified GOES ABI image
     """
@@ -256,8 +259,9 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
 def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True):
     """
     Wraps around get_dem(), make_ortho_map(), orthorectify_abi()
+    
     Parameters
-    ------------     
+    ------------
     goes_image_path: str
         filepath to GOES ABI NetCDF file
     data_vars: list
@@ -275,7 +279,7 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
     keep_dem: bool
         option to save DEM file or delete after use
     Returns
-    ------------ 
+    ------------
     None
     """
     
