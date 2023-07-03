@@ -116,7 +116,8 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     return (x,y)
 
 def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
-    '''Calculate azimuth and elevation angles for a geostationary satellite viewed from Earth's surface.
+    """
+    Calculate azimuth and elevation angles for a geostationary satellite viewed from Earth's surface.
     Parameters
     ------------  
     lon_deg: float 
@@ -125,15 +126,13 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
         latitude of ground point [degrees]
     lon_0_deg: float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
-
     Returns
     ------------ 
     az: float
         azimuth angle [degrees]
     el: float
-        elevation angle [degrees]
-                
-    '''
+        elevation angle [degrees]          
+    """
     
     
     # convert lat and lon from degrees to radians
@@ -151,26 +150,24 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
 
 def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
     
-    '''
-    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.
-        
+    """
+    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.  
     See more details from NOAA here: https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx
-    
     Parameters
     ------------  
-     lat_ssp: float
-        sub-satellite point latitude [degrees]
-     lon_ssp: float
-        sub-satellite point longitude [degrees]
-     lat: float
-        view point latitude on Earth's surfaace [degrees]
-     lon: float
-        view point longitude on Earth's surface [degrees]
-     elev: float
-        view point elevation (heigh above GRS80 ellispoid) [km]
-     H: float
-        satellite distance to Earth center [km] (defaults to 42164.16 km)
-     r_eq: float
+    lat_ssp: float
+       sub-satellite point latitude [degrees]
+    lon_ssp: float
+       sub-satellite point longitude [degrees]
+    lat: float
+       view point latitude on Earth's surfaace [degrees]
+    lon: float
+       view point longitude on Earth's surface [degrees]
+    elev: float
+       view point elevation (heigh above GRS80 ellispoid) [km]
+    H: float
+       satellite distance to Earth center [km] (defaults to 42164.16 km)
+    r_eq: float
         Earth semi-major axis (GRS80 ellipsoid) [km] (defaults to 6378.137 km)
     Returns
     ------------ 
@@ -178,8 +175,7 @@ def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
         local zenith angle [degrees]
     is_point_visible: bool
         True/False flag indicating if the ground point is actually visible to the satellite
-
-    '''
+    """
 
     # intermediate calculation
     B = np.arccos( np.cos(np.radians(lat)-np.radians(lat_ssp)) * np.cos(np.radians(lon)-np.radians(lon_ssp)) )
@@ -197,7 +193,8 @@ def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
 
 def goes_azi(lat_ssp, lon_ssp, lat, lon):
     
-    '''Compute azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
+    """
+    Compute azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
     See also: http://tiij.org/issues/issues/3_2/3_2e.html
     Parameters
     ------------ 
@@ -213,8 +210,7 @@ def goes_azi(lat_ssp, lon_ssp, lat, lon):
     ------------ 
     azi: float
         azimuth angle [degrees]
-
-    '''
+    """
     
     azi = 180 + np.degrees( np.arctan(np.tan(np.radians(lon_ssp - lon))/np.sin(np.radians(lat))) )
     
@@ -222,7 +218,8 @@ def goes_azi(lat_ssp, lon_ssp, lat, lon):
 
 def get_nested_coords(ds, x_rad, y_rad):
     
-    ''' Given the coordinates of a single point in the ABI Fixed Grid coordinates (x_rad and y_rad, in radians) find within a GOES ABI-L1b-Rad dataset, (any of the 2km bands) the coordinates of the nearest "2 km" (56 urad) pixel center, the coordinates of each of the pixel centers of the four "1 km" (28 urad) pixels, and the sixteen "500 m" (14 urad) pixels that are nested within the "2 km" pixel. 
+    """
+    Given the coordinates of a single point in the ABI Fixed Grid coordinates (x_rad and y_rad, in radians) find within a GOES ABI-L1b-Rad dataset, (any of the 2km bands) the coordinates of the nearest "2 km" (56 urad) pixel center, the coordinates of each of the pixel centers of the four "1 km" (28 urad) pixels, and the sixteen "500 m" (14 urad) pixels that are nested within the "2 km" pixel. 
     Parameters
     ------------ 
     ds: xarray.Dataset
@@ -233,10 +230,19 @@ def get_nested_coords(ds, x_rad, y_rad):
         y coordinate in the ABI Fixed Grid, elevation angle [radians]
     Returns
     ------------ 
-    :return: nearest_xs_2km, nearest_ys_2km, nearest_xs_1km, nearest_ys_1km, nearest_xs_500m, nearest_ys_500m (pixel centered coordinates of nested pixels)
-    :rtype: float
-    
-    '''
+    nearest_xs_2km: float
+        pixel-centered x coordinate of 2km pixel
+    nearest_ys_2km: float
+        pixel-centered y coordinate of 2km pixel
+    nearest_xs_1km: float
+        pixel-centered x coordinates of nested 1km pixels
+    nearest_ys_1km: float
+        pixel-centered y coordinates of nested 1km pixels
+    nearest_xs_500m: float
+        pixel-centered x coordinates of nested 500 m pixels
+    nearest_ys_500m: float
+        pixel-centered y coordinates of nested 500 m pixels
+    """
     
     # "2 km" pixel coordinate
     nearest_xs = ds.sel(x=x_rad, y=y_rad, method="nearest").x
