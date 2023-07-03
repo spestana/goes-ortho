@@ -5,7 +5,8 @@ Geometry functions for GOES-R ABI imagery
 import numpy as np
 
 def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
-    '''Computes the latitude and longitude (degrees) of a ground point given GOES-R ABI Fixed Grid image coordinates .
+    """
+    Computes the latitude and longitude (degrees) of a ground point given GOES-R ABI Fixed Grid image coordinates
     Parameters
     ------------        
     x: float 
@@ -25,9 +26,8 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     lon: float
         longitude of ground point [degrees]
     lat: float
-        latitude of ground point [degrees]
-               
-    '''
+        latitude of ground point [degrees]         
+    """
     
     # intermediate calculations
     a = np.sin(x)**2 + ( np.cos(x)**2 * ( np.cos(y)**2 + ( req**2 / rpol**2 ) * np.sin(y)**2 ) )
@@ -57,7 +57,8 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     return (lon,lat)
 
 def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
-    '''Computes the GOES-R ABI Fixed Grid image coordinates given latitude and longitude (degrees) of a ground point.
+    """
+    Computes the GOES-R ABI Fixed Grid image coordinates given latitude and longitude (degrees) of a ground point.
     Parameters
     ------------  
     lon_deg: float
@@ -82,7 +83,7 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
         ABI Fixed Grid x coordinate (scan angle) [radians]
     y: float
         ABI Fixed Grid y coordinate (elevation angle) [radians]           
-    '''
+    """
     
     # convert lat and lon from degrees to radians
     lon = np.radians(lon_deg)

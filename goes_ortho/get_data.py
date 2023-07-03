@@ -11,7 +11,7 @@ import shutil
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
     download a DEM of choice from OpenTopography World DEM
-    ## first written by David Shean
+    (modified by Shashank Bhushan, first written by David Shean)
     Parameters
     ------------
     demtype: str

@@ -12,7 +12,8 @@ import numpy as np
 
 
 def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2): 
-    ''' Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)
+    """
+    Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)
     Parameters
     ------------ 
     rad: float, np.array, or xarray.DataArray
@@ -29,13 +30,14 @@ def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2):
     ------------ 
     Tb: float, np.array, or xarray.DataArray
         brightness temperature [K]
-    '''
+    """
     Tb = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
     return Tb
 
 
 def goesReflectance(rad, kappa): 
-    ''' Convert Radiance to Reflectance for GOES-R ABI reflective bands (1-6)
+    """
+    Convert Radiance to Reflectance for GOES-R ABI reflective bands (1-6)
     Parameters
     ------------ 
     rad: float, np.array, or xarray.DataArray
@@ -46,12 +48,13 @@ def goesReflectance(rad, kappa):
     ------------ 
     ref: float, np.array, or xarray.DataArray
         reflectance factor
-    '''
+    """
     ref = kappa * rad
     return ref
 
 def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
-    ''' Convert GOES ABI Radiance units from [mW / m^2 sr cm^-1] to [W / m^2 sr um]
+    """
+    Convert GOES ABI Radiance units from [mW / m^2 sr cm^-1] to [W / m^2 sr um]
     Parameters
     ------------ 
     goes: int
@@ -64,7 +67,7 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     ------------ 
     rad_wl:  float, np.array, or xarray.DataArray
         GOES ABI Radiance in "wavelength" units [W / m^2 sr um]
-    '''
+    """
     
     # Read in Band Equivalent Widths file for GOES16 or GOES17
     eqw = pd.read_csv('../data/GOES{goes}_ABI_ALLBANDS_MAR2016.eqw'.format(goes=str(goes)), sep=r'\s+', skiprows=1, index_col='CHANNEL')    

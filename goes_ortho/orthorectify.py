@@ -11,7 +11,7 @@ from goes_ortho.rad import goesBrightnessTemp, goesReflectance
 
 
 def ABIpixelMap(abi_grid_x, abi_grid_y):
-    '''
+    """
     Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
     NOTE: This function isn't needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we're doing.
     Parameters
@@ -26,8 +26,7 @@ def ABIpixelMap(abi_grid_x, abi_grid_y):
         pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]
     center_y: np.array
         pixel center y coordinates (elevation angle) in ABI Fixed Grid [radians]
-
-    '''
+    """
     
     # IFOV values for GOES ABI bands ("500 m" 14 urad; "1 km" 28 urad; "2 km" 56 urad)
     ifov=np.array([14e-6, 28e-6, 56e-6])
@@ -48,11 +47,8 @@ def ABIpixelMap(abi_grid_x, abi_grid_y):
  
 
 def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
-    '''For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, 
-    taking into account the underlying terrain and satellite's viewing geometry.
-    
-    Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)
-    
+    """
+    For the entire DEM, determine the ABI scan angle coordinates for every DEM grid cell, taking into account the underlying terrain and satellite's viewing geometry. Create the mapping between GOES-R ABI pixels (netCDF input file) and a DEM grid (geotiff input file)
     Parameters
     ------------ 
     goes_filepath: str
@@ -61,13 +57,11 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
         filepath to digital elevation model (DEM), GeoTiff file
     out_filepath: str
         optional filepath and filename to save this map to, defaults to None
-    
     Returns
     ------------ 
     ds: xarray.Dataset
         dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
-    
-    '''
+    """
     
     print('\nRUNNING: make_ortho_map()')
     
@@ -168,7 +162,8 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
 
 
 def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
-    '''Using the pixel mapping for a specific ABI viewing geometry over a particular location,
+    """
+    Using the pixel mapping for a specific ABI viewing geometry over a particular location,
     orthorectify the ABI radiance values and return an xarray dataarray with those values.
     Parameters
     ------------ 
@@ -184,8 +179,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     ------------ 
     pixel_map: xarray.Dataset
         dataset of the orthorectified GOES ABI image
-    
-    '''
+    """
     print('\nRUNNING: orthorectify_abi_rad()')
     
     # First check, Does the projection info in the image match our mapping?
@@ -260,8 +254,8 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
 
 
 def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_filepath=None, demtype='SRTMGL3', keep_dem=True):
-    '''Wraps around get_dem(), make_ortho_map(), orthorectify_abi()
-    
+    """
+    Wraps around get_dem(), make_ortho_map(), orthorectify_abi()
     Parameters
     ------------     
     goes_image_path: str
@@ -283,8 +277,7 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
     Returns
     ------------ 
     None
-       
-    '''
+    """
     
     if dem_filepath == None:
         dem_filepath = 'temp_{demtype}_{bounds}_DEM.tif'.format(demtype=demtype,bounds='_'.join([str(b) for b in bounds]))
