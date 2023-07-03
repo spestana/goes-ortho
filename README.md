@@ -4,6 +4,9 @@
 [![DOI](https://zenodo.org/badge/281728618.svg)](https://zenodo.org/badge/latestdoi/281728618)
 
 [![example workflow](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml/badge.svg)](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml)
+[![example workflow](https://github.com/spestana/goes-ortho/actions/workflows/docs.yml/badge.svg)](https://github.com/spestana/goes-ortho/actions/workflows/docs.yml)
+
+
 
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
 
