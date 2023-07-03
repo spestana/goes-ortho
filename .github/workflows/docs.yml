@@ -41,6 +41,7 @@ jobs:
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
       - run: |
           source $CONDA/etc/profile.d/conda.sh
+          conda activate goesenv
           pdoc --html goes_ortho --force
 
       - uses: actions/upload-pages-artifact@v1
