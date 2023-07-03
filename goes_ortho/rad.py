@@ -1,6 +1,8 @@
 """
 Functions for converting GOES ABI Radiance values
-Steven Pestana, March 2021 (spestana@uw.edu)
+"""
+
+"""Steven Pestana, March 2021 (spestana@uw.edu)
 
 For background information, see: 
  - http://cimss.ssec.wisc.edu/goes/calibration/#eqw
