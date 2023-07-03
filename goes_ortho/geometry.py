@@ -228,7 +228,7 @@ def get_nested_coords(ds, x_rad, y_rad):
     Given the coordinates of a single point in the ABI Fixed Grid coordinates (x_rad and y_rad, in radians) find within a GOES ABI-L1b-Rad dataset, (any of the 2km bands) the coordinates of the nearest "2 km" (56 urad) pixel center, the coordinates of each of the pixel centers of the four "1 km" (28 urad) pixels, and the sixteen "500 m" (14 urad) pixels that are nested within the "2 km" pixel. 
     
     Parameters
-    ------------ 
+    ------------
     ds: xarray.Dataset
         xarray dataset read from a GOES ABI-L1b-Rad NetCDF file of any of the "2 km" bands
     x_rad: float
@@ -236,7 +236,7 @@ def get_nested_coords(ds, x_rad, y_rad):
     y_rad: float
         y coordinate in the ABI Fixed Grid, elevation angle [radians]
     Returns
-    ------------ 
+    ------------
     nearest_xs_2km: float
         pixel-centered x coordinate of 2km pixel
     nearest_ys_2km: float
