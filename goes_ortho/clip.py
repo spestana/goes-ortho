@@ -7,10 +7,22 @@ import os
 from goes_ortho.geometry import LonLat2ABIangle
 
 def subsetNetCDF(filepath,bounds,newfilepath=None):
-    '''Function to crop a GOES ABI netcdf file to lat/lon bounds.
-        Inputs:
-            - filepath: path to a netcdf file
-            - bounds: list or array containing lat/lon bounds like [min_lat, max_lat, min_lon, max_lon]'''
+    '''Crop a GOES-R ABI NetCDF file to latitude/longitude bounds.
+            
+    :param filepath: path to a NetCDF file
+    :type filepath: str
+    :param bounds: list or array containing latitude/longitude bounds like [min_lat, max_lat, min_lon, max_lon]
+    :type filepath: list, np.array
+    :param newfilepath: path and filename for a new NetCDF file to write out to, otherwise overwrites input NetCDF file, defaults to None
+    :type filepath: str
+    :return: None
+    :rtype: None
+    
+    :Example:
+
+    subsetNetCDF('./my_file.nc, [30, 40, -110, -100], newfilepath='./my_file_clipped.nc')
+            
+    '''
     # get all the files we just downloaded to "filepath"
     file_list = getListOfFiles(filepath)
     
@@ -60,8 +72,20 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     return None
 
 def getListOfFiles(dirName):
-    # create a list of file and sub directories 
-    # names in the given directory 
+    ''' Create a list of file paths contained in the given directory, searching subdirectories. 
+            
+    :param dirName: path of directory to search within
+    :type filepath: str
+    :return: list of file paths
+    :rtype: list
+    
+    :Example:
+
+    file_list = getListOfFiles('/home/user/my_files/)
+            
+    '''
+
+    # 
     # https://thispointer.com/python-how-to-get-list-of-files-in-directory-and-sub-directories/
     listOfFile = os.listdir(dirName)
     allFiles = list()
