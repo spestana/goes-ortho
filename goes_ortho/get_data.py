@@ -79,9 +79,9 @@ def download_example_data() -> None:
     """
 
     # Static commit hash (to be updated as needed)
-    commit = "bc4e02ee93a9a8ca10738df3bcec2b829c838d69"
+    #commit = "16756d3aff6ca41ebb0be999a82d2f66930e7851"
     # The URL from which to download the tarball
-    url = f"https://github.com/spestana/goes-ortho-data/tarball/main#commit={commit}"
+    url = f"https://github.com/spestana/goes-ortho-data/tarball/main" ##commit={commit}"
 
     # Make resources directory
     tmp_dir = "./tests/resources/"

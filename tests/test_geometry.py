@@ -1,4 +1,4 @@
-'''Functions for testing goes_geometry module.'''
+'''Functions for testing geometry module.'''
 
 import glob
 import xarray as xr
@@ -7,7 +7,7 @@ import goes_ortho as go
 
 def test_LonLat2ABIangle(setup_session):
     # get geometry metadata from one of our CONUS test/example datasets
-    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-bc4e02e/data/C/OR_ABI-L2-ACHAC-M6_G17_s20221210056177_e20221210058550_c20221210101260.nc')
+    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-*/data/C/OR_ABI-L2-ACHAC-M6_G17_s20221210056177_e20221210058550_c20221210101260.nc')
     with xr.open_dataset(filepaths[0]) as ds:
         req = ds.goes_imager_projection.semi_major_axis
         rpol = ds.goes_imager_projection.semi_minor_axis
@@ -22,7 +22,7 @@ def test_LonLat2ABIangle(setup_session):
 
 def test_both(setup_session):
     # get geometry metadata from one of our Full Disk test/example datasets
-    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-bc4e02e/data/F/OR_ABI-L1b-RadF-M6C16_G18_s20230370050213_e20230370059532_c20230370059568.nc')
+    filepaths = glob.glob(f'./tests/resources/spestana-goes-ortho-data-*/data/F/OR_ABI-L1b-RadF-M6C16_G18_s20230370050213_e20230370059532_c20230370059568.nc')
     print(filepaths[0])
     with xr.open_dataset(filepaths[0]) as ds:
         req = ds.goes_imager_projection.semi_major_axis

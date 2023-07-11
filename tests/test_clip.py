@@ -1,16 +1,19 @@
-'''Functions for testing goes_clip module.'''
+'''Functions for testing clip module.'''
 
 from os import path
+import glob
 import xarray as xr
 import goes_ortho as go
 
 ### test function for CONUS images ###
 
 def test_goes_clip_conus(setup_session):
-    # run goes clip function
-    filepath = './tests/resources/spestana-goes-ortho-data-bc4e02e/data/C/'
+    # setup for clip function
+    file_list = glob.glob('./tests/resources/spestana-goes-ortho-data-*/data/C/*.nc')
+    filepath = file_list[0]
     bounds = [30, 40, -110, -100]
     newfilepath = path.abspath('./tmp.nc')
+    # run goes clip function
     go.clip.subsetNetCDF(filepath,bounds,newfilepath)
     # do we have a dataset?
     assert type(xr.open_dataset('tmp.nc')) == xr.core.dataset.Dataset, "unable to open file"
@@ -23,10 +26,12 @@ def test_goes_clip_conus(setup_session):
 ### test function for Full Disk images ###
 
 def test_goes_clip_fulldisk(setup_session):
-    # run goes clip function
-    filepath = './tests/resources/spestana-goes-ortho-data-bc4e02e/data/F/'
+    # setup for clip function
+    file_list = glob.glob('./tests/resources/spestana-goes-ortho-data-*/data/C/*.nc')
+    filepath = file_list[0]
     bounds = [-40, 40, -170, 20]
     newfilepath = path.abspath('./tmp.nc')
+    # run goes clip function
     go.clip.subsetNetCDF(filepath,bounds,newfilepath)
     # do we have a dataset?
     assert type(xr.open_dataset('tmp.nc')) == xr.core.dataset.Dataset, "unable to open file"
