@@ -36,4 +36,4 @@ jobs:
       run: |
         source $CONDA/etc/profile.d/conda.sh
         conda activate goesenv
-        pytest --cov-report html:cov_html
+        pytest
