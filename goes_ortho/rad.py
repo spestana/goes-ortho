@@ -62,7 +62,7 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     Parameters
     ------------
     goes: int
-        16 or 17 to select GOES-16 or GOES-17
+        16, 17, or 18 to select GOES-16, GOES-17, or GOES-18
     channel: int
         1-16 to select GOES ABI channel/band
     rad_wn: float, np.array, or xarray.DataArray
