@@ -43,6 +43,7 @@ These python scripts and jupyter notebooks help with downloading GOES ABI data f
 ```bash
 conda env create -f environment.yml
 conda activate goesenv
+pip install -e .
 ipython kernel install --user --name goesenv
 ```
 
