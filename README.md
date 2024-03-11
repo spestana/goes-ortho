@@ -36,11 +36,14 @@ These python scripts and jupyter notebooks help with downloading GOES ABI data f
 
 ---
 
-### Setting up the conda environment:
+### Setting up the environment:
+
+(with [conda](https://docs.conda.io/projects/conda/en/latest/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/))
 
 ```bash
 conda env create -f environment.yml
-conda activate goes-linux; ipython kernel install --user --name goes-linux
+conda activate goesenv
+ipython kernel install --user --name goesenv
 ```
 
 ---
