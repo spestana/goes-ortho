@@ -47,6 +47,15 @@ pip install -e .
 ipython kernel install --user --name goesenv
 ```
 
+Also currently requires [this version of goespy](https://github.com/spestana/goes-py):
+
+```bash
+git clone https://github.com/spestana/goes-py.git
+cd goes-py
+conda activate goesenv
+pip install -e .
+```
+
 ---
 
 ### download-goes.py
