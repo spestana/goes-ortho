@@ -13,16 +13,24 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     
     Parameters
     ------------
-    filepath: str
+    filepath : str
         path to a NetCDF file
-    ilepath: str
-    bounds: list, np.array
+    bounds : list
         list or array containing latitude/longitude bounds like [min_lat, max_lat, min_lon, max_lon]
-    newfilepath: str
-        path and filename for a new NetCDF file to write out to, otherwise overwrites input NetCDF file, defaults to None
+    newfilepath : str
+        path and filename for a new NetCDF file to write out to, defaults to None where it will overwrite the input NetCDF file
+    
     Returns
     ------------
     None
+
+    Examples
+    ------------
+    Subset a GOES ABI CONUS image so that we only have the western half of CONUS within latitudes 30 and 50, and longitudes -125 and -105.
+
+    >>> bounds = [30, 50, -125, -105]
+    >>> subsetNetCDF('CONUS.nc',bounds,newfilepath='westernCONUS.nc')
+    
     """
     
     # get bounds: Lat_min Lat_max Lon_min Lon_max
@@ -77,11 +85,12 @@ def getListOfFiles(dirName):
     
     Parameters
     ------------
-    dirName: str
+    dirName : str
         path of directory to search within
+    
     Returns
     ------------
-    allFiles: list
+    allFiles : list
         list of file paths
     """
 
