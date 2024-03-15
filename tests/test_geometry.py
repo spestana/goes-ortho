@@ -2,6 +2,7 @@
 
 from os import path
 import sys
+import glob
 from pathlib import Path
 import xarray as xr
 import goes_ortho as go
