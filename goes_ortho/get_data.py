@@ -10,23 +10,27 @@ import shutil
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
-    download a DEM of choice from OpenTopography World DEM
-    (modified by Shashank Bhushan, first written by David Shean)
+    download a DEM of choice from OpenTopography World DEM (modified by Shashank Bhushan, first written by David Shean)
     
     Parameters
     ------------
-    demtype: str
+    demtype : str
         type of DEM to fetch (e.g., SRTMGL1, SRTMGL1_E, SRTMGL3 etc)
-    bounds: list
+    bounds : list
         geographic aoi extent in format (minx,miny,maxx,maxy)
-    out_fn: str
+    out_fn : str
         path to output filename
-    t_srs: str
+    t_srs : str
         output DEM projection
+    
     Returns
     -----------
-    out_DEM: str
+    out_DEM : str
         path to output DEM (useful if the downloaded DEM is reprojected to custom proj)
+
+    Examples
+    ------------
+    
     """
     import requests
     from distutils.spawn import find_executable
