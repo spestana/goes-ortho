@@ -10,24 +10,29 @@ def ABIangle2LonLat(x, y, H, req, rpol, lon_0_deg):
     
     Parameters
     ------------
-    x: float 
+    x : float 
         coordinate in the ABI Fixed Grid, scan angle [radians]
-    y: float
+    y : float
         coordinate in the ABI Fixed Grid, elevation angle [radians]
-    H: float
+    H : float
         satellite distance to Earth center [km]
-    req: float
+    req : float
         Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km]
-    rpol: float
+    rpol : float
         Earth semi-minor axis of GRS80 ellipsoid (polar radius) [km] 
-    lon_0_deg: float
+    lon_0_deg : float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
+    
     Returns
     -----------
-    lon: float
+    lon : float
         longitude of ground point [degrees]
-    lat: float
+    lat : float
         latitude of ground point [degrees]
+
+    Examples
+    -----------
+    
     """
     
     # intermediate calculations
@@ -63,28 +68,33 @@ def LonLat2ABIangle(lon_deg, lat_deg, z, H, req, rpol, e, lon_0_deg):
     
     Parameters
     ------------
-    lon_deg: float
+    lon_deg : float
         longitude of ground point [degrees]
-    lat_deg: float
+    lat_deg : float
         latitude of ground point [degrees]
-    z: float
+    z : float
         elevation of ground point above GRS80 ellipsoid [meters]
-    H: float
+    H : float
         satellite distance to Earth center [km]
-    req: float
+    req : float
         Earth semi-major axis of GRS80 ellipsoid (equatorial radius) [km]
-    rpol: float
+    rpol : float
         Earth semi-minor axis of GRS80 ellipsoid (polar radius) [km]
-    e: float
+    e : float
         eccentricity of ellipsoid (e=0.0818191910435 for GRS80) [unitless]
-    lon_0_deg: float
+    lon_0_deg : float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
+    
     Returns
     ------------
-    x: float
+    x : float
         ABI Fixed Grid x coordinate (scan angle) [radians]
-    y: float
+    y : float
         ABI Fixed Grid y coordinate (elevation angle) [radians]
+    
+    Examples
+    ------------
+    
     """
     
     # convert lat and lon from degrees to radians
@@ -124,18 +134,23 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
     
     Parameters
     ------------
-    lon_deg: float 
+    lon_deg : float 
         longitude of ground point [degrees]
-    lat_deg: float
+    lat_deg : float
         latitude of ground point [degrees]
-    lon_0_deg: float
+    lon_0_deg : float
         longitude of projection origin (longitude of sub-satellite point) [degrees]
+    
     Returns
     ------------
-    az: float
+    az : float
         azimuth angle [degrees]
-    el: float
+    el : float
         elevation angle [degrees]
+
+    Examples
+    ------------
+    
     """
     
     
@@ -155,31 +170,35 @@ def calcLookAngles(lon_deg, lat_deg, lon_0_deg):
 def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
     
     """
-    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite.
-    See more details from NOAA here: https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx
+    Compute the Locan Zenith Angle for a point on Earth surface to a GOES-R geostationary satellite. See more details from NOAA here: https://www.ncdc.noaa.gov/sites/default/files/attachments/GOES-R_ABI_local_zenith_angle_description.docx
     
     Parameters
     ------------
-    lat_ssp: float
+    lat_ssp : float
        sub-satellite point latitude [degrees]
-    lon_ssp: float
+    lon_ssp : float
        sub-satellite point longitude [degrees]
-    lat: float
+    lat : float
        view point latitude on Earth's surfaace [degrees]
-    lon: float
+    lon : float
        view point longitude on Earth's surface [degrees]
-    elev: float
+    elev : float
        view point elevation (heigh above GRS80 ellispoid) [km]
-    H: float
+    H : float
        satellite distance to Earth center [km] (defaults to 42164.16 km)
-    r_eq: float
+    r_eq : float
         Earth semi-major axis (GRS80 ellipsoid) [km] (defaults to 6378.137 km)
+    
     Returns
     ------------ 
-    LZA: float
+    LZA : float
         local zenith angle [degrees]
-    is_point_visible: bool
+    is_point_visible : bool
         True/False flag indicating if the ground point is actually visible to the satellite
+
+    Examples
+    ------------
+    
     """
 
     # intermediate calculation
@@ -199,23 +218,27 @@ def goes_lza(lat_ssp, lon_ssp, lat, lon, H=42164.16, r_eq=6378.137):
 def goes_azi(lat_ssp, lon_ssp, lat, lon):
     
     """
-    Compute azimuth for geostationary satellite, not GOES specific, spherical Earth assumption
-    See also: http://tiij.org/issues/issues/3_2/3_2e.html
+    Compute azimuth for geostationary satellite, not GOES specific, spherical Earth assumption. See also: http://tiij.org/issues/issues/3_2/3_2e.html
     
     Parameters
     ------------
-    lat_ssp: float
+    lat_ssp : float
         sub-satellite point latitude [degrees]
-    lon_ssp: float
+    lon_ssp : float
         sub-satellite point longitude [degrees]
-    lat: float
+    lat : float
         view point latitude on Earth's surfaace [degrees]
-    lon: float
+    lon : float
         view point longitude on Earth's surface [degrees]
+    
     Returns
     ------------
-    azi: float
+    azi : float
         azimuth angle [degrees]
+
+    Examples
+    ------------
+    
     """
     
     azi = 180 + np.degrees( np.arctan(np.tan(np.radians(lon_ssp - lon))/np.sin(np.radians(lat))) )
@@ -229,26 +252,31 @@ def get_nested_coords(ds, x_rad, y_rad):
     
     Parameters
     ------------
-    ds: xarray.Dataset
+    ds : xarray.Dataset
         xarray dataset read from a GOES ABI-L1b-Rad NetCDF file of any of the "2 km" bands
-    x_rad: float
+    x_rad : float
         x coordinate in the ABI Fixed Grid, scan angle [radians]
-    y_rad: float
+    y_rad : float
         y coordinate in the ABI Fixed Grid, elevation angle [radians]
+    
     Returns
     ------------
-    nearest_xs_2km: float
+    nearest_xs_2km : float
         pixel-centered x coordinate of 2km pixel
-    nearest_ys_2km: float
+    nearest_ys_2km : float
         pixel-centered y coordinate of 2km pixel
-    nearest_xs_1km: float
+    nearest_xs_1km : float
         pixel-centered x coordinates of nested 1km pixels
-    nearest_ys_1km: float
+    nearest_ys_1km : float
         pixel-centered y coordinates of nested 1km pixels
-    nearest_xs_500m: float
+    nearest_xs_500m : float
         pixel-centered x coordinates of nested 500 m pixels
-    nearest_ys_500m: float
+    nearest_ys_500m : float
         pixel-centered y coordinates of nested 500 m pixels
+
+    Examples
+    ------------
+    
     """
     
     # "2 km" pixel coordinate
