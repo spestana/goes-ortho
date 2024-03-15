@@ -34,7 +34,7 @@ def test_abi_radiance_wavenumber_to_wavelength(setup_session):
     for goes in [16,17,18]:
         for channel in range(16):
             channel += 1 # add 1 so we get channel numbers 1 through 16 (rather than 0 through 15)
-            rad_wl = radiance_wavenumber_to_wavelength(goes, channel, rad_wn)
+            rad_wl = go.rad.radiance_wavenumber_to_wavelength(goes, channel, rad_wn)
             print(rad_wl)
     assert 0
 
