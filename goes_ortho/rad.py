@@ -19,20 +19,25 @@ def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2):
     
     Parameters
     ------------
-    rad: float, np.array, or xarray.DataArray
+    rad : float, np.array, or xarray.DataArray
         radiance [mW / m^2 sr cm^-1]
-    fk1: float
+    fk1 : float
         Planck function coefficient 1, from GOES ABI product metadata
-    fk2: float
+    fk2 : float
         Planck function coefficient 2, from GOES ABI product metadata
-    bc1: float
+    bc1 : float
         spectral response function offset correction term, from GOES ABI product metadata
-    bc2: float
+    bc2 : float
         spectral response function scale correction term, from GOES ABI product metadata
+    
     Returns
     ------------
-    Tb: float, np.array, or xarray.DataArray
+    Tb : float, np.array, or xarray.DataArray
         brightness temperature [K]
+
+    Examples
+    ------------
+    
     """
     Tb = ( fk2 / (np.log((fk1 / rad) + 1)) - bc1 ) / bc2
     return Tb
@@ -44,14 +49,19 @@ def goesReflectance(rad, kappa):
     
     Parameters
     ------------
-    rad: float, np.array, or xarray.DataArray
+    rad : float, np.array, or xarray.DataArray
         radiance [mW / m^2 sr cm^-1]
-    kappa: float
+    kappa : float
         incident Lambertian equivalent radiance, from GOES ABI product metadata
+    
     Returns
     ------------
-    ref: float, np.array, or xarray.DataArray
+    ref : float, np.array, or xarray.DataArray
         reflectance factor
+
+    Examples
+    ------------
+    
     """
     ref = kappa * rad
     return ref
@@ -62,16 +72,21 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     
     Parameters
     ------------
-    goes: int
+    goes : int
         16, 17, or 18 to select GOES-16, GOES-17, or GOES-18
-    channel: int
+    channel : int
         1-16 to select GOES ABI channel/band
-    rad_wn: float, np.array, or xarray.DataArray
+    rad_wn : float, np.array, or xarray.DataArray
         GOES ABI Radiance in "wavenumber" units [mW / m^2 sr cm^-1]
+    
     Returns
     ------------
-    rad_wl:  float, np.array, or xarray.DataArray
+    rad_wl :  float, np.array, or xarray.DataArray
         GOES ABI Radiance in "wavelength" units [W / m^2 sr um]
+
+    Examples
+    ------------
+    
     """
     
     # Read in Band Equivalent Widths file for GOES16 or GOES17
@@ -87,27 +102,31 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
 
 def makeABIrgb_fromReflectance(R_ref, G_ref, B_ref, gamma = 2.2, green_coefficients={'red': 0.45, 'nir': 0.1, 'blue': 0.45}):
     
-    ''' Create RGB images given GOES-R ABI Channel 01, 02, and 03 datasets.
-        Adapted from https://github.com/daniellelosos/True-Color-Image_GOES-R-ABI-L1b-Radiances
+    ''' Create RGB images given GOES-R ABI Channel 01, 02, and 03 datasets. Adapted from https://github.com/daniellelosos/True-Color-Image_GOES-R-ABI-L1b-Radiances
         
-        Parameters
-        ------------
-        R_ref: np.ndarray
-            Red band data from GOES ABI (Channel 2)
-        G_ref: np.ndarray
-            "Green" band data from GOES ABI (Channel 3) (ABI does not have a true green band, instead we can use the NIR "Veggie" band)
-        B_ref: np.ndarray
-            Blue band data from GOES ABI (Channel 1)
-        gamma: float
-            Gamma correction to adjust brightness of output image, defaults to gamma=2.2
-        green_coefficients: dict
-            Dictionary of multipliers for the red, nir, and blue bands to create a synthetic green band, defaults to green_coefficients={'red': 0.45, 'nir': 0.1, 'blue': 0.45}
-        Returns
-        ------------
-        RGB:  np.ndarray
-            "True Color" RGB
-        RGB_veggie: np.ndarray
-            "False Color" RGB
+    Parameters
+    ------------
+    R_ref : np.ndarray
+        Red band data from GOES ABI (Channel 2)
+    G_ref : np.ndarray
+        "Green" band data from GOES ABI (Channel 3) (ABI does not have a true green band, instead we can use the NIR "Veggie" band)
+    B_ref : np.ndarray
+        Blue band data from GOES ABI (Channel 1)
+    gamma : float
+        Gamma correction to adjust brightness of output image, defaults to gamma=2.2
+    green_coefficients : dict
+        Dictionary of multipliers for the red, nir, and blue bands to create a synthetic green band, defaults to green_coefficients={'red': 0.45, 'nir': 0.1, 'blue': 0.45}
+    
+    Returns
+    ------------
+    RGB :  np.ndarray
+        "True Color" RGB
+    RGB_veggie : np.ndarray
+        "False Color" RGB
+
+    Examples
+    ------------
+    
     '''
     
     # Apply range limits for each channel. Reflectance values must be between 0 and 1.
