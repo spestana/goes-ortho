@@ -3,7 +3,9 @@
 
 [![DOI](https://zenodo.org/badge/281728618.svg)](https://zenodo.org/badge/latestdoi/281728618)
 
-[![Tests](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml/badge.svg?event=push)](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml)
+[![example workflow](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml/badge.svg)](https://github.com/spestana/goes-ortho/actions/workflows/tests.yml)
+[![example workflow](https://github.com/spestana/goes-ortho/actions/workflows/docs.yml/badge.svg)](https://github.com/spestana/goes-ortho/actions/workflows/docs.yml)
+
 
 
 ### (Orthorectifying GOES ABI imagery at sub-pixel resolution)
@@ -34,11 +36,24 @@ These python scripts and jupyter notebooks help with downloading GOES ABI data f
 
 ---
 
-### Setting up the conda environment:
+### Setting up the environment:
+
+(with [conda](https://docs.conda.io/projects/conda/en/latest/index.html) or [mamba](https://mamba.readthedocs.io/en/latest/))
 
 ```bash
 conda env create -f environment.yml
-conda activate goes-linux; ipython kernel install --user --name goes-linux
+conda activate goesenv
+pip install -e .
+ipython kernel install --user --name goesenv
+```
+
+Also currently requires [this version of goespy](https://github.com/spestana/goes-py):
+
+```bash
+git clone https://github.com/spestana/goes-py.git
+cd goes-py
+conda activate goesenv
+pip install -e .
 ```
 
 ---

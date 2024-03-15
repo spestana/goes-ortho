@@ -1,0 +1,16 @@
+<html><head></head>
+<body>
+<h1><b>goes_ortho</b>: a python library for orthorectifying GOES-R ABI image products</h1>
+
+<p><a href="./goes_ortho/index.html">docs</a></p>
+
+<p>The latest generation of geostationary-orbiting weather satellites make frequent observations (5-60 min) in the visible and IR wavelengths at moderate resolutions (500-~2000m) (GOES-16/17 ABI, Himawari 8/9 AHI). This lends themselves to be used to fill temporal gaps between ~12-hour repeat observations by polar-orbiting spacecraft (Aqua/Terra MODIS, SNPP VIIRS, etc). However, their geostationary orbits mean that outside of their sub-satellite-point on the equator, all other view angles are off-nadir, and due to the Earth's curvature in view, actual pixel sizes increase to >6 km towards the planet's limb.</p>
+
+<p>Additionally, when viewing complex terrain such as the mountains of western CONUS, parallax affects the apparent position of the variable topography. Some portions of the ground suface may even become obscured from view completely by surrounding steep terrain with poleward-facing aspects (north-facing aspects in the Northern Hemisphere, south-facing aspects in the Southern Hemisphere).</p>
+
+<p>Before using observations from these instruments for observing the land surface over mountains, orthorectification is needed to try and account for the off-nadir view angles and topographic effects in the geostationary satellite imagery.</p>
+
+<p>The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is "sub-pixel" because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.</p>
+
+</body>
+</html>

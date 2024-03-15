@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import os
+from glob import glob
 from goespy.Downloader import ABI_Downloader # https://github.com/palexandremello/goes-py
 import sys, argparse
-from goes_clip import subsetNetCDF
+from goes_ortho.clip import subsetNetCDF
     
 ##############################################################
 
@@ -59,7 +60,8 @@ for d in range(len(days)):
             # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
             if os.path.exists(filepath[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
                 print('\nSubsetting files in...{}'.format(filepath[i]))
-                subsetNetCDF(filepath[i],bounds)
+                for file in glob(filepath[i]+'*.nc'):
+                    subsetNetCDF(file,bounds)
         i+=1
 
 
