@@ -13,21 +13,25 @@ from goes_ortho.rad import goesBrightnessTemp, goesReflectance
 
 def ABIpixelMap(abi_grid_x, abi_grid_y):
     """
-    Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV)
-    NOTE: This function isn't needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we're doing.
+    Converts an array of continuous ABI scan angles into discrete pixel center locations (in scan angle coordinates, incrimenting by the pixel IFOV) NOTE: This function isn't needed for the applying the mapping to a GOES ABI image, but we can still use this to make some visualizations of what we're doing.
     
     Parameters
     ------------
-    abi_grid_x: np.array
+    abi_grid_x : np.array
         2-dimensional array of x coordinates (scan angle) in ABI Fixed Grid [radians]
-    abi_grid_y: np.array
+    abi_grid_y : np.array
         2-dimensional array of y coordinates (elevation angle) in ABI Fixed Grid [radians]
+    
     Returns
     ------------
-    center_x: np.array
+    center_x : np.array
         pixel center x coordinates (scan angle) in ABI Fixed Grid [radians]
-    center_y: np.array
+    center_y : np.array
         pixel center y coordinates (elevation angle) in ABI Fixed Grid [radians]
+
+    Examples
+    ------------
+    
     """
     
     # IFOV values for GOES ABI bands ("500 m" 14 urad; "1 km" 28 urad; "2 km" 56 urad)
@@ -54,16 +58,21 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     
     Parameters
     ------------
-    goes_filepath: str
+    goes_filepath : str
         filepath to GOES ABI NetCDF file
-    dem_filepath: str
+    dem_filepath : str
         filepath to digital elevation model (DEM), GeoTiff file
-    out_filepath: str
+    out_filepath : str
         optional filepath and filename to save this map to, defaults to None
+    
     Returns
     ------------
-    ds: xarray.Dataset
+    ds : xarray.Dataset
         dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
+
+    Examples
+    ------------
+    
     """
     
     print('\nRUNNING: make_ortho_map()')
@@ -171,18 +180,23 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     
     Parameters
     ------------
-    goes_filepath: str
+    goes_filepath : str
         filepath to GOES ABI NetCDF file
-    pixel_map: xarray.Dataset
+    pixel_map : xarray.Dataset
         dataset of the map relating ABI Fixed Grid coordinates to latitude and longitude
-    data_vars: list
+    data_vars : list
         list of variable names from the GOES ABI NetCDF file we wish to extract
-    out_filename: str
+    out_filename : str
         optional filepath and filename to save the orthorectified image to, defaults to None
+    
     Returns
     ------------
-    pixel_map: xarray.Dataset
+    pixel_map : xarray.Dataset
         dataset of the orthorectified GOES ABI image
+
+    Examples
+    ------------
+    
     """
     print('\nRUNNING: orthorectify_abi_rad()')
     
@@ -263,25 +277,30 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
     
     Parameters
     ------------
-    goes_image_path: str
+    goes_image_path : str
         filepath to GOES ABI NetCDF file
-    data_vars: list
+    data_vars : list
         list of variable names from the GOES ABI NetCDF file we wish to extract
-    bounds: list
+    bounds : list
         longitude and latitude bounds to clip and orthorectify GOES ABI image, like [min_lon, min_lat, max_lon, max_lat]
-    api_key: str
+    api_key : str
         Opentopography.org ABI key, can be created at https://portal.opentopography.org/requestService?service=api
-    new_goes_filename: str
+    new_goes_filename : str
         new filepath and filename to save the orthorectified image to
-    dem_filepath: str
+    dem_filepath : str
         filepath to save DEM to, defaults to None
-    demtype:str
+    demtype :str
         DEM from Opentopography.org, see documentation in get_data.get_dem()
-    keep_dem: bool
+    keep_dem : bool
         option to save DEM file or delete after use
+    
     Returns
     ------------
     None
+
+    Examples
+    ------------
+    
     """
     
     if dem_filepath == None:
