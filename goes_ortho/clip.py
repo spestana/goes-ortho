@@ -32,7 +32,8 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     lon_east = bounds[3]
     
 
-    with xr.open_dataset(filepath) as file:
+    with xr.open_dataset(filepath, engine='h5netcdf') as file:
+        print(file)
         f = file.load()
         # Values needed for geometry calculations
         req = f.goes_imager_projection.semi_major_axis

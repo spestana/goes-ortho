@@ -16,6 +16,7 @@ import numpy as np
 def goesBrightnessTemp(rad, fk1, fk2, bc1, bc2): 
     """
     Convert Radiance to Brightness Temperature for GOES-R ABI emissive bands (7-16)
+    
     Parameters
     ------------
     rad: float, np.array, or xarray.DataArray
@@ -83,3 +84,54 @@ def abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn):
     rad_wl = (rad_wn / scale_milliwatts_by) * (eqw['EQW(cm-1)'][channel]/eqw['EQW(um)'][channel])
     
     return rad_wl
+
+def makeABIrgb_fromReflectance(R_ref, G_ref, B_ref, gamma = 2.2, green_coefficients={'red': 0.45, 'nir': 0.1, 'blue': 0.45}):
+    
+    ''' Create RGB images given GOES-R ABI Channel 01, 02, and 03 datasets.
+        Adapted from https://github.com/daniellelosos/True-Color-Image_GOES-R-ABI-L1b-Radiances
+        
+        Parameters
+        ------------
+        R_ref: np.ndarray
+            Red band data from GOES ABI (Channel 2)
+        G_ref: np.ndarray
+            "Green" band data from GOES ABI (Channel 3) (ABI does not have a true green band, instead we can use the NIR "Veggie" band)
+        B_ref: np.ndarray
+            Blue band data from GOES ABI (Channel 1)
+        gamma: float
+            Gamma correction to adjust brightness of output image, defaults to gamma=2.2
+        green_coefficients: dict
+            Dictionary of multipliers for the red, nir, and blue bands to create a synthetic green band, defaults to green_coefficients={'red': 0.45, 'nir': 0.1, 'blue': 0.45}
+        Returns
+        ------------
+        RGB:  np.ndarray
+            "True Color" RGB
+        RGB_veggie: np.ndarray
+            "False Color" RGB
+    '''
+    
+    # Apply range limits for each channel. Reflectance values must be between 0 and 1.
+    R_ref = np.clip(R_ref, 0, 1)
+    G_ref = np.clip(G_ref, 0, 1)
+    B_ref = np.clip(B_ref, 0, 1)
+    
+    # Apply a gamma correction to the image to correct ABI detector brightness
+    Red = np.power(R_ref, 1/gamma)
+    Green = np.power(G_ref, 1/gamma)
+    Blue = np.power(B_ref, 1/gamma)
+    
+    # GOES-R Series satellites do not have a channel in the visible green range. Band 3 is a NIR channel typically used to monitor vegetation.
+    # Calculate the "True" Green Band to serve as a green proxy for the RGB True Color image, using a fractional combination.
+    # Source: "Generation of GOES‐16 True Color Imagery without a Green Band" - https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018EA000379
+    Green_true = green_coefficients['r'] * Red + green_coefficients['nir'] * Green + green_coefficients['blue'] * Blue
+    Green_true = np.clip(Green_true, 0, 1)  # Apply band limits again, just in case.
+    
+    # Combine three RGB channels with a stacked array, then display the resulting images.
+    
+    # The RGB array with the raw veggie band
+    RGB_veggie = np.dstack([Red, Green, Blue])
+    
+    # The RGB array for the true color image
+    RGB = np.dstack([Red, Green_true, Blue])
+    
+    return RGB, RGB_veggie

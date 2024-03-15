@@ -8,9 +8,11 @@ dependencies:
   - pandas
   - matplotlib
   - xarray
+  - rioxarray
   - gdal
   - pyproj
   - pathlib
   - requests
   - rasterio
   - netcdf4
+  - h5netcdf

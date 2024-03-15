@@ -4,6 +4,7 @@ Functions to orthorectify GOES-R ABI images using a DEM
 
 import numpy as np
 import xarray as xr
+import rioxarray
 import os
 from goes_ortho.get_data import get_dem
 from goes_ortho.geometry import LonLat2ABIangle
@@ -83,8 +84,8 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     
     # Load DEM
     print('\nOpening DEM file...')
-    dem = xr.open_rasterio(dem_filepath)
-    dem = dem.where(dem!=dem.nodatavals[0])[0,:,:] # replace nodata with nans
+    dem = rioxarray.open_rasterio(dem_filepath)
+    dem = dem.where(dem!=dem.attrs['_FillValue'])[0,:,:] # replace nodata with nans
     dem = dem.fillna(0) # fill nans with zeros for the ocean (temporary fix for fog project)
     #dem = dem.where(dem!=0) # replace zeros with nans
     # Create 2D arrays of longitude and latitude from the DEM
