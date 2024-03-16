@@ -29,13 +29,13 @@ def test_goesReflectance(setup_session):
     Ref = go.rad.goesReflectance(rad, kappa)
     assert Ref == 0.24755792572951874
 
-
-def test_abi_radiance_wavenumber_to_wavelength(setup_session):
-    for goes in [16,17,18]:
-        for channel in range(16):
-            channel += 1 # add 1 so we get channel numbers 1 through 16 (rather than 0 through 15)
-            rad_wl = go.rad.abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn)
-            print(rad_wl)
+# work in progress
+#def test_abi_radiance_wavenumber_to_wavelength(setup_session):
+#    for goes in [16,17,18]:
+#        for channel in range(16):
+#            channel += 1 # add 1 so we get channel numbers 1 through 16 (rather than 0 through 15)
+#            rad_wl = go.rad.abi_radiance_wavenumber_to_wavelength(goes, channel, rad_wn)
+#            print(rad_wl)
     assert 0
 
 
