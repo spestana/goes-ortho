@@ -142,7 +142,7 @@ def makeABIrgb_fromReflectance(R_ref, G_ref, B_ref, gamma = 2.2, green_coefficie
     # GOES-R Series satellites do not have a channel in the visible green range. Band 3 is a NIR channel typically used to monitor vegetation.
     # Calculate the "True" Green Band to serve as a green proxy for the RGB True Color image, using a fractional combination.
     # Source: "Generation of GOES‐16 True Color Imagery without a Green Band" - https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018EA000379
-    Green_true = green_coefficients['r'] * Red + green_coefficients['nir'] * Green + green_coefficients['blue'] * Blue
+    Green_true = green_coefficients['red'] * Red + green_coefficients['nir'] * Green + green_coefficients['blue'] * Blue
     Green_true = np.clip(Green_true, 0, 1)  # Apply band limits again, just in case.
     
     # Combine three RGB channels with a stacked array, then display the resulting images.
