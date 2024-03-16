@@ -4,11 +4,61 @@
 
 import os
 import tarfile
-import tempfile
 import urllib.request
 import shutil
 import subprocess
 import sys
+import goes_ortho as go
+from goespy.Downloader import ABI_Downloader
+import json
+from glob import glob
+from dateutil import rrule, parser
+
+
+def download_abi(downloadRequest_filepath):
+    '''Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())'''
+
+    # load json file that specifies what we'd like to download and parse its contents
+    with open(downloadRequest_filepath, "r") as f:
+        downloadRequest = json.load(f)
+
+    startDatetime = parser.parse(downloadRequest['dateRange']['startDatetime'])
+    endDatetime = parser.parse(downloadRequest['dateRange']['endDatetime'])
+    bounds = [  downloadRequest['bounds']["min_lat"],
+                downloadRequest['bounds']["max_lat"],
+                downloadRequest['bounds']["min_lon"],
+                downloadRequest['bounds']["max_lon"] 
+            ]
+    satellite = downloadRequest['satellite']
+    bucket = 'noaa-' + satellite
+    product = downloadRequest['product']
+    outDir = downloadRequest['outputDirectory']
+
+    # parse channels/bands and start a download for each
+    for channel in downloadRequest['bands']:
+        #print(channel)
+        if type(channel) == int:
+            channel = 'C{:02}'.format(channel) # correct channel to a string formatted like "C02" if we were provided with an integer channel/band number
+            #print(channel)  
+        # Show us the bounds we'll crop images to
+        print('\nFiles will be downloaded and then cropped to these bounds:')
+        print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[1],w=bounds[2],e=bounds[3],s=bounds[0]))
+        # For each S3 bucket, download the corresponding observations if we don't have them already
+        filepath = []; # store filepaths of the files we download
+        print('For each S3 bucket, download the corresponding observations')
+        i = 0
+        for dt in rrule.rrule(rrule.HOURLY, dtstart=startDatetime, until=endDatetime):
+            filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,f'{dt.hour:02}',channel))
+            if not os.path.exists(filepath[i]):
+                ABI = ABI_Downloader(outDir,bucket,dt.year,dt.month,dt.day,f'{dt.hour:02}',product,channel)
+                # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
+                if os.path.exists(filepath[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
+                    print('\nSubsetting files in...{}'.format(filepath[i]))
+                    for file in glob(filepath[i]+'*.nc'):
+                        go.clip.subsetNetCDF(file,bounds)
+                i+=1
+    print("Done")
+    return None
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
