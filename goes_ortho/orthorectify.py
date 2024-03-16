@@ -289,7 +289,7 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
         new filepath and filename to save the orthorectified image to
     dem_filepath : str
         filepath to save DEM to, defaults to None
-    demtype :str
+    demtype : str
         DEM from Opentopography.org, see documentation in get_data.get_dem()
     keep_dem : bool
         option to save DEM file or delete after use
