@@ -4,12 +4,11 @@ Functions for extracting timeseries from directories of GOES ABI imagery
 
 import xarray as xr
 import matplotlib.pyplot as plt
-import goes_ortho
+import goes_ortho as go
 import glob
 import numpy as np
 import pandas as pd
 import fnmatch
-from goes_ortho.geometry import get_nested_coords
 
 def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=None):
     '''Given a directory of GOES ABI products, create a timeseries of data variables (specified in data_vars) for a single point (at lon, lat, elevation).
@@ -45,14 +44,14 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                        
                 # Read goes_imager_projection values needed for geometry calculations           
                 # and compute the corresponding look angles (in radiance) for the lat, lon, elevation we are interested in
-                x_rad, y_rad = goes_ortho.geometry.LonLat2ABIangle(lon,
-                                                                   lat,
-                                                                   z,
-                                                                   f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
-                                                                   f.goes_imager_projection.semi_major_axis,
-                                                                   f.goes_imager_projection.semi_minor_axis,
-                                                                   0.0818191910435, # GRS-80 eccentricity
-                                                                   f.goes_imager_projection.longitude_of_projection_origin)
+                x_rad, y_rad = go.geometry.LonLat2ABIangle(lon,
+                                                           lat,
+                                                           z,
+                                                           f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
+                                                           f.goes_imager_projection.semi_major_axis,
+                                                           f.goes_imager_projection.semi_minor_axis,
+                                                           0.0818191910435, # GRS-80 eccentricity
+                                                           f.goes_imager_projection.longitude_of_projection_origin)
         
                 # get the timestamp for this observation (these should all be UTC, but I am removing timezone info because not all timestamps are converting the same way, and I was getting a "Cannot compare tz-naive and tz-aware timestamps" error)
                 timestamp = pd.Timestamp(f.time_coverage_start).replace(tzinfo=None)
@@ -75,10 +74,10 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                     if var == 'Rad':
                         # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
                         if f.band_id.values <= 6:
-                            ref_or_tb = goes_ortho.rad.goesReflectance(values[i], f.kappa0.values)
+                            ref_or_tb = go.rad.goesReflectance(values[i], f.kappa0.values)
                         # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
                         else:
-                            ref_or_tb = goes_ortho.rad.goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
+                            ref_or_tb = go.rad.goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
             
             
                 # create a dictionary for this row of values (where each row is a GOES-R observation time)
@@ -145,13 +144,13 @@ def make_nested_abi_timeseries(directory, product, data_vars, lon, lat, z, outfi
                 #print(filename)
                 # Read goes_imager_projection values needed for geometry calculations           
                 # and compute the corresponding look angles (in radiance) for the lat, lon, elevation we are interested in
-                x_rad, y_rad = goes_ortho.LonLat2ABIangle(lon, lat, z,
-                                                          f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
-                                                          f.goes_imager_projection.semi_major_axis,
-                                                          f.goes_imager_projection.semi_minor_axis,
-                                                          0.0818191910435, # GRS-80 eccentricity
-                                                          f.goes_imager_projection.longitude_of_projection_origin)
-                nearest_xs_2km, nearest_ys_2km, nearest_xs_1km, nearest_ys_1km, nearest_xs_500m, nearest_ys_500m = get_nested_coords(f, x_rad, y_rad)
+                x_rad, y_rad = go.geometry.LonLat2ABIangle(lon, lat, z,
+                                                           f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
+                                                           f.goes_imager_projection.semi_major_axis,
+                                                           f.goes_imager_projection.semi_minor_axis,
+                                                           0.0818191910435, # GRS-80 eccentricity
+                                                           f.goes_imager_projection.longitude_of_projection_origin)
+                nearest_xs_2km, nearest_ys_2km, nearest_xs_1km, nearest_ys_1km, nearest_xs_500m, nearest_ys_500m = go.geometry.get_nested_coords(f, x_rad, y_rad)
 
                 # get the timestamp for this observation (these should all be UTC, but I am removing timezone info because not all timestamps are converting the same way, and I was getting a "Cannot compare tz-naive and tz-aware timestamps" error)
                 timestamp = pd.Timestamp(f.time_coverage_start).replace(tzinfo=None).round('min')
@@ -164,28 +163,28 @@ def make_nested_abi_timeseries(directory, product, data_vars, lon, lat, z, outfi
                     # find corresponding pixel 'Rad' value nearest to these scan angles y_rad and x_rad
                     rad_values = f['Rad'].sel(y=nearest_ys_500m[:,0], x=nearest_xs_500m[0,:], method='nearest').rename(f'rad')  #.rename({'x': 'x05','y': 'y05'})
                     # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
-                    ref_or_tb = goes_ortho.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
+                    ref_or_tb = go.rad.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
                 elif band in [1, 3, 5]:
                     #print(f'Found band {f.band_id.values[0]} file...')
                     #print(f'Using pixel coordinates for 1km pixels: {nearest_xs_1km}, {nearest_ys_1km}')
                     # find corresponding pixel 'Rad' value nearest to these scan angles y_rad and x_rad
                     rad_values = f['Rad'].sel(y=nearest_ys_1km[:,0], x=nearest_xs_1km[0,:], method='nearest').rename(f'rad') #.rename({'x': 'x1','y': 'y1'})
                     # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
-                    ref_or_tb = goes_ortho.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
+                    ref_or_tb = go.rad.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
                 elif band in [4, 6]:
                     #print(f'Found band {f.band_id.values[0]} file...')
                     #print(f'Using pixel coordinates for 1km pixels: {nearest_xs_2km}, {nearest_ys_2km}')
                     # find corresponding pixel 'Rad' value nearest to these scan angles y_rad and x_rad
                     rad_values = f['Rad'].sel(y=nearest_ys_2km[:,0], x=nearest_xs_2km[0,:], method='nearest').rename(f'rad') #
                     # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
-                    ref_or_tb = goes_ortho.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
+                    ref_or_tb = go.rad.goesReflectance(rad_values, f.kappa0.values).rename(f'ref')
                 else:
                     #print(f'Found band {f.band_id.values[0]} file...')
                     #print(f'Using pixel coordinates for 2km pixels: {nearest_xs_2km}, {nearest_ys_2km}')
                     # find corresponding pixel 'Rad' value nearest to these scan angles y_rad and x_rad
                     rad_values = f['Rad'].sel(y=nearest_ys_2km[:,0], x=nearest_xs_2km[0,:], method='nearest').rename(f'rad') #.rename({'x': 'x2','y': 'y2'})
                     # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
-                    ref_or_tb = goes_ortho.goesBrightnessTemp(rad_values, f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values).rename(f'tb')
+                    ref_or_tb = go.rad.goesBrightnessTemp(rad_values, f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values).rename(f'tb')
                 # append to list
                 rad_values['t'] = timestamp.round('min')
                 ref_or_tb['t'] = timestamp.round('min')
