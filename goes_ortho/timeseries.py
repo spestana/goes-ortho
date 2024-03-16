@@ -45,14 +45,14 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                        
                 # Read goes_imager_projection values needed for geometry calculations           
                 # and compute the corresponding look angles (in radiance) for the lat, lon, elevation we are interested in
-                x_rad, y_rad = goes_ortho.LonLat2ABIangle(lon,
-                                               lat,
-                                               z,
-                                               f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
-                                               f.goes_imager_projection.semi_major_axis,
-                                               f.goes_imager_projection.semi_minor_axis,
-                                               0.0818191910435, # GRS-80 eccentricity
-                                               f.goes_imager_projection.longitude_of_projection_origin)
+                x_rad, y_rad = goes_ortho.geometry.LonLat2ABIangle(lon,
+                                                                   lat,
+                                                                   z,
+                                                                   f.goes_imager_projection.perspective_point_height + f.goes_imager_projection.semi_major_axis,
+                                                                   f.goes_imager_projection.semi_major_axis,
+                                                                   f.goes_imager_projection.semi_minor_axis,
+                                                                   0.0818191910435, # GRS-80 eccentricity
+                                                                   f.goes_imager_projection.longitude_of_projection_origin)
         
                 # get the timestamp for this observation (these should all be UTC, but I am removing timezone info because not all timestamps are converting the same way, and I was getting a "Cannot compare tz-naive and tz-aware timestamps" error)
                 timestamp = pd.Timestamp(f.time_coverage_start).replace(tzinfo=None)
@@ -75,10 +75,10 @@ def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=
                     if var == 'Rad':
                         # If we are looking at a reflective band (bands 1-6), convert Radiance to Reflectance
                         if f.band_id.values <= 6:
-                            ref_or_tb = goes_ortho.goesReflectance(values[i], f.kappa0.values)
+                            ref_or_tb = goes_ortho.rad.goesReflectance(values[i], f.kappa0.values)
                         # If we are looking at an emissive band (bands 7-16), convert Radiance to Brightness Temperature (K)
                         else:
-                            ref_or_tb = goes_ortho.goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
+                            ref_or_tb = goes_ortho.rad.goesBrightnessTemp(values[i], f.planck_fk1.values, f.planck_fk2.values, f.planck_bc1.values, f.planck_bc2.values)
             
             
                 # create a dictionary for this row of values (where each row is a GOES-R observation time)
