@@ -284,7 +284,7 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
     bounds : list
         longitude and latitude bounds to clip and orthorectify GOES ABI image, like [min_lon, min_lat, max_lon, max_lat]
     api_key : str
-        Opentopography.org ABI key, can be created at https://portal.opentopography.org/requestService?service=api
+        Opentopography.org API key, can be created at https://portal.opentopography.org/requestService?service=api
     new_goes_filename : str
         new filepath and filename to save the orthorectified image to
     dem_filepath : str
