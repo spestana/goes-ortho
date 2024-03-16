@@ -7,6 +7,8 @@ import tarfile
 import tempfile
 import urllib.request
 import shutil
+import subprocess
+import sys
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
