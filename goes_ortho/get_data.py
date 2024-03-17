@@ -9,7 +9,6 @@ import shutil
 import subprocess
 import sys
 import goes_ortho as go
-from goespy.Downloader import ABI_Downloader
 import json
 from glob import glob
 from dateutil import rrule, parser
@@ -17,7 +16,7 @@ from dateutil import rrule, parser
 
 def download_abi(downloadRequest_filepath):
     '''Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())'''
-
+    from goespy.Downloader import ABI_Downloader
     # load json file that specifies what we'd like to download and parse its contents
     with open(downloadRequest_filepath, "r") as f:
         downloadRequest = json.load(f)
