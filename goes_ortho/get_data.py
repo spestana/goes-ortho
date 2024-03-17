@@ -48,7 +48,7 @@ def download_abi(downloadRequest_filepath):
         print('For each S3 bucket, download the corresponding observations')
         i = 0
         for dt in rrule.rrule(rrule.HOURLY, dtstart=startDatetime, until=endDatetime):
-            filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,f'{dt.hour:02}',channel))
+            filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,'{:02}'.format(dt.hour),channel))
             if not os.path.exists(filepath[i]):
                 ABI = ABI_Downloader(outDir,bucket,dt.year,dt.month,dt.day,f'{dt.hour:02}',product,channel)
                 # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
