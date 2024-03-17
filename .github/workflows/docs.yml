@@ -39,6 +39,7 @@ jobs:
           conda activate goesenv
           pip install .
           pip install pdoc3
+          pip install goespy@git+https://github.com/spestana/goes-py
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
       - run: |
