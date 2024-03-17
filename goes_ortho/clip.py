@@ -16,7 +16,7 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     filepath : str
         path to a NetCDF file
     bounds : list
-        list or array containing latitude/longitude bounds like [min_lat, max_lat, min_lon, max_lon]
+        list or array containing latitude/longitude bounds like [min_lon, min_lat, max_lon, max_lat]
     newfilepath : str
         path and filename for a new NetCDF file to write out to, defaults to None where it will overwrite the input NetCDF file
     
@@ -28,16 +28,17 @@ def subsetNetCDF(filepath,bounds,newfilepath=None):
     ------------
     Subset a GOES ABI CONUS image so that we only have the western half of CONUS within latitudes 30 and 50, and longitudes -125 and -105.
 
-    >>> bounds = [30, 50, -125, -105]
+    >>> bounds = [-125, 30, -105, 50]
     >>> subsetNetCDF('CONUS.nc',bounds,newfilepath='westernCONUS.nc')
     
     """
     
-    # get bounds: Lat_min Lat_max Lon_min Lon_max
-    lat_south = bounds[0]
-    lat_north = bounds[1]
-    lon_west = bounds[2]
-    lon_east = bounds[3]
+    # get bounds: [min_lon, min_lat, max_lon, max_lat]
+    lon_west = bounds[0]
+    lat_south = bounds[1]
+    lon_east = bounds[2]
+    lat_north = bounds[3]
+    
     
 
     with xr.open_dataset(filepath, engine='h5netcdf') as file:

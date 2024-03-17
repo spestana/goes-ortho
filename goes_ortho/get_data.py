@@ -15,8 +15,7 @@ from glob import glob
 from dateutil import rrule, parser
 
 
-def download_abi(downloadRequest_filepath):
-    '''Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())'''
+def parse_json(downloadRequest_filepath):
 
     # load json file that specifies what we'd like to download and parse its contents
     with open(downloadRequest_filepath, "r") as f:
@@ -24,25 +23,38 @@ def download_abi(downloadRequest_filepath):
 
     startDatetime = parser.parse(downloadRequest['dateRange']['startDatetime'])
     endDatetime = parser.parse(downloadRequest['dateRange']['endDatetime'])
-    bounds = [  downloadRequest['bounds']["min_lat"],
-                downloadRequest['bounds']["max_lat"],
-                downloadRequest['bounds']["min_lon"],
-                downloadRequest['bounds']["max_lon"] 
-            ]
+    bounds = [  downloadRequest['bounds']["min_lon"],
+                downloadRequest['bounds']["min_lat"],
+                downloadRequest['bounds']["max_lon"],
+                downloadRequest['bounds']["max_lat"] 
+            ] # bounds = [min_lon, min_lat, max_lon, max_lat]
     satellite = downloadRequest['satellite']
     bucket = 'noaa-' + satellite
     product = downloadRequest['product']
+    channels = downloadRequest['bands']
+    variables = downloadRequest['variables']
+    apiKey = downloadRequest['apiKey']
     outDir = downloadRequest['outputDirectory']
 
+    return startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir
+  
+
+def download_abi(downloadRequest_filepath):
+    '''Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())'''
+
+    startDatetime, endDatetime, bounds, satellite, bucket, product, channels, _, _, outDir = parse_json(downloadRequest_filepath)
+
+    image_path_list = []
+
     # parse channels/bands and start a download for each
-    for channel in downloadRequest['bands']:
+    for channel in channels:
         #print(channel)
         if type(channel) == int:
             channel = 'C{:02}'.format(channel) # correct channel to a string formatted like "C02" if we were provided with an integer channel/band number
             #print(channel)  
         # Show us the bounds we'll crop images to
         print('\nFiles will be downloaded and then cropped to these bounds:')
-        print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[1],w=bounds[2],e=bounds[3],s=bounds[0]))
+        print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[3],w=bounds[0],e=bounds[2],s=bounds[1]))
         # For each S3 bucket, download the corresponding observations if we don't have them already
         filepath = []; # store filepaths of the files we download
         print('For each S3 bucket, download the corresponding observations')
@@ -55,10 +67,11 @@ def download_abi(downloadRequest_filepath):
                 if os.path.exists(filepath[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
                     print('\nSubsetting files in...{}'.format(filepath[i]))
                     for file in glob(filepath[i]+'*.nc'):
+                        image_path_list.append(file)
                         go.clip.subsetNetCDF(file,bounds)
                 i+=1
     print("Done")
-    return None
+    return image_path_list
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
