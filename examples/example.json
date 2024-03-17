@@ -1,18 +1,18 @@
 { 
 "dateRange" : {
-                "startDatetime" : "2020-03-03T00:00:00Z",
-                "endDatetime" : "2020-03-03T12:00:00Z"
+                "startDatetime" : "2024-03-16T00:00:00Z",
+                "endDatetime" : "2024-03-16T00:59:00Z"
             },
 "bounds" : { 
-                "min_lat" : 32.0,
-                "max_lat" : 34.0,
-                "min_lon" : -120.0,
-                "max_lon" : -118.0
+                "min_lon" : -122.12,              
+                "min_lat" : 46.6,
+                "max_lon" : -121.35,
+                "max_lat" : 47.1
             },
-"satellite" : "goes17",
+"satellite" : "goes16",
 "product" : "ABI-L1b-RadC",
-"bands" : [14],
+"bands" : [2],
 "variables" : ["Rad"],
 "outputDirectory" : "/storage/spestana/scratchspace/",
-"apiKey" : "1234567890"
+"apiKey" : "585b1d1639bc5ef8a4a5bdea7e45a8d1"
 }
