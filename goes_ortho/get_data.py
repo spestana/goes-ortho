@@ -13,7 +13,156 @@ from goespy.Downloader import ABI_Downloader
 import json
 from glob import glob
 from dateutil import rrule, parser
+import datetime as dt
+import xarray as xr
+import zarr
+from dask.distributed import Client, LocalCluster
 
+def build_zarr(downloadRequest_filepath):
+
+    # download requested imagery
+    image_path_list = download_abi(downloadRequest_filepath)
+
+    # parse json request file
+    startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath = parse_json(downloadRequest_filepath)
+
+    # orthorectify all images
+    new_image_path_list = []
+    for goes_image_path in image_path_list:
+        new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
+        new_image_path_list.append(new_goes_filename)
+        go.orthorectify.ortho(goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=False)
+    
+    # add time dimension, fix CRS, build zarr file
+    for variable in variables:
+        new_image_path_list = add_datetime_crs(new_image_path_list, variable)
+
+        # start Dask cluster
+        client = dask_start_cluster(
+                            workers=6,
+                            threads=2,
+                            open_browser=False,
+                            verbose=True,
+                            )
+
+        print(new_image_path_list)
+        nc_files = sorted(
+            new_image_path_list,
+            key=get_start_date_from_abi_filename
+        )
+        print(nc_files)
+        # Open all the raster files as a single dataset (combining them together)
+        # Why did we choose chunks = 500? 100MB?
+        # https://docs.xarray.dev/en/stable/user-guide/dask.html#optimization-tips
+        print('open all rasters')
+        ds = xr.open_mfdataset(nc_files, chunks={'time': 500})
+        # rechunk along time dimension
+        # Dask's rechunk documentation: https://docs.dask.org/en/stable/generated/dask.array.rechunk.html
+        # 0:-1 specifies that we want the dataset to be chunked along the 0th dimension -- the time dimension, which means that each chunk will have all 40 thousand values in time dimension
+        # 1:'auto', 2:'auto' and balance=True specifies that dask can freely rechunk along the latitude and longitude dimensions to attain blocks that have a uniform size
+        print('rechunk')
+        ds[variable].data.rechunk(
+            {0:-1, 1:'auto', 2:'auto'}, 
+            block_size_limit=1e8, 
+            balance=True
+        )
+        # Assign the dimensions of a chunk to variables to use for encoding afterwards
+        t,y,x = ds[variable].data.chunks[0][0], ds[variable].data.chunks[1][0], ds[variable].data.chunks[2][0]
+        # Create an output zarr file and write these chunks to disk
+        # remove if file already exists
+        shutil.rmtree(outputFilepath, ignore_errors=True)
+        # chunk
+        ds[variable].encoding = {'chunks': (t, y, x)}
+        # output zarr file
+        print('saving zarr file')
+        ds.to_zarr(outputFilepath)
+        # Display 
+        source_group = zarr.open(outputFilepath)
+        source_array = source_group[variable]
+        print(source_group.tree())
+        print(source_array.info)
+        del source_group
+        del source_array
+    print('Done.')
+    return None
+
+def get_start_date_from_abi_filename(s):
+    return s.split('_s')[1].split('_')[0]
+
+def dask_start_cluster(
+    workers,
+    threads=1,
+    ip_address=None,
+    port=":8787",
+    open_browser=False,
+    verbose=True,
+):
+    """
+    Starts a dask cluster. Can provide a custom IP or URL to view the progress dashboard.
+    This may be necessary if working on a remote machine.
+    """
+    cluster = LocalCluster(
+        n_workers=workers,
+        threads_per_worker=threads,
+        #silence_logs=logging.ERROR,
+        dashboard_address=port,
+    )
+
+    client = Client(cluster)
+
+    if ip_address:
+        if ip_address[-1] == "/":
+            ip_address = ip_address[:-1]  # remove trailing '/' in case it exists
+        port = str(cluster.dashboard_link.split(":")[-1])
+        url = ":".join([ip_address, port])
+        if verbose:
+            print("\n" + "Dask dashboard at:", url)
+    else:
+        if verbose:
+            print("\n" + "Dask dashboard at:", cluster.dashboard_link)
+        url = cluster.dashboard_link
+
+    if port not in url:
+        if verbose:
+            print("Port", port, "already occupied")
+
+    if verbose:
+        print("Workers:", workers)
+        print("Threads per worker:", threads, "\n")
+
+    if open_browser:
+        webbrowser.open(url, new=0, autoraise=True)
+
+    return client
+
+def add_datetime_crs(files, variable, crs='EPSG:4326'):
+    new_files = []
+    datetimes = [
+        dt.datetime.strptime(
+            f.split('_')[3][1:-1], # parse the start time (the part "s2022__________" in the file name)
+            "%Y%j%H%M%S"
+        ) for f in files
+    ]
+
+    for i,file in enumerate(files):
+        print(f"Processing {i} of {len(files)}...")
+        try:
+            ds = xr.open_dataset(file)
+            ds = ds.assign_coords({"time": datetimes[i]})
+            ds = ds.expand_dims("time")
+            ds = ds.reset_coords(drop=True)
+            da = ds[variable]
+            new_file_name = file.replace(
+                ".nc",
+                "_{}.nc".format(variable),
+            )
+            da = da.rio.write_crs(crs)
+            da.to_netcdf(new_file_name)
+            new_files.append(new_file_name)
+        except Exception as err:
+            print(f"Failed on {file}")
+            print(f"Error: {err}")
+    return new_files
 
 def parse_json(downloadRequest_filepath):
 
@@ -34,15 +183,16 @@ def parse_json(downloadRequest_filepath):
     channels = downloadRequest['bands']
     variables = downloadRequest['variables']
     apiKey = downloadRequest['apiKey']
-    outDir = downloadRequest['outputDirectory']
+    outDir = downloadRequest['downloadDirectory']
+    outputFilepath = downloadRequest['outputFilepath']
 
-    return startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir
+    return startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath
   
 
 def download_abi(downloadRequest_filepath):
     '''Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())'''
 
-    startDatetime, endDatetime, bounds, satellite, bucket, product, channels, _, _, outDir = parse_json(downloadRequest_filepath)
+    startDatetime, endDatetime, bounds, satellite, bucket, product, channels, _, _, outDir, _ = parse_json(downloadRequest_filepath)
 
     image_path_list = []
 
