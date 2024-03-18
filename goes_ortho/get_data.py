@@ -35,7 +35,7 @@ def build_zarr(downloadRequest_filepath):
     
     # add time dimension, fix CRS, build zarr file
     for variable in variables:
-        new_image_path_list = add_datetime_crs(new_image_path_list, variable)
+        new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
 
         # start Dask cluster
         client = dask_start_cluster(
@@ -46,10 +46,11 @@ def build_zarr(downloadRequest_filepath):
                             )
 
         print(new_image_path_list)
-        nc_files = sorted(
-            new_image_path_list,
-            key=get_start_date_from_abi_filename
-        )
+        #nc_files = sorted(
+        #    new_image_path_list,
+        #    key=datetimes_list
+        #)
+        nc_files = [img_path for img_dt, img_path in sorted(zip(datetimes_list, new_image_path_list))]
         print(nc_files)
         # Open all the raster files as a single dataset (combining them together)
         # Why did we choose chunks = 500? 100MB?
@@ -162,7 +163,7 @@ def add_datetime_crs(files, variable, crs='EPSG:4326'):
         except Exception as err:
             print(f"Failed on {file}")
             print(f"Error: {err}")
-    return new_files
+    return new_files, datetimes
 
 def parse_json(downloadRequest_filepath):
 
