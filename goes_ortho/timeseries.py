@@ -10,6 +10,25 @@ import numpy as np
 import pandas as pd
 import fnmatch
 
+def df_from_zarr(zarrFilepath, variable, point_lat_lon, outFilepath=None):
+
+    ds = xr.open_dataset(
+        zarrFilepath,
+        chunks={'time': 40785, 'latitude': 50, 'longitude': 50},
+        engine='zarr'
+    )
+    # When we pass in a chunks argument, the dataset opened will be filled with Dask arrays
+
+    point_timeseries = ds[variable].sel(latitude = point_lat_lon[0], longitude = point_lat_lon[1], method='nearest')
+
+    # Convert the timeseries into a pandas dataframe and save in a .csv file
+    df = point_timeseries.to_dataframe().drop(columns=['latitude', 'longitude'])
+
+    if outFilepath != None:
+        df.to_csv(outFilepath) 
+
+    return df
+
 def make_abi_timeseries(directory, product, data_vars, lon, lat, z, outfilepath=None):
     '''Given a directory of GOES ABI products, create a timeseries of data variables (specified in data_vars) for a single point (at lon, lat, elevation).
 	   Returns a pandas dataframe, optional output to a csv file.'''
