@@ -18,6 +18,23 @@ dependencies:
   - h5netcdf
   - zarr
   - dask
+  - awscli
+  - s3fs
+  - fsspec
+  - gdown
+  - aiohttp
+  - scipy
+  - geopandas
+  - opencv
+  - folium
+  - distributed
+  - tqdm
+  - pytest
+  - nb_conda_kernels
+  - hvplot
+  - black
+  - flake8
+  - pip
   - pip:
-    - "--editable=goespy@git+https://github.com/spestana/goes-py"
-    - "--editable=gtsa@git+https://github.com/friedrichknuth/gtsa"
+    - "--editable=git+https://github.com/spestana/goes-py#egg=goespy"
+    - "--editable=git+https://github.com/friedrichknuth/gtsa#egg=gtsa"
