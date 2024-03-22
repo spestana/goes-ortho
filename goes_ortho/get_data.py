@@ -16,7 +16,7 @@ from dateutil import rrule, parser
 import datetime as dt
 import xarray as xr
 import zarr
-from dask.distributed import Client, LocalCluster
+import gtsa
 
 def build_zarr(downloadRequest_filepath):
 
@@ -38,7 +38,7 @@ def build_zarr(downloadRequest_filepath):
         new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
 
         # start Dask cluster
-        client = dask_start_cluster(
+        client = gtsa.io.dask_start_cluster(
                             workers=6,
                             threads=2,
                             open_browser=False,
@@ -89,52 +89,6 @@ def build_zarr(downloadRequest_filepath):
 
 def get_start_date_from_abi_filename(s):
     return s.split('_s')[1].split('_')[0]
-
-def dask_start_cluster(
-    workers,
-    threads=1,
-    ip_address=None,
-    port=":8787",
-    open_browser=False,
-    verbose=True,
-):
-    """
-    Starts a dask cluster. Can provide a custom IP or URL to view the progress dashboard.
-    This may be necessary if working on a remote machine.
-    """
-    cluster = LocalCluster(
-        n_workers=workers,
-        threads_per_worker=threads,
-        #silence_logs=logging.ERROR,
-        dashboard_address=port,
-    )
-
-    client = Client(cluster)
-
-    if ip_address:
-        if ip_address[-1] == "/":
-            ip_address = ip_address[:-1]  # remove trailing '/' in case it exists
-        port = str(cluster.dashboard_link.split(":")[-1])
-        url = ":".join([ip_address, port])
-        if verbose:
-            print("\n" + "Dask dashboard at:", url)
-    else:
-        if verbose:
-            print("\n" + "Dask dashboard at:", cluster.dashboard_link)
-        url = cluster.dashboard_link
-
-    if port not in url:
-        if verbose:
-            print("Port", port, "already occupied")
-
-    if verbose:
-        print("Workers:", workers)
-        print("Threads per worker:", threads, "\n")
-
-    if open_browser:
-        webbrowser.open(url, new=0, autoraise=True)
-
-    return client
 
 def add_datetime_crs(files, variable, crs='EPSG:4326'):
     new_files = []
