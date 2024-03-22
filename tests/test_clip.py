@@ -11,7 +11,7 @@ def test_goes_clip_conus(setup_session):
     # setup for clip function
     file_list = glob.glob('./tests/resources/spestana-goes-ortho-data-*/data/C/*.nc')
     filepath = file_list[0]
-    bounds = [30, 40, -110, -100]
+    bounds = [-110, 30, -100, 40]
     newfilepath = path.abspath('./tmp.nc')
     # run goes clip function
     go.clip.subsetNetCDF(filepath,bounds,newfilepath)
