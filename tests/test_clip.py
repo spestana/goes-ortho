@@ -29,7 +29,7 @@ def test_goes_clip_fulldisk(setup_session):
     # setup for clip function
     file_list = glob.glob('./tests/resources/spestana-goes-ortho-data-*/data/C/*.nc')
     filepath = file_list[0]
-    bounds = [-40, 40, -170, 20]
+    bounds = [-170, -40, 40,  20] # [min_lon, min_lat, max_lon, max_lat]
     newfilepath = path.abspath('./tmp.nc')
     # run goes clip function
     go.clip.subsetNetCDF(filepath,bounds,newfilepath)
