@@ -19,5 +19,5 @@ dependencies:
   - zarr
   - dask
   - pip:
-    - "--editable=goespy@git+https://github.com/spestana/goes-py"
-    - "--editable=gtsa@git+https://github.com/friedrichknuth/gtsa"
+    - "--editable=git+https://github.com/spestana/goes-py"
+    - "--editable=git+https://github.com/friedrichknuth/gtsa"
