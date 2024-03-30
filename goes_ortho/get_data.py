@@ -87,6 +87,34 @@ def build_zarr(downloadRequest_filepath):
     print('Done.')
     return None
 
+
+
+def make_request_json(workflowName, startDatetime, endDatetime, bounds, satellite, product, band, variable, apiKey):
+    '''For running through github actions, make a request json file from github user input to be read by the build_zarr function'''
+    import json
+    request_dict = { 
+                "dateRange" : {
+                                "startDatetime" : startDatetime,
+                                "endDatetime" : endDatetime
+                            },
+                "bounds" : { 
+                                "min_lon" : bounds[0],              
+                                "min_lat" : bounds[1],
+                                "max_lon" : bounds[2],
+                                "max_lat" : bounds[3]
+                            },
+                "satellite" : satellite,
+                "product" : product,
+                "bands" : [band],
+                "variables" : [variable],
+                "downloadDirectory" : "./",
+                "outputFilepath" : "./{}.zarr".format(workflowName),
+                "apiKey" : apiKey
+    }
+    filename = workflowName + '.json'
+    with open(filename, "w") as f:
+        json.dump(request_dict , f)  
+
 def get_start_date_from_abi_filename(s):
     return s.split('_s')[1].split('_')[0]
 
@@ -98,9 +126,10 @@ def add_datetime_crs(files, variable, crs='EPSG:4326'):
             "%Y%j%H%M%S"
         ) for f in files
     ]
-
+    print(datetimes)
     for i,file in enumerate(files):
         print(f"Processing {i} of {len(files)}...")
+        print(datetimes[i])
         try:
             ds = xr.open_dataset(file)
             ds = ds.assign_coords({"time": datetimes[i]})
