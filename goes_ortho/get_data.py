@@ -43,7 +43,7 @@ def build_zarr(downloadRequest_filepath):
         new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
 
         # start Dask cluster
-	print('start Dask cluster')
+        print('start Dask cluster')
         client = gtsa.io.dask_start_cluster(
                             workers=6,
                             threads=2,
