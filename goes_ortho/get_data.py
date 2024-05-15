@@ -124,6 +124,9 @@ def get_start_date_from_abi_filename(s):
     return s.split('_s')[1].split('_')[0]
 
 def add_datetime_crs(files, variable, crs='EPSG:4326'):
+    print(files)
+    print(variable)
+    print(crs)
     new_files = []
     datetimes = [
         dt.datetime.strptime(
