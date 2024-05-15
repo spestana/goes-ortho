@@ -35,7 +35,7 @@ def build_zarr(downloadRequest_filepath):
     print(image_path_list)
     for goes_image_path in image_path_list:
         print('filename: ', goes_image_path)
-        new_goes_filename = goes_image_path.with_name(goes_image_path.stem + '_o')
+        new_goes_filename = goes_image_path.with_name(goes_image_path.stem + '_o').with_suffix('.nc')
         #new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
         print('renamed to: ', new_goes_filename)
         new_image_path_list.append(new_goes_filename)
@@ -149,10 +149,11 @@ def add_datetime_crs(files, variable, crs='EPSG:4326'):
             ds = ds.expand_dims("time")
             ds = ds.reset_coords(drop=True)
             da = ds[variable]
-            new_file_name = file.replace(
-                ".nc",
-                "_{}.nc".format(variable),
-            )
+            new_file_name = file.with_name(file.stem + '_{}'.format(variable)).with_suffix('.nc')
+            #new_file_name = file.replace(
+            #    ".nc",
+            #    "_{}.nc".format(variable),
+            #)
             da = da.rio.write_crs(crs)
             da.to_netcdf(new_file_name)
             new_files.append(new_file_name)
