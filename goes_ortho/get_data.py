@@ -135,7 +135,7 @@ def add_datetime_crs(files, variable, crs='EPSG:4326'):
     new_files = []
     datetimes = [
         dt.datetime.strptime(
-            f.split('_')[3][1:-1], # parse the start time (the part "s2022__________" in the file name)
+            f.stem.split('_')[3][1:-1], # parse the start time (the part "s2022__________" in the file name)
             "%Y%j%H%M%S"
         ) for f in files
     ]
