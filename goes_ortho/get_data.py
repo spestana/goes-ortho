@@ -17,6 +17,7 @@ import datetime as dt
 import xarray as xr
 import zarr
 import gtsa
+from pathlib import Path
 
 def build_zarr(downloadRequest_filepath):
 
@@ -34,7 +35,8 @@ def build_zarr(downloadRequest_filepath):
     print(image_path_list)
     for goes_image_path in image_path_list:
         print('filename: ', goes_image_path)
-        new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
+        new_goes_filename = goes_image_path.with_name(goes_image_path.stem + '_o')
+        #new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
         print('renamed to: ', new_goes_filename)
         new_image_path_list.append(new_goes_filename)
         go.orthorectify.ortho(goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=True)
@@ -189,7 +191,7 @@ def download_abi(downloadRequest_filepath):
 
     startDatetime, endDatetime, bounds, satellite, bucket, product, channels, _, _, outDir, _ = parse_json(downloadRequest_filepath)
 
-    image_path_list = []
+    output_filepaths = []
 
     # parse channels/bands and start a download for each
     for channel in channels:
@@ -201,22 +203,25 @@ def download_abi(downloadRequest_filepath):
         print('\nFiles will be downloaded and then cropped to these bounds:')
         print('\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n'.format(n=bounds[3],w=bounds[0],e=bounds[2],s=bounds[1]))
         # For each S3 bucket, download the corresponding observations if we don't have them already
-        filepath = []; # store filepaths of the files we download
+        download_filepaths = [] # store filepaths where our downloaded files are
         print('For each S3 bucket, download the corresponding observations')
         i = 0
         for dt in rrule.rrule(rrule.HOURLY, dtstart=startDatetime, until=endDatetime):
-            filepath.append('{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,'{:02}'.format(dt.hour),channel))
-            if not os.path.exists(filepath[i]):
+            this_filepath = Path(outDir) / satellite / dt.year / dt.month / dt.day / product / '{:02}'.format(dt.hour) / channel
+            print(this_filepath)
+            download_filepaths.append(this_filepath) #'{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,'{:02}'.format(dt.hour),channel)
+            if not Path.is_dir(download_filepaths[i]): #os.path.exists(download_filepaths[i]):
                 ABI = ABI_Downloader(outDir,bucket,dt.year,dt.month,dt.day,f'{dt.hour:02}',product,channel)
                 # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
-                if os.path.exists(filepath[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
-                    print('\nSubsetting files in...{}'.format(filepath[i]))
-                    for file in glob(filepath[i]+'*.nc'):
-                        image_path_list.append(file)
+                if Path.is_dir(download_filepaths[i]): # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
+                    print('\nSubsetting files in...{}'.format(download_filepaths[i]))
+                    for file in download_filepaths[i].glob('*.nc'):
+                        print(file)
+                        output_filepaths.append(file)
                         go.clip.subsetNetCDF(file,bounds)
                 i+=1
     print("Done")
-    return image_path_list
+    return output_filepaths
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj='EPSG:4326'):
     """
