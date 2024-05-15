@@ -34,7 +34,7 @@ def build_zarr(downloadRequest_filepath):
     for goes_image_path in image_path_list:
         new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
         new_image_path_list.append(new_goes_filename)
-        go.orthorectify.ortho(goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=False)
+        go.orthorectify.ortho(goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=True)
     
     # add time dimension, fix CRS, build zarr file
     print('add time dimension, fix CRS, build zarr file')
