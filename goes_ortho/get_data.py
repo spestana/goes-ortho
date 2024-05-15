@@ -21,12 +21,15 @@ import gtsa
 def build_zarr(downloadRequest_filepath):
 
     # download requested imagery
+    print('download requested imagery')
     image_path_list = download_abi(downloadRequest_filepath)
 
     # parse json request file
+    print('parse json request file')
     startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath = parse_json(downloadRequest_filepath)
 
     # orthorectify all images
+    print('orthorectify all images')
     new_image_path_list = []
     for goes_image_path in image_path_list:
         new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
@@ -34,10 +37,13 @@ def build_zarr(downloadRequest_filepath):
         go.orthorectify.ortho(goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=False)
     
     # add time dimension, fix CRS, build zarr file
+    print('add time dimension, fix CRS, build zarr file')
     for variable in variables:
+        print('add_datetime_crs')
         new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
 
         # start Dask cluster
+	print('start Dask cluster')
         client = gtsa.io.dask_start_cluster(
                             workers=6,
                             threads=2,
