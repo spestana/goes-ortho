@@ -91,7 +91,6 @@ def build_zarr(downloadRequest_filepath):
 
 def make_request_json(workflowName, startDatetime, endDatetime, bounds, satellite, product, band, variable, apiKey):
     '''For running through github actions, make a request json file from github user input to be read by the build_zarr function'''
-    import json
     request_dict = { 
                 "dateRange" : {
                                 "startDatetime" : startDatetime,
