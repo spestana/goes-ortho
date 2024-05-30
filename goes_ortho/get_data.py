@@ -208,7 +208,10 @@ def download_abi(downloadRequest_filepath):
         print('For each S3 bucket, download the corresponding observations')
         i = 0
         for dt in rrule.rrule(rrule.HOURLY, dtstart=startDatetime, until=endDatetime):
-            this_filepath = Path(outDir) / satellite / str(dt.year) / str(dt.month) / str(dt.day) / product / '{:02}'.format(dt.hour) / channel
+	    if ("L1b-Rad" in product) or ("L2-CMIP" in product):
+                this_filepath = Path(outDir) / satellite / str(dt.year) / str(dt.month) / str(dt.day) / product / '{:02}'.format(dt.hour) / channel
+            else:
+	        this_filepath = Path(outDir) / satellite / str(dt.year) / str(dt.month) / str(dt.day) / product / '{:02}'.format(dt.hour)
             print(this_filepath)
             download_filepaths.append(this_filepath) #'{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,'{:02}'.format(dt.hour),channel)
             if not Path.is_dir(download_filepaths[i]): #os.path.exists(download_filepaths[i]):
