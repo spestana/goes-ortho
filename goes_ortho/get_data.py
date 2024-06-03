@@ -27,7 +27,7 @@ def build_zarr(downloadRequest_filepath):
 
     # parse json request file
     print('parse json request file')
-    startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath = parse_json(downloadRequest_filepath)
+    _, _, bounds, _, _, _, _, variables, apiKey, _, outputFilepath = parse_json(downloadRequest_filepath)
 
     # orthorectify all images
     print('orthorectify all images')
@@ -43,6 +43,10 @@ def build_zarr(downloadRequest_filepath):
     print(new_image_path_list)
     # add time dimension, fix CRS, build zarr file
     print('add time dimension, fix CRS, build zarr file')
+    # if 'Rad' is one of our variables, add reflectance 'ref', or brightness temperature 'tb' to the list too
+    if 'Rad' in variables:
+        variables.append('ref')
+        variables.append('tb')
     for variable in variables:
         print('add_datetime_crs')
         new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
