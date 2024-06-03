@@ -68,7 +68,7 @@ def build_zarr(downloadRequest_filepath):
         # https://docs.xarray.dev/en/stable/user-guide/dask.html#optimization-tips
         print('open all rasters')
         ds = xr.open_mfdataset(nc_files, chunks={'time': 500})
-        # if 'Rad' is our variables, check if we should add reflectance 'ref', or brightness temperature 'tb' to the list too
+        # if 'Rad' is our variable, check if we should add reflectance 'ref', or brightness temperature 'tb' to the list too
         if variable == 'Rad':
             if ds.band_id.values[0] <= 6:
                 print('adding ref to variables list')
