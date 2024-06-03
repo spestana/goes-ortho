@@ -229,7 +229,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
         if var == 'Rad':
             # if we are looking at bands 1-6, compute reflectance
             if abi_image.band_id.values[0] <= 6:
-                pixel_map['ref'] = ref_or_tb = goesReflectance(pixel_map[var], abi_image.kappa0.values)
+                pixel_map['ref'] = goesReflectance(pixel_map[var], abi_image.kappa0.values)
             # else, compute brightness temperature for bands 7-16
             else:
                 pixel_map['tb'] = goesBrightnessTemp(pixel_map[var], abi_image.planck_fk1.values, abi_image.planck_fk2.values, abi_image.planck_bc1.values, abi_image.planck_bc2.values)
