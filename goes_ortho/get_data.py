@@ -43,11 +43,6 @@ def build_zarr(downloadRequest_filepath):
     print(new_image_path_list)
     # add time dimension, fix CRS, build zarr file
     print('add time dimension, fix CRS, build zarr file')
-    # if 'Rad' is one of our variables, add reflectance 'ref', or brightness temperature 'tb' to the list too
-    if 'Rad' in variables:
-        print('adding ref and tb to variables list')
-        variables.append('ref')
-        variables.append('tb')
     for variable in variables:
         print('add_datetime_crs')
         new_image_path_list, datetimes_list = add_datetime_crs(new_image_path_list, variable)
@@ -73,6 +68,14 @@ def build_zarr(downloadRequest_filepath):
         # https://docs.xarray.dev/en/stable/user-guide/dask.html#optimization-tips
         print('open all rasters')
         ds = xr.open_mfdataset(nc_files, chunks={'time': 500})
+        # if 'Rad' is our variables, check if we should add reflectance 'ref', or brightness temperature 'tb' to the list too
+        if variable == 'Rad':
+            if ds.band_id.values[0] <= 6:
+                print('adding ref to variables list')
+                variables.append('ref')
+            else:
+                print('adding tb to variables list')
+                variables.append('tb')
         # rechunk along time dimension
         # Dask's rechunk documentation: https://docs.dask.org/en/stable/generated/dask.array.rechunk.html
         # 0:-1 specifies that we want the dataset to be chunked along the 0th dimension -- the time dimension, which means that each chunk will have all 40 thousand values in time dimension
