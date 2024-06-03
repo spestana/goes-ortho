@@ -45,6 +45,7 @@ def build_zarr(downloadRequest_filepath):
     print('add time dimension, fix CRS, build zarr file')
     # if 'Rad' is one of our variables, add reflectance 'ref', or brightness temperature 'tb' to the list too
     if 'Rad' in variables:
+        print('adding ref and tb to variables list')
         variables.append('ref')
         variables.append('tb')
     for variable in variables:
