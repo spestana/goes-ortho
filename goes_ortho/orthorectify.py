@@ -304,7 +304,7 @@ def ortho(goes_image_path, data_vars, bounds, api_key, new_goes_filename, dem_fi
     """
     
     if dem_filepath == None:
-        dem_filepath = 'temp_{demtype}_{bounds}_DEM.tif'.format(demtype=demtype,bounds='_'.join([str(b) for b in bounds]))
+        dem_filepath = 'temp_{demtype}_DEM.tif'.format(demtype=demtype,bounds='_'.join([str(b) for b in bounds]))
     get_dem(demtype=demtype, 
             bounds=bounds,
             api_key=api_key,
