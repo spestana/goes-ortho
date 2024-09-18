@@ -91,6 +91,9 @@ version-file = "src/goes_ortho/version.py"
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
