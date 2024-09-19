@@ -33,7 +33,7 @@ dependencies:
   - hvplot
   - black
   - flake8
-  - sklearn
+  - scikit-learn
   - pip
   - pip:
     - "--editable=git+https://github.com/spestana/goes-py#egg=goespy"
