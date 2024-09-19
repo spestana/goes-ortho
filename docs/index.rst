@@ -18,7 +18,7 @@
 
 .. toctree::
    :caption: API Reference
-   :maxdepth: 1
+   :maxdepth: 2
 
    get_data
    orthorectify
