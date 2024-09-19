@@ -37,7 +37,7 @@ dependencies = [
     "hvplot",
     "black",
     "flake8",
-    "sklearn",
+    "scikit-learn",
     "goespy @ git+https://github.com/spestana/goes-py",
     "gtsa @ git+https://github.com/friedrichknuth/gtsa",
 ]
