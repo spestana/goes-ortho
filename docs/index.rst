@@ -1,7 +1,5 @@
 
 .. include:: ../README.rst
-   :relative-docs:
-   :relative-images:
 
 .. toctree::
    :caption: Getting Started
