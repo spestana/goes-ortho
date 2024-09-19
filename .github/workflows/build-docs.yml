@@ -22,7 +22,9 @@ jobs:
           python-version: "3.x"
 
       - name: Install Pandoc
-        run: sudo apt-get install pandoc
+        run: |
+          sudo apt update
+          sudo apt-get install pandoc
 
       - name: Install libgdal
         run: sudo apt-get install libgdal-dev
