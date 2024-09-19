@@ -21,11 +21,17 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Pandoc and libgdal-dev
+      - name: Install Pandoc
         run: |
           sudo apt update
           sudo apt-get install pandoc
+
+      - name: Install libgdal-dev
+        run: |
+          sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get update
           sudo apt-get install libgdal-dev
+          gdalinfo --version
 
       - name: Install dependencies
         run: |
