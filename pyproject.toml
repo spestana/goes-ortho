@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "goes_ortho"
 dynamic = ["version"]
-readme = "README.md"
+readme = "README.rst"
 description = "Python package for accessing downloading GOES-R ABI imagery, orthorectifying with a DEM, and creating timeseries"
 dependencies = [
     "boto3",
