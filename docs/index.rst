@@ -1,8 +1,5 @@
 
-```{include} ../README.rst
-:relative-docs: ..
-:relative-images: .
-```
+.. include:: ../README.rst
 
 .. toctree::
    :caption: Getting Started

@@ -33,11 +33,6 @@ extensions = [
     "nbsphinx",
 ]
 
-myst_enable_extensions = [
-    "relative-docs",
-    "relative-images"
-]
-
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 

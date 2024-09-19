@@ -18,8 +18,9 @@ GOES ABI Terrain Correction
 
 Orthorectifying GOES ABI imagery at sub-pixel resolution
 
-.. image:: ./docs/images/GOES-terrain-correction.gif
+.. image:: docs/images/GOES-terrain-correction.gif
    :width: 600px
+   :relative-images:
 
 ----
 
@@ -33,15 +34,17 @@ Before using observations from these instruments for observing the land surface 
 
 The terrain parallax is especially visually apparent when flipping between GOES-East and GOES-West views of a mountain range like the Sierra Nevada here:
 
-.. image:: ./docs/images/GOES_east-west_vis.gif
+.. image:: docs/images/GOES_east-west_vis.gif
    :width: 600px
+   :relative-images:
 
 The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is **"sub-pixel"** because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness tempreature values) over the terrain at the DEM's finer resolution.
 
 The figure below (from the GOES ABI ATBD) illustrates the satellite's viewing geometry. The orthorectification method developed here modifies point P on the Earth's surface using information from a DEM about its elevation relative to the reference ellipsoid.
 
-.. image:: ./docs/images/ABIgrid.png
+.. image:: docs/images/ABIgrid.png
    :width: 600px
+   :relative-images:
 
 These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the `goespy <https://github.com/palexandremello/goes-py>`_ library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California). 
 
@@ -103,8 +106,9 @@ goes_ortho.make_abi_timeseries()
 
 Creates a time series of a given GOES ABI product variable for a specified point location. This function can take into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
 
-.. image:: ./docs/examples/make_abi_timeseries_example_plot.png
+.. image:: docs/examples/make_abi_timeseries_example_plot.png
    :width: 600px
+   :relative-images:
 
 Usage:
 ~~~~~~
@@ -180,8 +184,9 @@ Flowchart:
 
 (flowchart diagram is a work in progress)
 
-.. image:: ./docs/images/goes-ortho-flowchart.png
+.. image:: docs/images/goes-ortho-flowchart.png
    :width: 600px
+   :relative-images:
 
 
 ----
