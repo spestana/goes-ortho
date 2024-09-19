@@ -1,5 +1,5 @@
 
-.. include:: ../README.md
+.. include:: ../README.rst
 
 .. toctree::
    :caption: Getting Started
