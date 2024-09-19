@@ -8,6 +8,14 @@
 
    installation
    quick_start
+   examples/subset_abi_netcdf_example
+   examples/orthorectify_abi_example
+   examples/orthorectify_abi_example2
+   examples/ortho-horizontal-offset
+   examples/make_abi_timeseries_example
+   examples/jsontest
+   examples/goes-orthorectify
+
 
 .. toctree::
    :caption: API Reference
