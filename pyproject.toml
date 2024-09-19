@@ -35,7 +35,6 @@ dependencies = [
     "folium",
     "distributed",
     "tqdm",
-    "nb_conda_kernels",
     "hvplot",
     "black",
     "flake8",
