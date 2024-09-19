@@ -5,9 +5,11 @@ GOES ABI Terrain Correction
    :target: https://zenodo.org/badge/latestdoi/281728618
    :alt: DOI
 
+
 .. image:: https://github.com/spestana/goes-ortho/actions/workflows/tests.yml/badge.svg
    :target: https://github.com/spestana/goes-ortho/actions/workflows/tests.yml
    :alt: tests
+
 
 .. image:: https://github.com/spestana/goes-ortho/actions/workflows/build-docs.yml/badge.svg
    :target: https://github.com/spestana/goes-ortho/actions/workflows/build-docs.yml
@@ -41,14 +43,14 @@ The figure below (from the GOES ABI ATBD) illustrates the satellite's viewing ge
 .. image:: docs/images/ABIgrid.png
    :width: 600px
 
-These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the `goespy <https://github.com/palexandremello/goes-py>_` library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California). 
+These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the `goespy <https://github.com/palexandremello/goes-py>`_ library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California). 
 
 ----
 
 Setting up the environment
 --------------------------
 
-(with `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `mamba <https://mamba.readthedocs.io/en/latest/>`_
+Using `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `mamba <https://mamba.readthedocs.io/en/latest/>`_
 
 .. code-block:: bash
    
@@ -58,21 +60,19 @@ Setting up the environment
    ipython kernel install --user --name goesenv
 
 
-Also currently requires [this version of goespy](https://github.com/spestana/goes-py):
+Also currently requires `this version of goespy <https://github.com/spestana/goes-py`_
 
 .. code-block:: bash
    
-   git clone https://github.com/spestana/goes-py.git
-   cd goes-py
-   conda activate goesenv
-   pip install -e .
+   pip install git+https://github.com/spestana/goes-py#egg=goespy
 
 
 ----
 
-### download-goes.py
+download-goes.py
+----------------
 
-Downloads GOES-16 or GOES-17 products/bands, requires command line arguments (wrapper around goespy.Downloader.ABI_Downloader()):
+Downloads GOES-16 or GOES-17 products/bands, requires command line arguments (wrapper around ``goespy.Downloader.ABI_Downloader()``):
 
 Usage:
 ~~~~~~
@@ -114,15 +114,15 @@ Usage:
    df = make_abi_timeseries(directory, product, data_vars, lon, lat, elev, outfilepath)
 
 **Inputs:**
- * `directory`: Directory containing GOES ABI product NetCDF files (using glob, this function searches recursively and allows the use of [Unix shell-style wildcards](https://docs.python.org/3/library/glob.html))
- * `product`: GOES ABI product to search directory for (using glob, this allows the use of `Unix shell-style wildcards <https://docs.python.org/3/library/glob.html`_)
- * `data_vars`: String or list of strings, each the name of a data variable contained within the ABI product NetCDF file; If an ABI-L1b-Rad product is being read, and radiance ("Rad") is one of the data variables in this list, an additional column will be returned (`ref_or_tb`) containing reflectance (for ABI bands 1-6) or brightness temperature (for ABI bands 7-16) converted from the radiance values.
- * `lon`: Longitude in degrees (-180 to 180)
- * `lat`: Latitude in degrees (-90 to 90)
- * `elev`: Elevation in meters (above GRS80 ellipsoid) of the point of interest
- * `outfilepath`: Optional filepath and filename to output a csv file of the resulting pandas dataframe
+ * ``directory``: Directory containing GOES ABI product NetCDF files (using glob, this function searches recursively and allows the use of `Unix shell-style wildcards <https://docs.python.org/3/library/glob.html>`_)
+ * ``product``: GOES ABI product to search directory for (using glob, this allows the use of `Unix shell-style wildcards <https://docs.python.org/3/library/glob.html>`_)
+ * ``data_vars``: String or list of strings, each the name of a data variable contained within the ABI product NetCDF file; If an ABI-L1b-Rad product is being read, and radiance ("Rad") is one of the data variables in this list, an additional column will be returned (`ref_or_tb`) containing reflectance (for ABI bands 1-6) or brightness temperature (for ABI bands 7-16) converted from the radiance values.
+ * ``lon``: Longitude in degrees (-180 to 180)
+ * ``lat``: Latitude in degrees (-90 to 90)
+ * ``elev``: Elevation in meters (above GRS80 ellipsoid) of the point of interest
+ * ``outfilepath``: Optional filepath and filename to output a csv file of the resulting pandas dataframe
 **Returns:**
- * `df`: Pandas dataframe where df.index is a pandas Timestamp of the GOES ABI observation time in UTC, and a column for each of the data_vars 
+ * ``df``: Pandas dataframe where df.index is a pandas Timestamp of the GOES ABI observation time in UTC, and a column for each of the data_vars 
  
 Examples:
 ~~~~~~~~~
@@ -167,13 +167,13 @@ Usage:
 Examples:
 ~~~~~~~~~
 
-**Note:** I've also included a copy of [asp_binder_utils.py](https://github.com/uw-cryo/asp-binder-demo/blob/6f03afadc7f4c6e13422da6d5f480c7f6762b47b/asp_binder_utils.py) here which has the extremely useful `get_dem()` function for downloading geotiffs of DEMs.
+**Note:** I've also included a copy of `asp_binder_utils.py <https://github.com/uw-cryo/asp-binder-demo/blob/6f03afadc7f4c6e13422da6d5f480c7f6762b47b/asp_binder_utils.py>`_ here which has the extremely useful ``get_dem()`` function for downloading geotiffs of DEMs.
 
-See the [orthorectify_abi_example.ipynb](https://github.com/spestana/goes-ortho/blob/main/examples/orthorectify_abi_example.ipynb) notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
+See the `orthorectify_abi_example.ipynb <https://github.com/spestana/goes-ortho/blob/main/examples/orthorectify_abi_example.ipynb>`_ notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
 
-See the [goes-orthorectify](https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify.ipynb) notebook for an example of orthorectifying a single GOES ABI image.
+See the `goes-orthorectify <https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify.ipynb>`_ notebook for an example of orthorectifying a single GOES ABI image.
 
-See the [goes-orthorectify-aster.py](https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify-aster.py) script for an example of orthorectifying a batch of GOES ABI images.
+See the `goes-orthorectify-aster.py <https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify-aster.py>`_ script for an example of orthorectifying a batch of GOES ABI images.
 
 Flowchart:
 ~~~~~~~~~~
@@ -189,7 +189,7 @@ Flowchart:
 goes-timeseries.py
 ~~~~~~~~~~~~~~~~~~
 
-**NOTE: Use `goes_ortho.make_abi_timeseries()` rather than this script.**
+**NOTE: Use ``goes_ortho.make_abi_timeseries()`` rather than this script.**
 
 Creates a time series of GOES ABI radiance values for a specified point location. This takes into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
 
