@@ -1,6 +1,7 @@
 
 .. include:: ../README.md
    :start-after: <!-- index.rst content start -->
+   :parser: myst
 
 .. toctree::
    :caption: Getting Started
