@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt-get install pandoc
+          sudo apt-get install libgdal-dev
 
       - name: Install dependencies
         run: |
