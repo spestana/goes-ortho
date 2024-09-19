@@ -62,6 +62,7 @@ doc = [
     "nbsphinx",
     "ipykernel",
     "ghp-import",
+    "docutils>=0.17",
 ]
 
 [project.urls]
