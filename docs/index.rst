@@ -1,5 +1,8 @@
 
-.. include:: ../README.md
+```{include} ../README.md
+:relative-docs: docs/
+:relative-images:
+```
 
 .. toctree::
    :caption: Getting Started
