@@ -1,6 +1,6 @@
 
 .. include:: ../README.md
-   :parser: myst
+   :parser: myst_parser.sphinx_
 
 .. toctree::
    :caption: Getting Started
