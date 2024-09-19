@@ -24,6 +24,9 @@ jobs:
       - name: Install Pandoc
         run: sudo apt-get install pandoc
 
+      - name: Install libgdal
+        run: sudo apt-get install libgdal-dev
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
