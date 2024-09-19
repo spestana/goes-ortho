@@ -1,7 +1,7 @@
 
 ```{include} ../README.rst
-:relative-docs:
-:relative-images:
+:relative-docs: ..
+:relative-images: .
 ```
 
 .. toctree::
