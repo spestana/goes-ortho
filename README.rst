@@ -60,7 +60,7 @@ Using `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `m
    ipython kernel install --user --name goesenv
 
 
-Also currently requires `this version of goespy <https://github.com/spestana/goes-py`_
+Also currently requires `this version of goespy <https://github.com/spestana/goes-py>`_
 
 .. code-block:: bash
    
