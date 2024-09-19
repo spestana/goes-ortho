@@ -38,6 +38,7 @@ dependencies = [
     "black",
     "flake8",
     "scikit-learn",
+    "geogif", 
     "goespy @ git+https://github.com/spestana/goes-py",
     "gtsa @ git+https://github.com/friedrichknuth/gtsa",
 ]
