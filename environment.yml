@@ -1,5 +1,5 @@
 name: goesenv
-channels:  
+channels:
   - conda-forge
 dependencies:
   - boto3

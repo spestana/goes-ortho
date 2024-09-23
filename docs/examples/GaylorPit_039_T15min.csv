@@ -1,4 +1,4 @@
-# TOA5	GaylorPit_039	CR1000	31480	CR1000.Std.18	CPU:GaylorPitIRSensor_11-13-2017.CR1	29255	T15min				
+# TOA5	GaylorPit_039	CR1000	31480	CR1000.Std.18	CPU:GaylorPitIRSensor_11-13-2017.CR1	29255	T15min
 TIMESTAMP [TS]	RECORD [RN]	BattV [Volts]	PTemp_C [Deg C]	TT_C [Deg C]	SBT_C [Deg C]	Judd_Air_TempF [Deg F]	Judd_Depth [Inches]	SlrkW_up [kW/m^2]	SlrkW_dwn [kW/m^2]	WindSpeed [mph]	WindDirection [deg]
 11/13/2017 14:00	0	13.47	11.33	20.81	7.917	47.85	0.406	NAN	0	NAN	0
 11/13/2017 14:15	1	13.46	11.2	20.93	8.38	48.82	0.671	0.547	0.127	NAN	0

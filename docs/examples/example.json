@@ -1,10 +1,10 @@
-{ 
+{
 "dateRange" : {
                 "startDatetime" : "2024-03-10T00:00:00Z",
                 "endDatetime" : "2024-03-17T00:00:00Z"
             },
-"bounds" : { 
-                "min_lon" : -122.12,              
+"bounds" : {
+                "min_lon" : -122.12,
                 "min_lat" : 46.6,
                 "max_lon" : -121.35,
                 "max_lat" : 47.1
