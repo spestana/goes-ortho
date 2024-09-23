@@ -6,6 +6,8 @@
 import os
 import sys
 
+from goes_ortho import __version__
+
 sys.path.insert(0, os.path.abspath("../src/goes_ortho"))
 
 autosummary_generate = True
@@ -16,7 +18,8 @@ autosummary_generate = True
 project = "goes_ortho"
 copyright = "2024, Steven Pestana"
 author = "Steven Pestana"
-release = "0.0.2"
+version = __version__
+release = __version__
 # the page title will default to "<project> <relsease> documentation" e.g. goes_ortho 0.0.2 documentation
 
 # -- General configuration ---------------------------------------------------
