@@ -16,6 +16,7 @@ dependencies = [
     "xarray",
     "rioxarray",
     "gdal<=3.8",
+    "osgeo",
     "pyproj",
     "pathlib",
     "requests",
