@@ -12,11 +12,9 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
-import gtsa
 import xarray as xr
 import zarr
 from dateutil import parser, rrule
-from goespy.Downloader import ABI_Downloader
 
 import goes_ortho as go
 
@@ -58,7 +56,7 @@ def build_zarr(downloadRequest_filepath):
 
         # start Dask cluster
         print("start Dask cluster")
-        _ = gtsa.io.dask_start_cluster(
+        _ = go.io.dask_start_cluster(
             workers=6,
             threads=2,
             open_browser=False,
@@ -306,7 +304,7 @@ def download_abi(downloadRequest_filepath):
             if not Path.is_dir(
                 download_filepaths[i]
             ):  # os.path.exists(download_filepaths[i]):
-                _ = ABI_Downloader(
+                _ = go.Downloader.ABI_Downloader(
                     outDir,
                     bucket,
                     this_datetime.year,
