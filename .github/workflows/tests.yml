@@ -31,8 +31,6 @@ jobs:
         source $CONDA/etc/profile.d/conda.sh
         conda activate goesenv
         pip install .
-        pip install goespy@git+https://github.com/spestana/goes-py
-        pip install gtsa@git+https://github.com/friedrichknuth/gtsa
         mamba install pytest
     - name: Test with pytest
       run: |
