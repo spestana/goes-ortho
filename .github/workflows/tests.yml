@@ -2,9 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ "re-org" ]
+    branches: [ "re-org", "docs" ]
   pull_request:
-    branches: [ "re-org" ]
+    branches: [ "re-org", "docs" ]
 
 permissions:
   contents: read
