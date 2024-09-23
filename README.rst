@@ -15,6 +15,14 @@ GOES ABI Terrain Correction
    :target: https://github.com/spestana/goes-ortho/actions/workflows/build-docs.yml
    :alt: docs
 
+.. image:: https://img.shields.io/conda/vn/conda-forge/goes-ortho.svg
+   :target: https://anaconda.org/conda-forge/goes-ortho
+   :alt: conda-forge
+
+.. image:: https://img.shields.io/pypi/v/goes-ortho.svg
+   :target: https://pypi.python.org/pypi/goes-ortho
+   :alt: pypi
+
 
 Orthorectifying GOES ABI imagery at sub-pixel resolution
 
