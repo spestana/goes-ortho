@@ -1,5 +1,5 @@
 name: goesenv
-channels:  
+channels:
   - conda-forge
 dependencies:
   - boto3
@@ -8,9 +8,33 @@ dependencies:
   - pandas
   - matplotlib
   - xarray
+  - rioxarray
   - gdal
   - pyproj
   - pathlib
   - requests
   - rasterio
   - netcdf4
+  - h5netcdf
+  - zarr
+  - dask
+  - awscli
+  - s3fs
+  - fsspec
+  - gdown
+  - aiohttp
+  - scipy
+  - geopandas
+  - opencv
+  - folium
+  - distributed
+  - tqdm
+  - pytest
+  - hvplot
+  - black
+  - flake8
+  - scikit-learn
+  - pip
+  - pip:
+    - "--editable=git+https://github.com/spestana/goes-py#egg=goespy"
+    - "--editable=git+https://github.com/friedrichknuth/gtsa#egg=gtsa"

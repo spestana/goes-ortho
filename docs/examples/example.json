@@ -1,0 +1,19 @@
+{
+"dateRange" : {
+                "startDatetime" : "2024-03-10T00:00:00Z",
+                "endDatetime" : "2024-03-17T00:00:00Z"
+            },
+"bounds" : {
+                "min_lon" : -122.12,
+                "min_lat" : 46.6,
+                "max_lon" : -121.35,
+                "max_lat" : 47.1
+            },
+"satellite" : "goes18",
+"product" : "ABI-L1b-RadC",
+"bands" : [7],
+"variables" : ["Rad"],
+"downloadDirectory" : "/storage/spestana/scratchspace/",
+"outputFilepath" : "/storage/spestana/scratchspace/example.zarr",
+"apiKey" : "585b1d1639bc5ef8a4a5bdea7e45a8d1"
+}
