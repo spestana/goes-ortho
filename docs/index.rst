@@ -6,7 +6,7 @@
    :maxdepth: 1
 
    installation
-   quick_start
+   examples/quick_start
    examples/subset_abi_netcdf_example
    examples/orthorectify_abi_example
    examples/orthorectify_abi_example2
