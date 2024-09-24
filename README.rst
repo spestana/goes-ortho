@@ -239,5 +239,3 @@ CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
 .. code-block:: bash
 
    python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.643103 -119.029146 2940
-
-----
