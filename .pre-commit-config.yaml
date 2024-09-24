@@ -59,8 +59,8 @@ repos:
     hooks:
       - id: codespell
         # Checks spelling in `docs/source` dirs ONLY
-        # Ignores `.ipynb` files and `_build` folders
-        args: ["--skip=*.ipynb,docs/_build"]
+        # Ignores `_build` folders
+        args: ["--skip=docs/_build"]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: "v0.10.0.1"
