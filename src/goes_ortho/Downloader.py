@@ -15,7 +15,11 @@ def ABI_Downloader(home, bucket, year, month, day, hour, product, channel):  # n
     product = can be a List or a single string for ABI sensors products from GOES satellite next-generation example: ["ABI-L2-CMIPF"] or "ABI-L1b-RadF"
     channel = Required only for "ABI-L1b-Rad" and "ABI-L2-CMIP" products. Can be a List or a single string for the channels from ABI sensors. Example = ['01','02'] or "13" (channel is ignored for other ABI products)
     """
-    from goes_ortho import boto3, botocore, checkData
+
+    import boto3
+    import botocore
+
+    from goes_ortho import checkData
     from goes_ortho.utils import ProgressPercentage, __isAList
 
     julianDay = ""
@@ -146,7 +150,10 @@ def GLM_Downloader(home, bucket, year, month, day, hour):
     day   = type List for day date: example = ['10','20','30']
     hour   = type List for hour need be UTC coordinate time date: example = ['06','12','18']"""
 
-    from goes_ortho import boto3, botocore, checkData
+    import boto3
+    import botocore
+
+    from goes_ortho import checkData
     from goes_ortho.utils import ProgressPercentage, __isAList
 
     julianDay = ""

@@ -4,8 +4,7 @@ def createPathGoesData(home, bucket, year, month, day, product, hour, channel=No
     """Function used create a directory, with the calendar date the user give to function"""
 
     import errno
-
-    from goes_ortho import os
+    import os
 
     pathReturn = ""
     """that part will get your home directory and the Satellite bucket you're getting your dataset
@@ -62,7 +61,7 @@ def checkFiles(path, singleFile):
     The singleFile is the filename from the data in the bucket 'noaa-goes16'
          and will check the singleFile exists on the created path
     """
-    from goes_ortho import os
+    import os
 
     if os.path.isfile("{0}/{1}".format(path, singleFile)):
         return True
@@ -86,7 +85,7 @@ def checkSize(path, singleFile, singleSize):
 
     """
 
-    from goes_ortho import os
+    import os
 
     if checkFiles(path, singleFile):
         if os.path.getsize(path + singleFile) == singleSize:

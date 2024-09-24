@@ -2,7 +2,7 @@
 
 
 def daytoJulian(year, month, day):
-    from goes_ortho import datetime
+    import datetime
 
     i, j, k = 0, 0, 0
     julianDay = []
@@ -66,7 +66,7 @@ def __isAList(year, month, day, product, hour, channel=None, julianDay=None):
 
 class ProgressPercentage(object):
     def __init__(self, filename, objectSize):
-        from goes_ortho import threading
+        import threading
 
         self._filename = filename
         self._size = objectSize
@@ -74,7 +74,7 @@ class ProgressPercentage(object):
         self._lock = threading.Lock()
 
     def __call__(self, bytes_amount):
-        from goes_ortho import sys
+        import sys
 
         # To simplify we'll assume this is hooked up
         # to a single filename.
