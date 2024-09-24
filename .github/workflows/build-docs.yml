@@ -33,10 +33,10 @@ jobs:
           sudo apt-get install gdal-bin libgdal-dev
           pip install GDAL==`gdal-config --version`
 
-      - name: Install dependencies
+      - name: Install dependencies and goes-ortho
         run: |
           python -m pip install --upgrade pip
-          pip install -e .[doc]
+          pip install goes-ortho[doc]
 
       - name: Build Sphinx documentation
         run: |
