@@ -28,7 +28,6 @@ Orthorectifying GOES ABI imagery at sub-pixel resolution
 
 .. image:: docs/images/GOES-terrain-correction.gif
    :width: 600px
-   :relative-images:
 
 ----
 
@@ -44,7 +43,6 @@ The terrain parallax is especially visually apparent when flipping between GOES-
 
 .. image:: docs/images/GOES_east-west_vis.gif
    :width: 600px
-   :relative-images:
 
 The sub-pixel orthorectification method applied here uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface. This method is **"sub-pixel"** because the DEM spatial resolution can be much finer (here I've used ~30 m, 1 arc-second SRTM DEM) than the GOES ABI image resolution (> 2 km). This effectively drapes ABI pixels (and their respective radiance or brightness temperature values) over the terrain at the DEM's finer resolution.
 
@@ -52,7 +50,6 @@ The figure below (from the GOES ABI ATBD) illustrates the satellite's viewing ge
 
 .. image:: docs/images/ABIgrid.png
    :width: 600px
-   :relative-images:
 
 These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the `goespy <https://github.com/palexandremello/goes-py>`_ library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California).
 
@@ -116,7 +113,6 @@ Creates a time series of a given GOES ABI product variable for a specified point
 
 .. image:: docs/examples/make_abi_timeseries_example_plot.png
    :width: 600px
-   :relative-images:
 
 Usage:
 ~~~~~~
@@ -203,7 +199,6 @@ Flowchart:
 
 .. image:: docs/images/goes-ortho-flowchart.png
    :width: 600px
-   :relative-images:
 
 
 ----
