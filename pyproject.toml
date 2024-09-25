@@ -43,6 +43,7 @@ dependencies = [
     "flake8",
     "scikit-learn",
     "geogif",
+    "goes2go",
 ]
 requires-python = ">=3.8"
 authors = [
