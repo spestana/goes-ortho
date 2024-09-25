@@ -4,7 +4,9 @@
 
 import datetime as dt
 import json
+import logging
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -12,50 +14,56 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
+import goes2go as g2g
+import numpy as np
 import xarray as xr
 import zarr
 from dateutil import parser, rrule
+from tqdm import tqdm
 
 import goes_ortho as go
 
 
-def build_zarr(downloadRequest_filepath):
+def build_zarr(downloadRequest_filepath, downloader="goes2go"):
     # download requested imagery
-    print("download requested imagery")
-    image_path_list = download_abi(downloadRequest_filepath)
+    logging.info("download requested imagery")
+    if downloader == "goespy":
+        image_path_list = download_abi_goespy(downloadRequest_filepath)
+    if downloader == "goes2go":
+        image_path_list = download_abi_goes2go(downloadRequest_filepath)
 
     # parse json request file
-    print("parse json request file")
+    logging.info("parse json request file")
     _, _, bounds, _, _, _, _, variables, apiKey, _, outputFilepath = parse_json(
         downloadRequest_filepath
     )
 
     # orthorectify all images
-    print("orthorectify all images")
+    logging.info("orthorectify all images")
     new_image_path_list = []
-    print(image_path_list)
+    logging.info(image_path_list)
     for goes_image_path in image_path_list:
-        print("filename: ", goes_image_path)
+        logging.info("filename: ", goes_image_path)
         new_goes_filename = goes_image_path.with_name(
             goes_image_path.stem + "_o"
         ).with_suffix(".nc")
         # new_goes_filename = goes_image_path.split('.')[:-1][0] + '_o.nc'
-        print("renamed to: ", new_goes_filename)
+        logging.info("renamed to: ", new_goes_filename)
         new_image_path_list.append(new_goes_filename)
         go.orthorectify.ortho(
             goes_image_path, variables, bounds, apiKey, new_goes_filename, keep_dem=True
         )
-    print(new_image_path_list)
+    logging.info(new_image_path_list)
     # add time dimension, fix CRS, build zarr file
-    print("add time dimension, fix CRS, build zarr file")
+    logging.info("add time dimension, fix CRS, build zarr file")
     for variable in variables:
-        print("add_datetime_crs")
+        logging.info("add_datetime_crs")
         new_image_path_list, datetimes_list = add_datetime_crs(
             new_image_path_list, variable
         )
 
         # start Dask cluster
-        print("start Dask cluster")
+        logging.info("start Dask cluster")
         _ = go.io.dask_start_cluster(
             workers=6,
             threads=2,
@@ -63,7 +71,7 @@ def build_zarr(downloadRequest_filepath):
             verbose=True,
         )
 
-        print(new_image_path_list)
+        logging.info(new_image_path_list)
         # nc_files = sorted(
         #    new_image_path_list,
         #    key=datetimes_list
@@ -72,11 +80,11 @@ def build_zarr(downloadRequest_filepath):
             img_path
             for img_dt, img_path in sorted(zip(datetimes_list, new_image_path_list))
         ]
-        print(nc_files)
+        logging.info(nc_files)
         # Open all the raster files as a single dataset (combining them together)
         # Why did we choose chunks = 500? 100MB?
         # https://docs.xarray.dev/en/stable/user-guide/dask.html#optimization-tips
-        print("open all rasters")
+        logging.info("open all rasters")
         ds = xr.open_mfdataset(nc_files, chunks={"time": 500})
         #
         ## if 'Rad' is our variable, check if we should add reflectance 'ref', or brightness temperature 'tb' to the list too
@@ -92,7 +100,7 @@ def build_zarr(downloadRequest_filepath):
         # Dask's rechunk documentation: https://docs.dask.org/en/stable/generated/dask.array.rechunk.html
         # 0:-1 specifies that we want the dataset to be chunked along the 0th dimension -- the time dimension, which means that each chunk will have all 40 thousand values in time dimension
         # 1:'auto', 2:'auto' and balance=True specifies that dask can freely rechunk along the latitude and longitude dimensions to attain blocks that have a uniform size
-        print("rechunk")
+        logging.info("rechunk")
         ds[variable].data.rechunk(
             {0: -1, 1: "auto", 2: "auto"}, block_size_limit=1e8, balance=True
         )
@@ -108,13 +116,13 @@ def build_zarr(downloadRequest_filepath):
         # chunk
         ds[variable].encoding = {"chunks": (t, y, x)}
         # output zarr file
-        print("saving zarr file")
+        logging.info("saving zarr file")
         ds.to_zarr(outputFilepath)
         # Display
         source_group = zarr.open(outputFilepath)
         source_array = source_group[variable]
-        print(source_group.tree())
-        print(source_array.info)
+        logging.info(source_group.tree())
+        logging.info(source_array.info)
         del source_group
         del source_array
     print("Done.")
@@ -235,7 +243,7 @@ def parse_json(downloadRequest_filepath):
     )
 
 
-def download_abi(downloadRequest_filepath):
+def download_abi_goespy(downloadRequest_filepath):
     """Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())"""
 
     (
@@ -297,7 +305,7 @@ def download_abi(downloadRequest_filepath):
                     / product
                     / "{:02}".format(this_datetime.hour)
                 )
-            print(this_filepath)
+            # print(this_filepath)
             download_filepaths.append(
                 this_filepath
             )  #'{}/{}/{}/{}/{}/{}/{}/{}/'.format(outDir,satellite,dt.year,dt.month,dt.day,product,'{:02}'.format(dt.hour),channel)
@@ -324,6 +332,99 @@ def download_abi(downloadRequest_filepath):
                         output_filepaths.append(file)
                         go.clip.subsetNetCDF(file, bounds)
                 i += 1
+    print("Done")
+    return output_filepaths
+
+
+def download_abi_goes2go(downloadRequest_filepath):
+    """Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goes2go functions)"""
+
+    (
+        start_datetime,
+        end_datetime,
+        bounds,
+        satellite,
+        bucket,
+        product_and_domain,
+        channels,
+        _,
+        _,
+        outDir,
+        _,
+    ) = parse_json(downloadRequest_filepath)
+
+    output_filepaths = []
+
+    # get satellite integer (e.g. the 16, 17, or 18 part of goes16, goes17, goes18
+    satellite_int = int(re.search(r"\d+", satellite).group())
+    # separate product and domain (C, F, M)
+    product = product_and_domain[:-1]
+    domain = product_and_domain[-1]
+    # check domain
+    valid_domains = ["M", "C", "F"]
+    assert any(
+        domain in d for d in valid_domains
+    ), "Invalid GOES-R ABI product name. Product name should end with a domain identifier: M, C, or F. (e.g. ABI-L2-LSTC)"
+
+    this_start_datetime = start_datetime
+
+    # step through and download n hours at a time
+    n = 3  # try 3 hours at a time
+    n_steps = int(
+        np.ceil((end_datetime - start_datetime).total_seconds() / (3600 * n))
+    )  # how many steps we'll have to take
+    print(f"Estimated {n_steps} batches to download")
+    batch_number = 1
+    while this_start_datetime < end_datetime:
+        print(f"Batch number {batch_number}")
+        this_end_datetime = this_start_datetime + dt.timedelta(hours=n)
+        print(
+            f"Download batch of imagery from {this_start_datetime} to {this_end_datetime}"
+        )
+
+        # set up goes2go object for this satellite, product, and domain
+        G = g2g.GOES(satellite=satellite_int, product=product, domain=domain)
+
+        # see what is available to download
+        # df = G.df(start=startDatetime.strftime("%Y-%m-%d %H:%M"), end=endDatetime.strftime("%Y-%m-%d %H:%M"))
+
+        # download this batch
+        df = G.timerange(
+            start=this_start_datetime.strftime("%Y-%m-%d %H:%M"),
+            end=this_end_datetime.strftime("%Y-%m-%d %H:%M"),
+        )
+
+        # get the filepaths of this batch
+        batch_filepaths = [
+            Path(g2g.config["default"]["save_dir"], filepath) for filepath in df["file"]
+        ]
+
+        # now try and crop these so they don't take up so much space - this is very inefficient but oh well it's what I have right now
+        print(f"Cropping image batch to {bounds}")
+        pbar = tqdm(total=len(batch_filepaths))
+        for _, this_filepath in enumerate(batch_filepaths):
+            if Path.exists(
+                this_filepath
+            ):  # we have to make sure the path exists (meaning we downloaded something) before running the subsetNetCDF function
+                logging.info("\nSubsetting file {}".format(this_filepath))
+                go.clip.subsetNetCDF(this_filepath, bounds)
+                pbar.update(1)
+
+        pbar.close()
+
+        # append the batch filepaths to our main filepaths list
+        output_filepaths.append(batch_filepaths)
+
+        # set the next start datetime to the end of this batch
+        this_start_datetime = this_end_datetime
+
+        batch_number += 1
+
+    # flatten the list of lists that we've compiled
+    output_filepaths = [
+        filepath for batch_filepaths in output_filepaths for filepath in batch_filepaths
+    ]
+
     print("Done")
     return output_filepaths
 
