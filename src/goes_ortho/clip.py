@@ -2,6 +2,8 @@
 Functions for clipping GOES ABI imagery to smaller areas
 """
 
+import logging
+
 import xarray as xr
 
 from goes_ortho.geometry import LonLat2ABIangle
@@ -40,7 +42,6 @@ def subsetNetCDF(filepath, bounds, newfilepath=None):
     lat_north = bounds[3]
 
     with xr.open_dataset(filepath) as file:
-        print(file)
         f = file.load()
         # Values needed for geometry calculations
         req = f.goes_imager_projection.semi_major_axis
@@ -56,19 +57,19 @@ def subsetNetCDF(filepath, bounds, newfilepath=None):
         x_rad_sw, y_rad_sw = LonLat2ABIangle(
             lon_west, lat_south, 0, H, req, rpol, e, lon_0
         )
-        print("SW Corner: {}, {}".format(x_rad_sw, y_rad_sw))
+        logging.info("SW Corner: {}, {}".format(x_rad_sw, y_rad_sw))
         x_rad_se, y_rad_se = LonLat2ABIangle(
             lon_east, lat_south, 0, H, req, rpol, e, lon_0
         )
-        print("SE Corner: {}, {}".format(x_rad_se, y_rad_se))
+        logging.info("SE Corner: {}, {}".format(x_rad_se, y_rad_se))
         x_rad_nw, y_rad_nw = LonLat2ABIangle(
             lon_west, lat_north, 0, H, req, rpol, e, lon_0
         )
-        print("NW Corner: {}, {}".format(x_rad_nw, y_rad_nw))
+        logging.info("NW Corner: {}, {}".format(x_rad_nw, y_rad_nw))
         x_rad_ne, y_rad_ne = LonLat2ABIangle(
             lon_east, lat_north, 0, H, req, rpol, e, lon_0
         )
-        print("NE Corner: {}, {}".format(x_rad_ne, y_rad_ne))
+        logging.info("NE Corner: {}, {}".format(x_rad_ne, y_rad_ne))
         # choose the bounds that cover the largest extent
         y_rad_s = min(
             y_rad_sw, y_rad_se
@@ -76,7 +77,7 @@ def subsetNetCDF(filepath, bounds, newfilepath=None):
         y_rad_n = max(y_rad_nw, y_rad_ne)  # northern-most
         x_rad_e = max(x_rad_se, x_rad_ne)  # eastern-most (scan angle in radians)
         x_rad_w = min(x_rad_sw, x_rad_nw)  # western-most
-        print(
+        logging.info(
             "Corner coords chosen: N: {}, S: {}; E: {}, W: {}".format(
                 y_rad_n, y_rad_s, x_rad_e, x_rad_w
             )

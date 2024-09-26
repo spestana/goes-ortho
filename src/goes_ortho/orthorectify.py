@@ -2,6 +2,7 @@
 Functions to orthorectify GOES-R ABI images using a DEM
 """
 
+import logging
 import os
 
 import numpy as np
@@ -77,14 +78,14 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
 
     """
 
-    print("\nRUNNING: make_ortho_map()")
+    logging.info("\nRUNNING: make_ortho_map()")
 
     # Open the GOES ABI image
-    print("\nOpening GOES ABI image...")
+    logging.info("\nOpening GOES ABI image...")
     abi_image = xr.open_dataset(goes_filepath, decode_times=False)
     # NOTE: for some reason (?) I sometimes get an error "ValueError: unable to decode time units 'seconds since 2000-01-01 12:00:00' with the default calendar. Try opening your dataset with decode_times=False." so I've added decode_times=False here.
     # Get inputs: projection information from the ABI radiance product (values needed for geometry calculations)
-    print("\nGet inputs: projection information from the ABI radiance product")
+    logging.info("\nGet inputs: projection information from the ABI radiance product")
     req = abi_image.goes_imager_projection.semi_major_axis
     rpol = abi_image.goes_imager_projection.semi_minor_axis
     H = (
@@ -93,10 +94,10 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     )
     lon_0 = abi_image.goes_imager_projection.longitude_of_projection_origin
     e = 0.0818191910435  # GRS-80 eccentricity
-    print("...done")
+    logging.info("...done")
 
     # Load DEM
-    print("\nOpening DEM file...")
+    logging.info("\nOpening DEM file...")
     dem = rioxarray.open_rasterio(dem_filepath)
     dem = dem.where(dem != dem.attrs["_FillValue"])[0, :, :]  # replace nodata with nans
     dem = dem.fillna(
@@ -104,20 +105,20 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
     )  # fill nans with zeros for the ocean (temporary fix for fog project)
     # dem = dem.where(dem!=0) # replace zeros with nans
     # Create 2D arrays of longitude and latitude from the DEM
-    print("\nCreate 2D arrays of longitude and latitude from the DEM")
+    logging.info("\nCreate 2D arrays of longitude and latitude from the DEM")
     X, Y = np.meshgrid(dem.x, dem.y)  # Lon and Lat of each DEM grid cell
     Z = dem.values  # elevation of each DEM grid cell
-    print("...done")
+    logging.info("...done")
 
     # For each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)
-    print(
+    logging.info(
         "\nFor each grid cell in the DEM, compute the corresponding ABI scan angle (x and y, radians)"
     )
     abi_grid_x, abi_grid_y = LonLat2ABIangle(X, Y, Z, H, req, rpol, e, lon_0)
-    print("...done")
+    logging.info("...done")
 
     # Create metadata dictionary about this map (should probably clean up metadata, adhere to some set of standards)
-    print("\nCreate metadata dictionary about this map")
+    logging.info("\nCreate metadata dictionary about this map")
     metadata = {
         # Information about the projection geometry:
         "longitude_of_projection_origin": lon_0,
@@ -148,10 +149,10 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
         "latitude_info": "latitude from DEM file",
         "elevation_info": "elevation from DEM file",
     }
-    print("...done")
+    logging.info("...done")
 
     # Create pixel map dataset
-    print("\nCreate pixel map dataset")
+    logging.info("\nCreate pixel map dataset")
     ds = xr.Dataset(
         {"elevation": (["latitude", "longitude"], dem.values)},
         coords={
@@ -162,17 +163,19 @@ def make_ortho_map(goes_filepath, dem_filepath, out_filepath=None):
         },
         attrs=metadata,
     )
-    print(ds)
-    print("...done")
+    # print(ds)
+    logging.info("...done")
 
     if out_filepath is not None:
-        print("\nExport this pixel map along with the metadata (NetCDF with xarray)")
+        logging.info(
+            "\nExport this pixel map along with the metadata (NetCDF with xarray)"
+        )
         # Export this pixel map along with the metadata (NetCDF with xarray)
         ds.to_netcdf(out_filepath, mode="w")
-        print("...done")
+        logging.info("...done")
 
     # Return the pixel map dataset
-    print("\nReturn the pixel map dataset.")
+    logging.info("\nReturn the pixel map dataset.")
 
     return ds
 
@@ -202,41 +205,41 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     ------------
 
     """
-    print("\nRUNNING: orthorectify_abi_rad()")
+    logging.info("\nRUNNING: orthorectify_abi_rad()")
 
     # First check, Does the projection info in the image match our mapping?
-    print("\nDoes the projection info in the image match our mapping?")
+    logging.info("\nDoes the projection info in the image match our mapping?")
     # Open the GOES ABI image
-    print("\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value")
+    logging.info("\nOpening GOES ABI image...\t\t\tABI image value\tPixel map value")
     abi_image = xr.open_dataset(goes_filepath, decode_times=False)
-    print(
+    logging.info(
         "perspective_point_height + semi_major_axis:\t{}\t{}".format(
             abi_image.goes_imager_projection.perspective_point_height
             + abi_image.goes_imager_projection.semi_major_axis,
             pixel_map.satellite_height,
         )
     )
-    print(
+    logging.info(
         "semi_major_axis:\t\t\t\t{}\t{}".format(
             abi_image.goes_imager_projection.semi_major_axis, pixel_map.semi_major_axis
         )
     )
-    print(
+    logging.info(
         "semi_minor_axis:\t\t\t\t{}\t{}".format(
             abi_image.goes_imager_projection.semi_minor_axis, pixel_map.semi_minor_axis
         )
     )
-    print(
+    logging.info(
         "longitude_of_projection_origin:\t\t\t{}\t\t{}".format(
             abi_image.goes_imager_projection.longitude_of_projection_origin,
             pixel_map.longitude_of_projection_origin,
         )
     )
-    print("...done")
+    logging.info("...done")
 
     # Map (orthorectify) and clip the image to the pixel map for each data variable we want
     for var in data_vars:
-        print(
+        logging.info(
             "\nMap (orthorectify) and clip the image to the pixel map for {}".format(
                 var
             )
@@ -244,7 +247,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
         abi_var_values = abi_image.sel(
             x=pixel_map.dem_px_angle_x, y=pixel_map.dem_px_angle_y, method="nearest"
         )[var].values
-        print("...done")
+        logging.info("...done")
 
         # Create a new xarray dataset with the orthorectified ABI radiance values,
         # Lat, Lon, Elevation, and metadata from the pixel map.
@@ -267,7 +270,7 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
                 )
 
     # Map (orthorectify) the original ABI Fixed Grid coordinate values to the new pixels for reference
-    print(
+    logging.info(
         "\nMap (orthorectify) and clip the image to the pixel map for ABI Fixed Grid coordinates"
     )
     abi_fixed_grid_x_values = abi_image.sel(
@@ -290,12 +293,12 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
         ("latitude", "longitude"),
         abi_fixed_grid_y_values_reshaped,
     )
-    print("...done")
+    logging.info("...done")
 
     # drop DEM from dataset
     # pixel_map = pixel_map.drop(['elevation'])
 
-    print(
+    logging.info(
         "\nCreate zone labels for each unique pair of ABI Fixed Grid coordinates (for each orthorectified pixel footprint)"
     )
     # Found this clever solution here: https://stackoverflow.com/a/32326297/11699349
@@ -311,16 +314,16 @@ def orthorectify_abi(goes_filepath, pixel_map, data_vars, out_filename=None):
     zone_labels = idx.reshape(pixel_map.abi_fixed_grid_y.values.shape)
     # Add the zone_labels to the dataset
     pixel_map["zone_labels"] = (("latitude", "longitude"), zone_labels)
-    print("...done")
+    logging.info("...done")
 
     # Output this result to a new NetCDF file
-    print("\nOutput this result to a new NetCDF file")
+    logging.info("\nOutput this result to a new NetCDF file")
     if out_filename is None:
         out_filename = abi_image.dataset_name + "_ortho.nc"
-    print("Saving file as: {}".format(out_filename))
+    logging.info("Saving file as: {}".format(out_filename))
 
     pixel_map.to_netcdf(out_filename)
-    print("...done")
+    logging.info("...done")
 
     return pixel_map
 
