@@ -35,6 +35,7 @@ dependencies = [
     "aiohttp",
     "scipy",
     "geopandas",
+    "geojson",
     "folium",
     "distributed",
     "tqdm",

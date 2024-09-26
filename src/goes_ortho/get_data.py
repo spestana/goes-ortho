@@ -1,6 +1,4 @@
-"""Get test data for tests and/or examples"""
-
-# based on https://github.com/GlacioHack/xdem/blob/d91bf1cc9b3f36d77f3729649bc8e9edc6b42f9f/xdem/examples.py#L33
+"""Functions for downloading data"""
 
 import datetime as dt
 import json
@@ -13,29 +11,35 @@ import sys
 import tarfile
 import urllib.request
 from pathlib import Path
+from typing import List, Tuple, Union
 
+import geojson
 import goes2go as g2g
 import numpy as np
 import xarray as xr
 import zarr
 from dateutil import parser, rrule
+from shapely.geometry import shape
 from tqdm import tqdm
 
 import goes_ortho as go
 
 
-def build_zarr(downloadRequest_filepath, downloader="goes2go"):
+def build_zarr(download_request_filepath, downloader="goes2go"):
+    """
+    For running through github actions. Download and build a zarr file from a download request json file
+    """
     # download requested imagery
     logging.info("download requested imagery")
     if downloader == "goespy":
-        image_path_list = download_abi_goespy(downloadRequest_filepath)
+        image_path_list = download_abi_goespy(download_request_filepath)
     if downloader == "goes2go":
-        image_path_list = download_abi_goes2go(downloadRequest_filepath)
+        image_path_list = download_abi_goes2go(download_request_filepath)
 
     # parse json request file
     logging.info("parse json request file")
     _, _, bounds, _, _, _, _, variables, apiKey, _, outputFilepath = parse_json(
-        downloadRequest_filepath
+        download_request_filepath
     )
 
     # orthorectify all images
@@ -139,8 +143,10 @@ def make_request_json(
     band,
     variable,
     apiKey,
-):
-    """For running through github actions, make a request json file from github user input to be read by the build_zarr function"""
+) -> str:
+    """
+    For running through github actions, make a request json file from github user input to be read by the build_zarr function
+    """
     request_dict = {
         "dateRange": {"startDatetime": startDatetime, "endDatetime": endDatetime},
         "bounds": {
@@ -160,13 +166,33 @@ def make_request_json(
     filename = workflowName + ".json"
     with open(filename, "w") as f:
         json.dump(request_dict, f)
+    return filename
 
 
-def get_start_date_from_abi_filename(s):
-    return s.split("_s")[1].split("_")[0]
+def get_start_date_from_abi_filename(s: str) -> str:
+    """
+    Read the start time from an ABI filename string.
+
+    Parameters
+    ------------
+    s : str
+        filename for an ABI image product
+
+    Returns
+    -----------
+    time_str : str
+        start time from the filename
+    """
+    time_str = s.split("_s")[1].split("_")[0]
+    return time_str
 
 
-def add_datetime_crs(files, variable, crs="EPSG:4326"):
+def add_datetime_crs(
+    files: List[str], variable: str, crs: str = "EPSG:4326"
+) -> Tuple[List[str], List[dt.datetime]]:
+    """
+    Add datetime and CRS information to a GOES ABI image product file
+    """
     print(files)
     print(variable)
     print(crs)
@@ -206,29 +232,46 @@ def add_datetime_crs(files, variable, crs="EPSG:4326"):
     return new_files, datetimes
 
 
-def parse_json(downloadRequest_filepath):
+def parse_json(download_request_filepath: str) -> Tuple:
+    """
+    Parses a json file that specifies what should be downloaded, created with make_request_json()
+
+    Parameters
+    ------------
+    download_request_filepath : str
+        file path to a download request json file, created with make_request_json()
+
+    Returns
+    -----------
+    parsed : Tuple
+        Tuple of parsed information (startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath)
+
+    Examples
+    ------------
+    (startDatetime, endDatetime, bounds, satellite, bucket, product, channels, variables, apiKey, outDir, outputFilepath) = parse_json("my_download_request.json")
+    """
     # load json file that specifies what we'd like to download and parse its contents
-    with open(downloadRequest_filepath, "r") as f:
-        downloadRequest = json.load(f)
+    with open(download_request_filepath, "r") as f:
+        download_request = json.load(f)
 
-    startDatetime = parser.parse(downloadRequest["dateRange"]["startDatetime"])
-    endDatetime = parser.parse(downloadRequest["dateRange"]["endDatetime"])
+    startDatetime = parser.parse(download_request["dateRange"]["startDatetime"])
+    endDatetime = parser.parse(download_request["dateRange"]["endDatetime"])
     bounds = [
-        downloadRequest["bounds"]["min_lon"],
-        downloadRequest["bounds"]["min_lat"],
-        downloadRequest["bounds"]["max_lon"],
-        downloadRequest["bounds"]["max_lat"],
+        download_request["bounds"]["min_lon"],
+        download_request["bounds"]["min_lat"],
+        download_request["bounds"]["max_lon"],
+        download_request["bounds"]["max_lat"],
     ]  # bounds = [min_lon, min_lat, max_lon, max_lat]
-    satellite = downloadRequest["satellite"]
+    satellite = download_request["satellite"]
     bucket = "noaa-" + satellite
-    product = downloadRequest["product"]
-    channels = downloadRequest["bands"]
-    variables = downloadRequest["variables"]
-    apiKey = downloadRequest["apiKey"]
-    outDir = downloadRequest["downloadDirectory"]
-    outputFilepath = downloadRequest["outputFilepath"]
+    product = download_request["product"]
+    channels = download_request["bands"]
+    variables = download_request["variables"]
+    apiKey = download_request["apiKey"]
+    outDir = download_request["downloadDirectory"]
+    outputFilepath = download_request["outputFilepath"]
 
-    return (
+    parsed = (
         startDatetime,
         endDatetime,
         bounds,
@@ -242,9 +285,27 @@ def parse_json(downloadRequest_filepath):
         outputFilepath,
     )
 
+    return parsed
 
-def download_abi_goespy(downloadRequest_filepath):
-    """Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goespy.ABIDownloader())"""
+
+def download_abi_goespy(download_request_filepath: str) -> List[Path]:
+    """
+    Download GOES ABI imagery as specified by an input JSON file using the goespy package for downloading.
+
+    Parameters
+    ------------
+    download_request_filepath : str
+        file path to a download request json file, created with make_request_json()
+
+    Returns
+    -----------
+    output_filepaths : List[Path]
+        path to output DEM (useful if the downloaded DEM is reprojected to custom proj)
+
+    Examples
+    ------------
+    filepaths = download_abi_goespy("my_download_request.json")
+    """
 
     (
         startDatetime,
@@ -258,7 +319,7 @@ def download_abi_goespy(downloadRequest_filepath):
         _,
         outDir,
         _,
-    ) = parse_json(downloadRequest_filepath)
+    ) = parse_json(download_request_filepath)
 
     output_filepaths = []
 
@@ -336,8 +397,24 @@ def download_abi_goespy(downloadRequest_filepath):
     return output_filepaths
 
 
-def download_abi_goes2go(downloadRequest_filepath):
-    """Download GOES ABI imagery as specified by an input JSON file. (this function wraps around goes2go functions)"""
+def download_abi_goes2go(download_request_filepath: str) -> List[Path]:
+    """
+    Download GOES ABI imagery as specified by an input JSON file using the goes2go package for downloading.
+
+    Parameters
+    ------------
+    download_request_filepath : str
+        file path to a download request json file, created with make_request_json()
+
+    Returns
+    -----------
+    output_filepaths : List[Path]
+        path to output DEM (useful if the downloaded DEM is reprojected to custom proj)
+
+    Examples
+    ------------
+    filepaths = download_abi_goes2go("my_download_request.json")
+    """
 
     (
         start_datetime,
@@ -351,7 +428,7 @@ def download_abi_goes2go(downloadRequest_filepath):
         _,
         outDir,
         _,
-    ) = parse_json(downloadRequest_filepath)
+    ) = parse_json(download_request_filepath)
 
     output_filepaths = []
 
@@ -388,11 +465,20 @@ def download_abi_goes2go(downloadRequest_filepath):
         # see what is available to download
         # df = G.df(start=startDatetime.strftime("%Y-%m-%d %H:%M"), end=endDatetime.strftime("%Y-%m-%d %H:%M"))
 
-        # download this batch
-        df = G.timerange(
-            start=this_start_datetime.strftime("%Y-%m-%d %H:%M"),
-            end=this_end_datetime.strftime("%Y-%m-%d %H:%M"),
-        )
+        try:
+            # download this batch
+            df = G.timerange(
+                start=this_start_datetime.strftime("%Y-%m-%d %H:%M"),
+                end=this_end_datetime.strftime("%Y-%m-%d %H:%M"),
+            )
+        except FileNotFoundError as e:
+            print(
+                f"FileNotFoundError encountered. The requested image may not exist. Because this searched a time window of {n} hours, there may be some valid imagery within the time window. Try a smaller time window to search for valid imagery.\n{e}"
+            )
+            # set the next start datetime to the end of this batch
+            this_start_datetime = this_end_datetime
+            batch_number += 1
+            continue
 
         # get the filepaths of this batch
         batch_filepaths = [
@@ -431,7 +517,7 @@ def download_abi_goes2go(downloadRequest_filepath):
 
 def get_dem(demtype, bounds, api_key, out_fn=None, proj="EPSG:4326"):
     """
-    download a DEM of choice from OpenTopography World DEM (modified by Shashank Bhushan, first written by David Shean)
+    download a DEM of choice from OpenTopography World DEM
 
     Parameters
     ------------
@@ -457,7 +543,8 @@ def get_dem(demtype, bounds, api_key, out_fn=None, proj="EPSG:4326"):
 
     import requests
 
-    ### From David Shean
+    # written by Shashank Bhushan, David Shean
+
     base_url = "https://portal.opentopography.org/API/globaldem?demtype={}&west={}&south={}&east={}&north={}&outputFormat=GTiff&API_Key={}"
     if out_fn is None:
         out_fn = "{}.tif".format(demtype)
@@ -488,8 +575,9 @@ def get_dem(demtype, bounds, api_key, out_fn=None, proj="EPSG:4326"):
 
 def run_bash_command(cmd):
     # written by Scott Henderson
-    # move to asp_binder_utils
-    """Call a system command through the subprocess python module."""
+    """
+    Call a system command through the subprocess python module.
+    """
     print(cmd)
     try:
         retcode = subprocess.call(cmd, shell=True)
@@ -505,7 +593,7 @@ def download_example_data() -> None:
     """
     Fetch the GOES ABI example files.
     """
-
+    # based on https://github.com/GlacioHack/xdem/blob/d91bf1cc9b3f36d77f3729649bc8e9edc6b42f9f/xdem/examples.py#L33
     # Static commit hash (to be updated as needed)
     # commit = "16756d3aff6ca41ebb0be999a82d2f66930e7851"
     # The URL from which to download the tarball
@@ -535,5 +623,31 @@ def download_example_data() -> None:
 
 
 def remove_example_data() -> None:
+    """
+    Remove example files downloaded by download_example_data().
+    """
     tmp_dir = "./tests/resources/"
     shutil.rmtree(tmp_dir)
+
+
+def bounds_from_geojson(geojson_filepath: str) -> Union[List[List[float]], List[float]]:
+    """
+    Get a bounding box around a polygon from a geojson file
+    """
+
+    with open(geojson_filepath) as f:
+        geojson_data = geojson.load(f)
+        bounds = []
+        for feature in geojson_data["features"]:
+            bounds.append(shape(feature["geometry"]).bounds)  # [minx, miny, maxx, maxy]
+
+        if len(bounds) > 1:
+            print(
+                "geojson file contains more than one feature, returning a list of bounds, one set of bounds per feature"
+            )
+        if len(bounds) == 1:
+            bounds = bounds[
+                0
+            ]  # if there is only one set of bounds, remove it from the list
+
+    return bounds

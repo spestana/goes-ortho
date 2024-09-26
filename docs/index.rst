@@ -7,6 +7,7 @@
 
    installation
    examples/quick_start
+   examples/download
    examples/subset_abi_netcdf_example
    examples/orthorectify_abi_example
    examples/orthorectify_abi_example2
