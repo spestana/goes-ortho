@@ -2,6 +2,7 @@
 Functions for clipping GOES ABI imagery to smaller areas
 """
 
+import datetime as dt
 import logging
 
 import xarray as xr
@@ -11,7 +12,7 @@ from goes_ortho.geometry import LonLat2ABIangle
 
 def subsetNetCDF(filepath, bounds, newfilepath=None):
     """
-    Crop a GOES-R ABI NetCDF file to latitude/longitude bounds.
+    Crop a GOES-R ABI NetCDF file to latitude/longitude bounds, add datetime dims/coords.
 
     Parameters
     ------------
@@ -85,6 +86,16 @@ def subsetNetCDF(filepath, bounds, newfilepath=None):
         # Use these coordinates to subset the whole dataset
         y_rad_bnds, x_rad_bnds = [y_rad_n, y_rad_s], [x_rad_w, x_rad_e]
         ds = f.sel(x=slice(*x_rad_bnds), y=slice(*y_rad_bnds))
+
+        # while we have the file open, add datetime dims/coords to the file
+        # parse the start time from the file name (the part "s2022__________")
+        this_datetime = dt.datetime.strptime(
+            filepath.stem.split("_")[3][1:-1], "%Y%j%H%M%S"
+        )
+        ds = ds.assign_coords({"time": this_datetime})
+        ds = ds.expand_dims("time")
+        ds = ds.reset_coords(drop=True)
+
     # Close the original file
     f.close()
     if newfilepath is None:
