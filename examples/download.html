@@ -1,0 +1,927 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Example workflow" href="example_workflow.html" /><link rel="prev" title="Quick Start" href="quick_start.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>Download GOES - goes_ortho 0.2.1.5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">goes_ortho 0.2.1.5 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">goes_ortho 0.2.1.5 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Download GOES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_workflow.html">Example workflow</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_data.html">goes_ortho.get_data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orthorectify.html">goes_ortho.orthorectify</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../timeseries.html">goes_ortho.timeseries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometry.html">goes_ortho.geometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clip.html">goes_ortho.clip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rad.html">goes_ortho.rad</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="section" id="Download-GOES">
+<h1>Download GOES<a class="headerlink" href="#Download-GOES" title="Permalink to this heading">#</a></h1>
+<p>This notebook demonstrates downloading a short time series of GOES-R ABI imagery.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">goes_ortho</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/spestana/.conda/envs/goes-test-env/lib/python3.12/site-packages/goes2go/data.py:665: FutureWarning: &#39;H&#39; is deprecated and will be removed in a future version. Please use &#39;h&#39; instead of &#39;H&#39;.
+  within=pd.to_timedelta(config[&#34;nearesttime&#34;].get(&#34;within&#34;, &#34;1h&#34;)),
+/home/spestana/.conda/envs/goes-test-env/lib/python3.12/site-packages/goes2go/NEW.py:188: FutureWarning: &#39;H&#39; is deprecated and will be removed in a future version. Please use &#39;h&#39; instead of &#39;H&#39;.
+  within=pd.to_timedelta(config[&#34;nearesttime&#34;].get(&#34;within&#34;, &#34;1h&#34;)),
+</pre></div></div>
+</div>
+<p>First, specify the time range, location bounds, satellite, product (and if applicable, band and variable) that we’d like to access.</p>
+<p>We will also need to provide an API key for <a class="reference external" href="https://portal.opentopography.org/requestService?service=api">OpenTopography.org</a> which you can create with a free account. This allows goes_ortho to access digital elevation models to perform the orthorectification step.</p>
+<p>The workflow below was developed to read a json file containing information about what we’d like to download. This was done to 1) allow these functions to run through github actions (still an experimental feature) and 2) keep a record of datasets we’ve downloaded. This is something that may change in the near future since it adds an unnecessary step for most use cases.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make request file from user input</span>
+<span class="n">request_filepath</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">get_data</span><span class="o">.</span><span class="n">make_request_json</span><span class="p">(</span><span class="n">workflowName</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
+                                                 <span class="n">startDatetime</span> <span class="o">=</span> <span class="s2">&quot;2020-04-19T00:00:00Z&quot;</span><span class="p">,</span>
+                                                 <span class="n">endDatetime</span> <span class="o">=</span> <span class="s2">&quot;2020-04-21T00:59:00Z&quot;</span><span class="p">,</span>
+                                                 <span class="n">bounds</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">get_data</span><span class="o">.</span><span class="n">bounds_from_geojson</span><span class="p">(</span><span class="s2">&quot;grand_mesa.geojson&quot;</span><span class="p">),</span>
+                                                 <span class="n">satellite</span> <span class="o">=</span> <span class="s2">&quot;goes16&quot;</span><span class="p">,</span>
+                                                 <span class="n">product</span> <span class="o">=</span> <span class="s2">&quot;ABI-L2-LSTC&quot;</span><span class="p">,</span>
+                                                 <span class="n">band</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                                                 <span class="n">variable</span> <span class="o">=</span> <span class="s2">&quot;LST&quot;</span><span class="p">,</span>
+                                                 <span class="n">apiKey</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1">#585b1d1639bc5ef8a4a5bdea7e45a8d1</span>
+                                                <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The functions below demonstrate downloading GOES imagery using two different downloader packages: <a class="reference external" href="https://goes2go.readthedocs.io/en/latest/">goes2go</a> and <a class="reference external" href="https://github.com/spestana/goes-py">goespy</a> (the goespy functions are now integrated directly within the goes-ortho package). I have found goes2go is typically faster.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">filepaths</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">get_data</span><span class="o">.</span><span class="n">download_abi_goes2go</span><span class="p">(</span><span class="n">request_filepath</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Estimated 17 batches to download
+Batch number 1
+Download batch of imagery from 2020-04-19 00:00:00+00:00 to 2020-04-19 03:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:01&lt;00:00,  2.03it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 2
+Download batch of imagery from 2020-04-19 03:00:00+00:00 to 2020-04-19 06:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 10.60it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 3
+Download batch of imagery from 2020-04-19 06:00:00+00:00 to 2020-04-19 09:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 10.80it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 4
+Download batch of imagery from 2020-04-19 09:00:00+00:00 to 2020-04-19 12:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 10.74it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 5
+Download batch of imagery from 2020-04-19 12:00:00+00:00 to 2020-04-19 15:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 10.90it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 6
+Download batch of imagery from 2020-04-19 15:00:00+00:00 to 2020-04-19 18:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.84it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 7
+Download batch of imagery from 2020-04-19 18:00:00+00:00 to 2020-04-19 21:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.98it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 8
+Download batch of imagery from 2020-04-19 21:00:00+00:00 to 2020-04-20 00:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.92it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 9
+Download batch of imagery from 2020-04-20 00:00:00+00:00 to 2020-04-20 03:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.67it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 10
+Download batch of imagery from 2020-04-20 03:00:00+00:00 to 2020-04-20 06:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.58it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 11
+Download batch of imagery from 2020-04-20 06:00:00+00:00 to 2020-04-20 09:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.43it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 12
+Download batch of imagery from 2020-04-20 09:00:00+00:00 to 2020-04-20 12:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.46it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 13
+Download batch of imagery from 2020-04-20 12:00:00+00:00 to 2020-04-20 15:00:00+00:00
+FileNotFoundError encountered. The requested image may not exist. Because this searched a time window of 3 hours, there may be some valid imagery within the time window. Try a smaller time window to search for valid imagery.
+noaa-goes16/ABI-L2-LSTC/2020/111/13
+Batch number 14
+Download batch of imagery from 2020-04-20 15:00:00+00:00 to 2020-04-20 18:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.60it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 15
+Download batch of imagery from 2020-04-20 18:00:00+00:00 to 2020-04-20 21:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.70it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 16
+Download batch of imagery from 2020-04-20 21:00:00+00:00 to 2020-04-21 00:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.65it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Batch number 17
+Download batch of imagery from 2020-04-21 00:00:00+00:00 to 2020-04-21 03:00:00+00:00
+📦 Finished downloading [3] files to [/home/spestana/data/noaa-goes16/ABI-L2-LSTC].
+Cropping image batch to [-108.368202, 38.80429, -107.627676, 39.211234]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 3/3 [00:00&lt;00:00, 11.43it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Done
+CPU times: user 5.94 s, sys: 863 ms, total: 6.8 s
+Wall time: 22.3 s
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">filepaths</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">get_data</span><span class="o">.</span><span class="n">download_abi_goespy</span><span class="p">(</span><span class="n">request_filepath</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Files will be downloaded and then cropped to these bounds:
+        (-108.368202,39.211234).        .(-107.627676,39.211234)
+
+
+
+        (-108.368202,38.80429). .(-107.627676,38.80429)
+
+For each S3 bucket, download the corresponding observations
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 00 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100001131_e20201100003504_c20201100004343.nc: [##########] 100%  1.701659 MB/1.701659 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/00
+goes16/2020/4/19/ABI-L2-LSTC/00/OR_ABI-L2-LSTC-M6_G16_s20201100001131_e20201100003504_c20201100004343.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 01 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100101131_e20201100103504_c20201100104361.nc: [##########] 100%  1.762344 MB/1.762344 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/01
+goes16/2020/4/19/ABI-L2-LSTC/01/OR_ABI-L2-LSTC-M6_G16_s20201100101131_e20201100103504_c20201100104361.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 02 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100201132_e20201100203504_c20201100204346.nc: [##########] 100%  1.827398 MB/1.827398 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/02
+goes16/2020/4/19/ABI-L2-LSTC/02/OR_ABI-L2-LSTC-M6_G16_s20201100201132_e20201100203504_c20201100204346.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 03 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100301132_e20201100303504_c20201100304348.nc: [##########] 100%  1.893841 MB/1.893841 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/03
+goes16/2020/4/19/ABI-L2-LSTC/03/OR_ABI-L2-LSTC-M6_G16_s20201100301132_e20201100303504_c20201100304348.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 04 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100401132_e20201100403504_c20201100404347.nc: [##########] 100%  1.912388 MB/1.912388 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/04
+goes16/2020/4/19/ABI-L2-LSTC/04/OR_ABI-L2-LSTC-M6_G16_s20201100401132_e20201100403504_c20201100404347.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 05 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100501132_e20201100503504_c20201100504340.nc: [##########] 100%  1.948882 MB/1.948882 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/05
+goes16/2020/4/19/ABI-L2-LSTC/05/OR_ABI-L2-LSTC-M6_G16_s20201100501132_e20201100503504_c20201100504340.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 06 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100601132_e20201100603505_c20201100604316.nc: [##########] 100%  1.973455 MB/1.973455 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/06
+goes16/2020/4/19/ABI-L2-LSTC/06/OR_ABI-L2-LSTC-M6_G16_s20201100601132_e20201100603505_c20201100604316.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 07 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100701132_e20201100703505_c20201100704354.nc: [##########] 100%  1.979452 MB/1.979452 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/07
+goes16/2020/4/19/ABI-L2-LSTC/07/OR_ABI-L2-LSTC-M6_G16_s20201100701132_e20201100703505_c20201100704354.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 08 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100801132_e20201100803505_c20201100804369.nc: [##########] 100%  2.035866 MB/2.035866 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/08
+goes16/2020/4/19/ABI-L2-LSTC/08/OR_ABI-L2-LSTC-M6_G16_s20201100801132_e20201100803505_c20201100804369.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 09 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201100901132_e20201100903505_c20201100904378.nc: [##########] 100%  2.069201 MB/2.069201 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/09
+goes16/2020/4/19/ABI-L2-LSTC/09/OR_ABI-L2-LSTC-M6_G16_s20201100901132_e20201100903505_c20201100904378.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 10 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101001132_e20201101003505_c20201101004356.nc: [##########] 100%  2.08223 MB/2.08223 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/10
+goes16/2020/4/19/ABI-L2-LSTC/10/OR_ABI-L2-LSTC-M6_G16_s20201101001132_e20201101003505_c20201101004356.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 11 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101101132_e20201101103505_c20201101104373.nc: [##########] 100%  2.057548 MB/2.057548 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/11
+goes16/2020/4/19/ABI-L2-LSTC/11/OR_ABI-L2-LSTC-M6_G16_s20201101101132_e20201101103505_c20201101104373.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 12 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101201132_e20201101203505_c20201101204347.nc: [##########] 100%  1.966647 MB/1.966647 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/12
+goes16/2020/4/19/ABI-L2-LSTC/12/OR_ABI-L2-LSTC-M6_G16_s20201101201132_e20201101203505_c20201101204347.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 13 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101301132_e20201101303505_c20201101304353.nc: [##########] 100%  1.739812 MB/1.739812 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/13
+goes16/2020/4/19/ABI-L2-LSTC/13/OR_ABI-L2-LSTC-M6_G16_s20201101301132_e20201101303505_c20201101304353.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 14 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101401132_e20201101403505_c20201101404378.nc: [##########] 100%  1.568007 MB/1.568007 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/14
+goes16/2020/4/19/ABI-L2-LSTC/14/OR_ABI-L2-LSTC-M6_G16_s20201101401132_e20201101403505_c20201101404378.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 15 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101501132_e20201101503505_c20201101504372.nc: [##########] 100%  1.53152 MB/1.53152 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/15
+goes16/2020/4/19/ABI-L2-LSTC/15/OR_ABI-L2-LSTC-M6_G16_s20201101501132_e20201101503505_c20201101504372.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 16 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101601132_e20201101603505_c20201101604343.nc: [##########] 100%  1.536471 MB/1.536471 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/16
+goes16/2020/4/19/ABI-L2-LSTC/16/OR_ABI-L2-LSTC-M6_G16_s20201101601132_e20201101603505_c20201101604343.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 17 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101701132_e20201101703505_c20201101704397.nc: [##########] 100%  1.530618 MB/1.530618 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/17
+goes16/2020/4/19/ABI-L2-LSTC/17/OR_ABI-L2-LSTC-M6_G16_s20201101701132_e20201101703505_c20201101704397.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 18 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101801132_e20201101803505_c20201101804367.nc: [##########] 100%  1.507082 MB/1.507082 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/18
+goes16/2020/4/19/ABI-L2-LSTC/18/OR_ABI-L2-LSTC-M6_G16_s20201101801132_e20201101803505_c20201101804367.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 19 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201101901132_e20201101903505_c20201101904334.nc: [##########] 100%  1.496716 MB/1.496716 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/19
+goes16/2020/4/19/ABI-L2-LSTC/19/OR_ABI-L2-LSTC-M6_G16_s20201101901132_e20201101903505_c20201101904334.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 20 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201102001132_e20201102003505_c20201102004371.nc: [##########] 100%  1.467092 MB/1.467092 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/20
+goes16/2020/4/19/ABI-L2-LSTC/20/OR_ABI-L2-LSTC-M6_G16_s20201102001132_e20201102003505_c20201102004371.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 21 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201102101132_e20201102103505_c20201102104445.nc: [##########] 100%  1.447728 MB/1.447728 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/21
+goes16/2020/4/19/ABI-L2-LSTC/21/OR_ABI-L2-LSTC-M6_G16_s20201102101132_e20201102103505_c20201102104445.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 22 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201102201132_e20201102203505_c20201102204366.nc: [##########] 100%  1.461739 MB/1.461739 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/22
+goes16/2020/4/19/ABI-L2-LSTC/22/OR_ABI-L2-LSTC-M6_G16_s20201102201132_e20201102203505_c20201102204366.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 23 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201102301132_e20201102303505_c20201102304375.nc: [##########] 100%  1.526796 MB/1.526796 MB
+Subsetting files in...goes16/2020/4/19/ABI-L2-LSTC/23
+goes16/2020/4/19/ABI-L2-LSTC/23/OR_ABI-L2-LSTC-M6_G16_s20201102301132_e20201102303505_c20201102304375.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 00 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110001132_e20201110003505_c20201110004359.nc: [##########] 100%  1.601177 MB/1.601177 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/00
+goes16/2020/4/20/ABI-L2-LSTC/00/OR_ABI-L2-LSTC-M6_G16_s20201110001132_e20201110003505_c20201110004359.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 01 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110101132_e20201110103505_c20201110104364.nc: [##########] 100%  1.73089 MB/1.73089 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/01
+goes16/2020/4/20/ABI-L2-LSTC/01/OR_ABI-L2-LSTC-M6_G16_s20201110101132_e20201110103505_c20201110104364.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 02 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110201132_e20201110203505_c20201110204344.nc: [##########] 100%  1.784311 MB/1.784311 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/02
+goes16/2020/4/20/ABI-L2-LSTC/02/OR_ABI-L2-LSTC-M6_G16_s20201110201132_e20201110203505_c20201110204344.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 03 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110301132_e20201110303505_c20201110304351.nc: [##########] 100%  1.836626 MB/1.836626 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/03
+goes16/2020/4/20/ABI-L2-LSTC/03/OR_ABI-L2-LSTC-M6_G16_s20201110301132_e20201110303505_c20201110304351.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 04 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110401132_e20201110403504_c20201110404358.nc: [##########] 100%  1.858458 MB/1.858458 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/04
+goes16/2020/4/20/ABI-L2-LSTC/04/OR_ABI-L2-LSTC-M6_G16_s20201110401132_e20201110403504_c20201110404358.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 05 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110501131_e20201110503504_c20201110504389.nc: [##########] 100%  1.872962 MB/1.872962 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/05
+goes16/2020/4/20/ABI-L2-LSTC/05/OR_ABI-L2-LSTC-M6_G16_s20201110501131_e20201110503504_c20201110504389.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 06 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110601131_e20201110603504_c20201110604343.nc: [##########] 100%  1.882345 MB/1.882345 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/06
+goes16/2020/4/20/ABI-L2-LSTC/06/OR_ABI-L2-LSTC-M6_G16_s20201110601131_e20201110603504_c20201110604343.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 07 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110701131_e20201110703504_c20201110704364.nc: [##########] 100%  1.906022 MB/1.906022 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/07
+goes16/2020/4/20/ABI-L2-LSTC/07/OR_ABI-L2-LSTC-M6_G16_s20201110701131_e20201110703504_c20201110704364.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 08 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110801131_e20201110803504_c20201110804329.nc: [##########] 100%  1.921032 MB/1.921032 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/08
+goes16/2020/4/20/ABI-L2-LSTC/08/OR_ABI-L2-LSTC-M6_G16_s20201110801131_e20201110803504_c20201110804329.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 09 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201110901131_e20201110903504_c20201110904360.nc: [##########] 100%  1.954707 MB/1.954707 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/09
+goes16/2020/4/20/ABI-L2-LSTC/09/OR_ABI-L2-LSTC-M6_G16_s20201110901131_e20201110903504_c20201110904360.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 10 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111001131_e20201111003504_c20201111004351.nc: [##########] 100%  1.975989 MB/1.975989 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/10
+goes16/2020/4/20/ABI-L2-LSTC/10/OR_ABI-L2-LSTC-M6_G16_s20201111001131_e20201111003504_c20201111004351.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 11 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111101131_e20201111103504_c20201111104359.nc: [##########] 100%  1.984507 MB/1.984507 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/11
+goes16/2020/4/20/ABI-L2-LSTC/11/OR_ABI-L2-LSTC-M6_G16_s20201111101131_e20201111103504_c20201111104359.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 12 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111201131_e20201111203503_c20201111204339.nc: [##########] 100%  1.967923 MB/1.967923 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/12
+goes16/2020/4/20/ABI-L2-LSTC/12/OR_ABI-L2-LSTC-M6_G16_s20201111201131_e20201111203503_c20201111204339.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 13 UTC
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 14 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111401130_e20201111403503_c20201111404374.nc: [##########] 100%  1.810978 MB/1.810978 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/14
+goes16/2020/4/20/ABI-L2-LSTC/14/OR_ABI-L2-LSTC-M6_G16_s20201111401130_e20201111403503_c20201111404374.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 15 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111501130_e20201111503503_c20201111504393.nc: [##########] 100%  1.880033 MB/1.880033 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/15
+goes16/2020/4/20/ABI-L2-LSTC/15/OR_ABI-L2-LSTC-M6_G16_s20201111501130_e20201111503503_c20201111504393.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 16 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111601130_e20201111603503_c20201111604388.nc: [##########] 100%  1.912107 MB/1.912107 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/16
+goes16/2020/4/20/ABI-L2-LSTC/16/OR_ABI-L2-LSTC-M6_G16_s20201111601130_e20201111603503_c20201111604388.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 17 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111701130_e20201111703503_c20201111704362.nc: [##########] 100%  1.920667 MB/1.920667 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/17
+goes16/2020/4/20/ABI-L2-LSTC/17/OR_ABI-L2-LSTC-M6_G16_s20201111701130_e20201111703503_c20201111704362.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 18 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111801130_e20201111803503_c20201111804416.nc: [##########] 100%  1.845728 MB/1.845728 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/18
+goes16/2020/4/20/ABI-L2-LSTC/18/OR_ABI-L2-LSTC-M6_G16_s20201111801130_e20201111803503_c20201111804416.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 19 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201111901130_e20201111903503_c20201111904383.nc: [##########] 100%  1.763694 MB/1.763694 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/19
+goes16/2020/4/20/ABI-L2-LSTC/19/OR_ABI-L2-LSTC-M6_G16_s20201111901130_e20201111903503_c20201111904383.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 20 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201112001130_e20201112003503_c20201112004371.nc: [##########] 100%  1.727079 MB/1.727079 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/20
+goes16/2020/4/20/ABI-L2-LSTC/20/OR_ABI-L2-LSTC-M6_G16_s20201112001130_e20201112003503_c20201112004371.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 21 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201112101130_e20201112103503_c20201112104424.nc: [##########] 100%  1.687915 MB/1.687915 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/21
+goes16/2020/4/20/ABI-L2-LSTC/21/OR_ABI-L2-LSTC-M6_G16_s20201112101130_e20201112103503_c20201112104424.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 22 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201112201130_e20201112203503_c20201112204424.nc: [##########] 100%  1.691709 MB/1.691709 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/22
+goes16/2020/4/20/ABI-L2-LSTC/22/OR_ABI-L2-LSTC-M6_G16_s20201112201130_e20201112203503_c20201112204424.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 23 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201112301130_e20201112303503_c20201112304429.nc: [##########] 100%  1.729744 MB/1.729744 MB
+Subsetting files in...goes16/2020/4/20/ABI-L2-LSTC/23
+goes16/2020/4/20/ABI-L2-LSTC/23/OR_ABI-L2-LSTC-M6_G16_s20201112301130_e20201112303503_c20201112304429.nc
+Downloading... the product ABI-L2-LSTC
+Downloading dataset to... 00 UTC
+OR_ABI-L2-LSTC-M6_G16_s20201120001130_e20201120003503_c20201120004384.nc: [##########] 100%  1.842908 MB/1.842908 MB
+Subsetting files in...goes16/2020/4/21/ABI-L2-LSTC/00
+goes16/2020/4/21/ABI-L2-LSTC/00/OR_ABI-L2-LSTC-M6_G16_s20201120001130_e20201120003503_c20201120004384.nc
+Done
+CPU times: user 6.49 s, sys: 870 ms, total: 7.36 s
+Wall time: 55.2 s
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="example_workflow.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Example workflow</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="quick_start.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Quick Start</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Steven Pestana
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
