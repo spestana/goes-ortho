@@ -130,7 +130,7 @@ def build_zarr(download_request_filepath, downloader="goes2go"):
         del source_group
         del source_array
     print("Done.")
-    return None
+    return outputFilepath
 
 
 def make_request_json(
@@ -651,3 +651,49 @@ def bounds_from_geojson(geojson_filepath: str) -> Union[List[List[float]], List[
             ]  # if there is only one set of bounds, remove it from the list
 
     return bounds
+
+
+def multi_nc_to_zarr(
+    nc_filepaths: List[Union[Path, str]], zarr_filepath: str
+) -> Union[Path, str]:
+    """
+    Read a list of GOES-R ABI netcdf filepaths, merge into a single zarr file along time dimension.
+    """
+
+    with go.io.dask_start_cluster(
+        workers=6,
+        threads=2,
+        open_browser=False,
+        verbose=True,
+    ) as _:
+        # read all the netcdf files, drop attributes where there are conflicts
+        print("read all the netcdf files, drop attributes where there are conflicts")
+        ds = xr.open_mfdataset(
+            nc_filepaths,
+            chunks={"time": 500},
+            combine_attrs="drop_conflicts",
+            combine="by_coords",
+            compat="no_conflicts",
+        )
+
+        # configure chunking on variables with dimensions of (time, x, y)
+        print("configure chunking on variables with dimensions of (time, x, y)")
+        for variable, _ in ds.data_vars.items():
+            if ds[variable].dims == ("time", "y", "x"):
+                ds[variable].data.rechunk(
+                    {0: -1, 1: "auto", 2: "auto"}, block_size_limit=1e8, balance=True
+                )
+                # Assign the dimensions of a chunk to variables to use for encoding afterwards
+                print(
+                    "Assign the dimensions of a chunk to variables to use for encoding afterwards"
+                )
+                t, y, x = (
+                    ds[variable].data.chunks[0][0],
+                    ds[variable].data.chunks[1][0],
+                    ds[variable].data.chunks[2][0],
+                )
+                ds[variable].encoding = {"chunks": (t, y, x)}
+
+        ds.to_zarr(zarr_filepath)
+
+        return zarr_filepath
