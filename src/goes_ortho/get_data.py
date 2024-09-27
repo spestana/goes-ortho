@@ -667,17 +667,26 @@ def multi_nc_to_zarr(
         verbose=True,
     ) as _:
         # read all the netcdf files, drop attributes where there are conflicts
+        print("read all the netcdf files, drop attributes where there are conflicts")
         ds = xr.open_mfdataset(
-            nc_filepaths, chunks={"time": 500}, combine_attrs="drop_conflicts"
+            nc_filepaths,
+            chunks={"time": 500},
+            combine_attrs="drop_conflicts",
+            combine="by_coords",
+            compat="no_conflicts",
         )
 
         # configure chunking on variables with dimensions of (time, x, y)
+        print("configure chunking on variables with dimensions of (time, x, y)")
         for variable, _ in ds.data_vars.items():
             if ds[variable].dims == ("time", "y", "x"):
                 ds[variable].data.rechunk(
                     {0: -1, 1: "auto", 2: "auto"}, block_size_limit=1e8, balance=True
                 )
                 # Assign the dimensions of a chunk to variables to use for encoding afterwards
+                print(
+                    "Assign the dimensions of a chunk to variables to use for encoding afterwards"
+                )
                 t, y, x = (
                     ds[variable].data.chunks[0][0],
                     ds[variable].data.chunks[1][0],
