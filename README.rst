@@ -92,7 +92,7 @@ Usage:
 
 .. code-block:: bash
 
-   python ./download-goes.py --bucket <S3-BUCKET> --year <YEAR> --month <MONTH> --days <START DAY> <END DAY> --product <ABI PRODUCT CODE> --channel <ABI CHANNEL> --bounds <MIN_LAT> <MAX_LAT> <MIN_LON> <MAX_LON> --dir <DESTINATION DIRECTORY>
+   python ./download-goes.py --bucket <S3-BUCKET> --year <YEAR> --month <MONTH> --days <START DAY> <END DAY> --product <ABI PRODUCT CODE> --channel <ABI CHANNEL> --bounds <MIN_LON> <MIN_LAT> <MAX_LON> <MAX_LAT> --dir <DESTINATION DIRECTORY>
 
 Examples:
 ~~~~~~~~~
@@ -101,13 +101,13 @@ This will download the GOES-16 ABI Level-1b Radiance (CONUS) product for channel
 
 .. code-block:: bash
 
-   python ./download-goes.py --bucket noaa-goes16 --year 2020 --month 2 --days 1 2 --product ABI-L1b-RadC --channel C14 --bounds 30 50 -125 -105 --dir /storage/spestana/scratchspace
+   python ./download-goes.py --bucket noaa-goes16 --year 2020 --month 2 --days 1 2 --product ABI-L1b-RadC --channel C14 --bounds -125 30 -105 50 --dir /storage/spestana/scratchspace
 
 We can do the same command with short flag names:
 
 .. code-block:: bash
 
-   python ./download-goes.py -B noaa-goes16 -Y 2020 -M 1 -D 1 2 -p ABI-L1b-RadC -c C14 -b 30 50 -125 -105 -d /storage/spestana/scratchspace
+   python ./download-goes.py -B noaa-goes16 -Y 2020 -M 1 -D 1 2 -p ABI-L1b-RadC -c C14 -b -125 30 -105 50 -d /storage/spestana/scratchspace
 
 ----
 
