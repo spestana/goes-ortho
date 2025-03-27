@@ -61,7 +61,7 @@ parser.add_argument(
     required=True,
     type=float,
     nargs=4,
-    help="Bounds to crop GOES ABI image to (min_lat max_lat min_lon max_lon",
+    help="Bounds to crop GOES ABI image to (min_lon, min_lat, max_lon, max_lat)",
 )
 parser.add_argument(
     "-d", "--dir", required=True, help="Directory to save GOES ABI files (.nc)"
@@ -120,7 +120,7 @@ storage_path = args.dir  # Local path where data will be stored (to do: check if
 print("\nFiles will be downloaded and then cropped to these bounds:")
 print(
     "\t({w},{n}).\t.({e},{n})\n\n\n\n\t({w},{s}).\t.({e},{s})\n".format(
-        n=bounds[1], w=bounds[2], e=bounds[3], s=bounds[0]
+        w=bounds[1], s=bounds[2], e=bounds[3], n=bounds[0]
     )
 )
 
