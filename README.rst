@@ -73,8 +73,12 @@ Using `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `m
    conda env create -f environment.yml
    conda activate goesenv
    pip install -e .
-   ipython kernel install --user --name goesenv
 
+If you are using Jupyter Notebooks, you may also need to run the following to use this environment within your notebooks:
+
+.. code-block:: bash
+
+   ipython kernel install --user --name goesenv
 
 ----
 
