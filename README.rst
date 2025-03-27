@@ -58,6 +58,14 @@ These python scripts and jupyter notebooks help with downloading GOES ABI data f
 Setting up the environment
 --------------------------
 
+First, clone this repo locally:
+
+.. code-block:: bash
+   
+   git clone https://github.com/spestana/goes-ortho
+   cd goes-ortho
+
+
 Using `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `mamba <https://mamba.readthedocs.io/en/latest/>`_
 
 .. code-block:: bash
