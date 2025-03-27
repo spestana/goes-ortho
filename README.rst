@@ -53,34 +53,13 @@ The figure below (from the GOES ABI ATBD) illustrates the satellite's viewing ge
 
 These python scripts and jupyter notebooks help with downloading GOES ABI data from AWS (wrapper around the `goespy <https://github.com/palexandremello/goes-py>`_ library), creating timeseries of GOES ABI brightness temperature for point locations, and orthorectifying (terrain correction) GOES ABI imagery using a DEM (here specifically for part of the Sierra Nevada in California).
 
+
+.. image:: https://raw.githubusercontent.com/spestana/goes-ortho/main/docs/examples/make_abi_timeseries_example_plot.png
+   :width: 600px
+
+
 ----
 
-Setting up the environment
---------------------------
-
-First, clone this repo locally:
-
-.. code-block:: bash
-   
-   git clone https://github.com/spestana/goes-ortho
-   cd goes-ortho
-
-
-Using `conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ or `mamba <https://mamba.readthedocs.io/en/latest/>`_
-
-.. code-block:: bash
-
-   conda env create -f environment.yml
-   conda activate goesenv
-   pip install -e .
-
-If you are using Jupyter Notebooks, you may also need to run the following to use this environment within your notebooks:
-
-.. code-block:: bash
-
-   ipython kernel install --user --name goesenv
-
-----
 
 download-goes.py
 ----------------
@@ -111,91 +90,6 @@ We can do the same command with short flag names:
 
 ----
 
-goes_ortho.make_abi_timeseries()
---------------------------------
-
-Creates a time series of a given GOES ABI product variable for a specified point location. This function can take into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
-
-.. image:: https://raw.githubusercontent.com/spestana/goes-ortho/main/docs/examples/make_abi_timeseries_example_plot.png
-   :width: 600px
-
-Usage:
-~~~~~~
-
-.. code-block:: python
-
-   df = make_abi_timeseries(directory, product, data_vars, lon, lat, elev, outfilepath)
-
-**Inputs:**
- * ``directory``: Directory containing GOES ABI product NetCDF files (using glob, this function searches recursively and allows the use of `Unix shell-style wildcards <https://docs.python.org/3/library/glob.html>`_)
- * ``product``: GOES ABI product to search directory for (using glob, this allows the use of `Unix shell-style wildcards <https://docs.python.org/3/library/glob.html>`_)
- * ``data_vars``: String or list of strings, each the name of a data variable contained within the ABI product NetCDF file; If an ABI-L1b-Rad product is being read, and radiance ("Rad") is one of the data variables in this list, an additional column will be returned (`ref_or_tb`) containing reflectance (for ABI bands 1-6) or brightness temperature (for ABI bands 7-16) converted from the radiance values.
- * ``lon``: Longitude in degrees (-180 to 180)
- * ``lat``: Latitude in degrees (-90 to 90)
- * ``elev``: Elevation in meters (above GRS80 ellipsoid) of the point of interest
- * ``outfilepath``: Optional filepath and filename to output a csv file of the resulting pandas dataframe
-**Returns:**
- * ``df``: Pandas dataframe where df.index is a pandas Timestamp of the GOES ABI observation time in UTC, and a column for each of the data_vars
-
-Examples:
-~~~~~~~~~
-
-See `make_abi_timeseries_example.ipynb <docs/examples/make_abi_timeseries_example.ipynb>`_ jupyter notebook.
-
-----
-
-
-goes_ortho.orthorectify_abi() and goes_ortho.make_ortho_map()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Functions for orthorectifying GOES-R ABI imagery using a DEM. Produces an orthorectified NetCDF at the spatial resolution of the input DEM.
-
-This method uses the GOES satellite's known orbital position (from ABI product NetCDF metadata) to compute the intersection of line of sight (LOS) vectors with a DEM surface.
-
-Usage:
-~~~~~~
-
-.. code-block:: python
-
-   # import to use these functions
-   import goes_ortho
-
-   # specify filepaths for inputs
-   abi_filepath = (
-       ".\OR_ABI-L1b-RadC-M4C14_G16_s20171111750224_e20171111755027_c20171111755074.nc"
-   )
-   dem_filepath = ".\dem.tif"
-
-   # download DEM (make sure to convert to GRS80 ellipsoid model GOES ABI fixed grid uses)
-   get_dem(
-       demtype="SRTMGL3",
-       bounds=(-121, 36, -118, 41),
-       out_fn=dem_filepath,
-       proj="+proj=lonlat +datum=GRS80",
-   )
-
-   # specify which data variables we want to include in the final product
-   data_vars = ["Rad"]
-
-   # generate the pixel mapping
-   pixel_map = goes_ortho.make_ortho_map(abi_filepath, dem_filepath)
-
-   # orthorectify the image
-   goes_ortho.orthorectify_abi(
-       abi_filepath, pixel_map, data_vars, out_filename="test_ortho.nc"
-   )
-
-
-Examples:
-~~~~~~~~~
-
-**Note:** I've also included a copy of `asp_binder_utils.py <https://github.com/uw-cryo/asp-binder-demo/blob/6f03afadc7f4c6e13422da6d5f480c7f6762b47b/asp_binder_utils.py>`_ here which has the extremely useful ``get_dem()`` function for downloading geotiffs of DEMs.
-
-See the `orthorectify_abi_example.ipynb <https://github.com/spestana/goes-ortho/blob/main/examples/orthorectify_abi_example.ipynb>`_ notebook for an example of orthorectifying GOES-16 and -17 images to make a pair of RGB images.
-
-See the `goes-orthorectify <https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify.ipynb>`_ notebook for an example of orthorectifying a single GOES ABI image.
-
-See the `goes-orthorectify-aster.py <https://github.com/spestana/goes-ortho/blob/main/goes-orthorectify-aster.py>`_ script for an example of orthorectifying a batch of GOES ABI images.
 
 Flowchart:
 ~~~~~~~~~~
@@ -205,42 +99,3 @@ Flowchart:
 .. image:: https://raw.githubusercontent.com/spestana/goes-ortho/main/docs/images/goes-ortho-flowchart.png
    :width: 600px
 
-
-----
-
-goes-timeseries.py
-~~~~~~~~~~~~~~~~~~
-
-**NOTE: Use ``goes_ortho.make_abi_timeseries()`` rather than this script.**
-
-Creates a time series of GOES ABI radiance values for a specified point location. This takes into account the point's elevation (in meters) to correct for terrain parallax from off-nadir view angles of GOES.
-
-Usage:
-~~~~~~
-
-.. code-block:: bash
-
-   python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l <LATITUDE> <LONGITUDE> <ELEVATION>
-
-Examples:
-~~~~~~~~~
-
-Gaylor Pit @ lat=37.88175, lon=-119.31212, elev=2811:
-
-.. code-block:: bash
-
-   python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.88175 -119.31212 2811
-
-
-Grand Mesa West @ lat=39.0339, lon=-108.2140, elev=3033:
-
-.. code-block:: bash
-
-   python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 39.0339 -108.2140 3033
-
-
-CUES site @  lat=37.643103, lon=-119.029146, elev=2940:
-
-.. code-block:: bash
-
-   python ./goes-timeseries.py -d /storage/GOES/goes16/2017/03 -l 37.643103 -119.029146 2940
